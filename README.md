@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @omegazyph
+- 👋 Hi, I’m omegazyph
 - 👀 I’m interested in  ai 
 - 🌱 I’m currently learning python
 - 💞️ I’m looking to collaborate on both
