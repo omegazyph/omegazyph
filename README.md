@@ -2,7 +2,7 @@
 - 👀 I’m interested in  ai 
 - 🌱 I’m currently learning python
 - 💞️ I’m looking to collaborate on both
-- 📫 How to reach me on here
+- 📫 How to reach me omegazyph@gmail.com
 - 😄 Pronouns: ...
 - ⚡ Fun fact: ...
 
