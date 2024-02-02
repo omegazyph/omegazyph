@@ -19,7 +19,7 @@ def encode():
     while True:
         try:
             # Get the key from user input and convert it to an integer
-            key = int(input("What is the Key: "))
+            key = int(input("Enter the encryption key for encoding: "))
             
             # Check if the key is within a reasonable range (1 to 25)
             if 1 <= key <= 25:
