@@ -31,7 +31,7 @@ def encode():
             print("Invalid key. Please enter a valid integer.")
 
     # Get the message to encode from user input
-    incoming_message = input("\nWhat is the message I need to Encode?\n")
+    incoming_message = input("\nWhat is the message?\n")
     outgoing_message = ""
 
     # Iterate through each character in the input message
