@@ -12,7 +12,15 @@ alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 def encode():
   
-  key = input("What is the Key: ")
+  
+  # Key Validation
+  try:
+    key = int(input("What is the Key: "))
+  except ValueError:
+    print("Invalid key. Please enter a valid integer.")
+    return
+
+        
   incoming_message = input("\nWhat is the message I need to Encode?\n")
   outgoing_message = ""
 
