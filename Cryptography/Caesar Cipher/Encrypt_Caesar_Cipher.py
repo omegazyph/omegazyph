@@ -10,7 +10,7 @@ this will decode and encrypt a message with a key
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 def encode():
-  print("\nWe are Encodeing now!!!\n")
+  
   key = input("What is the Key: ")
   incoming_message = input("\nWhat is the message I need to Encode?\n")
   outgoing_message = ""
@@ -24,5 +24,5 @@ def encode():
 
   print("\nHere is your coded message.\n" + outgoing_message)
 
-  # Call the function
-  encode()
+# Call the function
+encode()
