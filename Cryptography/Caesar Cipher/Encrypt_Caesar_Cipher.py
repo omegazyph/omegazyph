@@ -5,7 +5,7 @@ Caesar Cipher
 by Wayne Stock
 Created 2024-01-06
 modified 2024-02-02
-This program encodes a message using the Caesar cipher.
+This program encodes a message from a file using the Caesar cipher and puts it in a new file.
 '''
 
 
