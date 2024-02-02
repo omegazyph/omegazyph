@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 '''
-Caesar cipher
+Caesar Cipher
 by Wayne Stock
 Created 2024-01-06
+modified 2024-02-02
 This program encodes a message using the Caesar cipher.
 '''
 
