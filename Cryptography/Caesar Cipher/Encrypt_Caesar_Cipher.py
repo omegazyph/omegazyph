@@ -7,6 +7,8 @@ Created 2024-01-06
 modified 2024-02-02
 This program encodes a message using the Caesar cipher.
 '''
+
+
 print("\nWelcome to Wayne\'s Caesar Cipher!!!\n")
 
 # Define the alphabet as a constant
