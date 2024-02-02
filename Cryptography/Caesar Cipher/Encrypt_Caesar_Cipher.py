@@ -9,6 +9,12 @@ This program encodes a message using the Caesar cipher.
 '''
 
 
+# to open a file with the meassage
+with open('plain_text.txt', 'r') as file1:
+    content = file1.read()
+
+
+
 print("\nWelcome to Wayne\'s Caesar Cipher!!!\n")
 
 # Define the alphabet as a constant
@@ -35,7 +41,7 @@ def encode():
             print("Invalid key. Please enter a valid integer.")
 
     # Get the message to encode from user input
-    incoming_message = input("\nEnter the secret message to encode:\n")
+    incoming_message = content   #input("\nEnter the secret message to encode:\n")
     outgoing_message = ""
 
     # Iterate through each character in the input message
