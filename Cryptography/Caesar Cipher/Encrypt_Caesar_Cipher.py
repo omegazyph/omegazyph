@@ -23,3 +23,6 @@ def encode():
           outgoing_message += text
 
   print("\nHere is your coded message.\n" + outgoing_message)
+
+  # Call the function
+  encode()
