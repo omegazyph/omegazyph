@@ -10,13 +10,8 @@ This program encodes a message using the Caesar cipher.
 
 
 # to open a file with the meassage
-try:
-    with open('plain_text.txt') as file1:
-        content = file1.read()
-        print(content)  # Add this line to check if content is being read
-except Exception as e:
-    print(f"Error: {e}")
-
+with open('plain_text.txt') as file1:
+    content = file1.read()
 
 
 
