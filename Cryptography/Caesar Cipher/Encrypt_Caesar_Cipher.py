@@ -26,9 +26,9 @@ def encode():
   outgoing_message = ""
 
   for text in incoming_message:
-      if text in alphabet:
-          char = alphabet.find(text)
-          outgoing_message += alphabet[(char - int(key)) % 26]
+      if text in ALPHABET:
+          char = ALPHABET.find(text)
+          outgoing_message += ALPHABET[(char - int(key)) % 26]
       else:
           outgoing_message += text
 
