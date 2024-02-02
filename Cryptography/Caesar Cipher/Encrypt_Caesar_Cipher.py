@@ -8,7 +8,8 @@ Created 2024-01-06
 this will decode and encrypt a message with a key
 '''
 
-alphabet = "abcdefghijklmnopqrstuvwxyz"
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+
 
 def encode():
   
