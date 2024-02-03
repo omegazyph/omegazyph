@@ -5,7 +5,7 @@ Created 2024-01-06
 modified 2024-02-03
 this will run through the keys to decode the message
 '''
-print("This Brute Force will only find the key\n use only one word in the message!")
+print("\nThis Brute Force will only find the key\n use only one word in the message!\n or find the one you like\n")
 # Define the alphabet as a constant
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
@@ -38,4 +38,4 @@ def bruteForce_Attack(message, key, outgoing_message):
 # Iterate through all possible keys (0 to 25) and print the decrypted message for each key
 for i in range(26):
     plain_text = bruteForce_Attack(message, i, outgoing_message)
-    print("For key {}, decrypted text: {}".format(i, plain_text))
+    print("\nFor key {}, decrypted text: {}".format(i, plain_text))
