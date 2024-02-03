@@ -5,7 +5,7 @@ Created 2024-01-06
 modified 2024-02-03
 this will run through the keys to decode the message
 '''
-
+print("This Brute Force will only find the key\n use only one word in the message!")
 # Define the alphabet as a constant
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
