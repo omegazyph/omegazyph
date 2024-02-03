@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-
+'''
+Vigenere Cipher
+author Wayne Stock
+created 2024-02-03
+this program will in encode a file using Vigenere Cipher
+'''
 # ALPHABET is a constant representing the alphabet for encryption and decryption
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
