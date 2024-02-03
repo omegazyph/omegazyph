@@ -8,14 +8,15 @@ modified 2024-02-02
 This program encodes a message from a file using the Caesar cipher and puts it in a new file.
 '''
 
-
-# to open a file with the meassage
+# to open a file with the meassage to read
 with open('Cryptography/Caesar Cipher/plain_text.txt') as file1:
     content = file1.read()
 
 
 
+
 print("\nWelcome to Wayne\'s Caesar Cipher!!!\n")
+
 
 # Define the alphabet as a constant
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
@@ -43,6 +44,7 @@ def encode():
     # Get the message to encode from user input
     incoming_message = content   #input("\nEnter the secret message to encode:\n")
     outgoing_message = ""
+    
 
     # Iterate through each character in the input message
     for text in incoming_message:
@@ -55,7 +57,10 @@ def encode():
             outgoing_message += text
 
     # Print the encoded message
-    print("\nYour coded message.\n" + outgoing_message)
+    #print("\nYour coded message.\n" + outgoing_message)
+    
+    with open('Cryptography/Caesar Cipher/Coded_text.txt', 'w') as file2:
+        file2.write(outgoing_message)
 
 # Call the function to execute the encoding process
 encode()
