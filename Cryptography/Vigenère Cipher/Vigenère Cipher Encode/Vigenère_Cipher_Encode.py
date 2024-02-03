@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+
+
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
 def vigenere_decode(message, keyword):
