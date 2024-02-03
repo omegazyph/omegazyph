@@ -9,11 +9,8 @@ this will run through the keys to decode the message
 # Define the alphabet as a constant
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
-with open('Cryptography/Caesar Cipher/BruteForce_code/input_file.txt', 'r') as file:
-    inputfile = file.read()
-
 # Get the message to be decoded from the user
-message = inputfile     #input("What is the message you would like to Decode: ")
+message = input("What is the message you would like to Decode: ")
 outgoing_message = ""  # Variable to store the decoded message
 key = 0  # Initial key value
 
