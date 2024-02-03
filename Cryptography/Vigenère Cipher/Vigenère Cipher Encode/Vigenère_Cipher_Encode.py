@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-
-
+# ALPHABET is a constant representing the alphabet for encryption and decryption
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 def vigenere_decode(message, keyword):
   keyword_phrase = ""
   keyword_index = 0
 
+  # Build the keyword phrase based on the message and the given keyword
   for character in message:
     if keyword_index >= len(keyword):
       keyword_index = 0
@@ -19,6 +19,7 @@ def vigenere_decode(message, keyword):
 
   encoded_message = ""
 
+  # Decrypt the message using the Vigenere Cipher
   for i in range(len(message)):
     if message[i] in ALPHABET:
       old_character_index = ALPHABET.find(message[i])
@@ -30,7 +31,9 @@ def vigenere_decode(message, keyword):
     
   return encoded_message
 
+# Get user input for the message and keyword
 vigenere_message = input("Enter your Message:\n")
 vigenere_keyword = input("Enter your keyWord:\n")
 
-print("Here is your Encoded message:\n" + vigenere_decode(vigenere_message, vigenere_keyword))
+# Display the decoded message
+print("Here is your Decoded message:\n" + vigenere_decode(vigenere_message, vigenere_keyword))
