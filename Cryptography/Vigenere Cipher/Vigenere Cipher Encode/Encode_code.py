@@ -2,9 +2,9 @@
 
 '''
 Vigenere Cipher
-author Wayne Stock
-created 2024-02-03
-this program will encode a file using Vigenere Cipher into another file
+Author: Wayne Stock
+Created: 2024-02-03
+This program encodes a file using Vigenere Cipher into another file.
 '''
 
 print("\nWarning: Make sure your file is in the directory!")
@@ -14,6 +14,16 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 
 def vigenere_decode(message, keyword):
+    """
+    Decrypt the message using the Vigenere Cipher.
+
+    Args:
+    - message (str): The message to be decoded.
+    - keyword (str): The keyword used for decryption.
+
+    Returns:
+    - str: The decoded message.
+    """
     keyword_phrase = ""
     keyword_index = 0
 
@@ -42,35 +52,35 @@ def vigenere_decode(message, keyword):
 
 
 class UserInput:
-    # Get user input for the message and keyword
     @staticmethod
     def get_file_contents():
-        # Prompt the user for the filename or file path
+        """
+        Prompt the user for the filename or file path and read the file contents.
+
+        Returns:
+        - str: The contents of the file.
+        """
         while True:
-            # Get user input for the filename or file path
             file_name = input("Enter the filename or file path: ")
 
             try:
-                # Open the file in read mode
                 with open(file_name, 'r', encoding='utf-8') as file:
-                    # Read the contents of the file
                     file_contents = file.read()
 
-                # Do something with the file contents (e.g., print them)
                 print("Contents of the file:")
                 print(file_contents)
                 return file_contents
 
-
             except FileNotFoundError:
                 print(f"File '{file_name}' not found.")
-            
+
             except PermissionError:
                 print(f"Permission error: Unable to read file '{file_name}'.")
 
             except Exception as e:
                 print(f"An error occurred: {e}")
-            
+
+
 # Get file contents using the UserInput class
 file_contents = UserInput.get_file_contents()
 
@@ -82,7 +92,6 @@ while True:
         break
     else:
         print("Invalid characters in the keyword. Please use only lowercase letters.")
-
 
 if file_contents:
     # Display the decoded message
