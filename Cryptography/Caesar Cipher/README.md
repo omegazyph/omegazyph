@@ -13,7 +13,7 @@ This Python script implements a simple Caesar cipher for encoding and decoding m
    - Run the script using the following command:
 
      ```bash
-     python caesar_cipher.py
+     python3 caesar_cipher.py
      ```
 
 2. **Follow the Prompts:**
