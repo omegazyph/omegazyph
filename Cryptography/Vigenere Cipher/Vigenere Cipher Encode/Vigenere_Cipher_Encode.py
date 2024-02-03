@@ -7,6 +7,8 @@ created 2024-02-03
 this program will in encode a file using Vigenere Cipher into another file
 '''
 
+print("Warning make sure your file is in the directory!!!!!")
+
 # ALPHABET is a constant representing the alphabet for encryption and decryption
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
