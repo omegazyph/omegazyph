@@ -3,9 +3,12 @@ BruteForce Attack on Caesar Cipher
 by Wayne Stock
 Created 2024-01-06
 modified 2024-02-03
-this will run through the keys to decode the message
+This program will run through the keys to find the key and decode the message.
 '''
+
+# User instructions
 print("\nThis Brute Force will only find the key\nuse only one word in the message!\nor find the one you like\n")
+
 # Define the alphabet as a constant
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
