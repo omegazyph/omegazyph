@@ -48,7 +48,7 @@ def decode():
         if text in ALPHABET:
             # If the character is in the alphabet, apply the Caesar cipher
             char = ALPHABET.find(text)
-            outgoing_message += ALPHABET[(char - key) % 26]
+            outgoing_message += ALPHABET[(char + key) % 26]
         else:
             # If the character is not in the alphabet, leave it unchanged
             outgoing_message += text
