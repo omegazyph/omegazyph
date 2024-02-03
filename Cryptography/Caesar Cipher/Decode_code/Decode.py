@@ -7,7 +7,7 @@ Created 2024-01-06
 modified 2024-02-02
 This program decodes a message from a file using the Caesar cipher and puts it in a new file.
 '''
-print("\nWelcome to Wayne\'s Caesar Cipher!!!\n")
+print("\nWelcome to Wayne\'s Decode Caesar Cipher!!!\n")
 
 
 # to open a file with the meassage to read
@@ -25,7 +25,7 @@ def decode():
     while True:
         try:
             # Get the key from user input and convert it to an integer
-            key = int(input("Enter the encryption key for encoding: "))
+            key = int(input("Enter the Decryption key for decoding: "))
             
             # Check if the key is within a reasonable range (1 to 25)
             if 1 <= key <= 25:
