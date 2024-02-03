@@ -4,10 +4,10 @@
 Vigenere Cipher
 author Wayne Stock
 created 2024-02-03
-this program will in encode a file using Vigenere Cipher into another file
+this program will encode a file using Vigenere Cipher into another file
 '''
 
-print("Warning make sure your file is in the directory!!!!!")
+print("\nWarning: Make sure your file is in the directory!")
 
 # ALPHABET is a constant representing the alphabet for encryption and decryption
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
@@ -45,20 +45,16 @@ class UserInput:
     # Get user input for the message and keyword
     @staticmethod
     def get_file_contents():
-        # Prompt the user for the file name
+        # Prompt the user for the filename or file path
         # Set the permanent path
         permanent_path = "Cryptography/Vigenere Cipher/Vigenere Cipher Encode/"
 
-        # Get user input for the filename
-        file_name = input("Enter the filename: ")
+        # Get user input for the filename or file path
+        file_name = input("Enter the filename or file path: ")
 
-        # Combine the permanent path and the entered filename
-        full_path = f"{permanent_path}{file_name}"  # Adjust the path separator based on your operating system
-
-        
         try:
             # Open the file in read mode
-            with open(full_path, 'r') as file:
+            with open(file_name, 'r') as file:
                 # Read the contents of the file
                 file_contents = file.read()
 
