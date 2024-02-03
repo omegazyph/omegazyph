@@ -65,6 +65,8 @@ class UserInput:
             except FileNotFoundError:
                 print(f"File '{file_name}' not found.")
             
+            except PermissionError:
+                print(f"Permission error: Unable to read file '{file_name}'.")
 
             except Exception as e:
                 print(f"An error occurred: {e}")
