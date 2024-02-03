@@ -59,7 +59,7 @@ class UserInput:
                 # Do something with the file contents (e.g., print them)
                 print("Contents of the file:")
                 print(file_contents)
-                break  # Exit the loop after successfully reading the file
+                return file_contents
 
 
             except FileNotFoundError:
