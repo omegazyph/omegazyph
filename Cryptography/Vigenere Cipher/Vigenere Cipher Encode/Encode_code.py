@@ -52,7 +52,7 @@ class UserInput:
 
             try:
                 # Open the file in read mode
-                with open(file_name, 'r') as file:
+                with open(file_name, 'r', encoding='utf-8') as file:
                     # Read the contents of the file
                     file_contents = file.read()
 
