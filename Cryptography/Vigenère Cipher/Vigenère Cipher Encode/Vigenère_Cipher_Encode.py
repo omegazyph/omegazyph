@@ -2,7 +2,7 @@
 
 
 
-ALPLABET = 'abcdefghijklmnopqrstuvwxyz'
+ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 def vigenere_decode(message, keyword):
   keyword_phrase = ""
@@ -11,7 +11,7 @@ def vigenere_decode(message, keyword):
   for character in message:
     if keyword_index >= len(keyword):
       keyword_index = 0
-    if character in ALPLABET:
+    if character in ALPHABET:
       keyword_phrase += keyword[keyword_index]
       keyword_index += 1
     else:
@@ -20,10 +20,10 @@ def vigenere_decode(message, keyword):
   encoded_message = ""
 
   for i in range(len(message)):
-    if message[i] in ALPLABET:
-      old_character_index = ALPLABET.find(message[i])
-      offset_index = ALPLABET.find(keyword_phrase[i])
-      new_character = ALPLABET[(old_character_index - offset_index) % 26]
+    if message[i] in ALPHABET:
+      old_character_index = ALPHABET.find(message[i])
+      offset_index = ALPHABET.find(keyword_phrase[i])
+      new_character = ALPHABET[(old_character_index - offset_index) % 26]
       encoded_message += new_character
     else:
       encoded_message += message[i]
