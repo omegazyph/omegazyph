@@ -10,7 +10,7 @@ This program encodes a message from a file using the Caesar cipher and puts it i
 
 
 # to open a file with the meassage
-with open('plain_text.txt') as file1:
+with open('Cryptography/Caesar Cipher/plain_text.txt') as file1:
     content = file1.read()
 
 
