@@ -4,7 +4,7 @@
 Vigenere Cipher
 author Wayne Stock
 created 2024-02-03
-this program will in encode a file using Vigenere Cipher
+this program will in encode a file using Vigenere Cipher into another file
 '''
 
 # ALPHABET is a constant representing the alphabet for encryption and decryption
@@ -44,11 +44,19 @@ class UserInput:
     @staticmethod
     def get_file_contents():
         # Prompt the user for the file name
-        file_name = input("Enter the file name: ")
+        # Set the permanent path
+        permanent_path = "Cryptography/Vigenere Cipher/Vigenere Cipher Encode/"
 
+        # Get user input for the filename
+        file_name = input("Enter the filename: ")
+
+        # Combine the permanent path and the entered filename
+        full_path = f"{permanent_path}{file_name}"  # Adjust the path separator based on your operating system
+
+        
         try:
             # Open the file in read mode
-            with open(file_name, 'r') as file:
+            with open(full_path, 'r') as file:
                 # Read the contents of the file
                 file_contents = file.read()
 
