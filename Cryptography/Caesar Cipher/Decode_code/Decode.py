@@ -9,7 +9,7 @@ This program encodes a message from a file using the Caesar cipher and puts it i
 '''
 
 # to open a file with the meassage to read
-with open('Cryptography/Caesar Cipher/Encode_code/plain_text.txt') as file1:
+with open('Cryptography/Caesar Cipher/Decode_code/plain_text.txt') as file1:
     content = file1.read()
 
 
@@ -59,7 +59,7 @@ def encode():
     # Print the encoded message
     #print("\nYour coded message.\n" + outgoing_message)
     
-    with open('Cryptography/Caesar Cipher/Encode_code/Coded_text.txt', 'w') as file2:
+    with open('Cryptography/Caesar Cipher/decode_code/Coded_text.txt', 'w') as file2:
         file2.write(outgoing_message)
 
 # Call the function to execute the encoding process
