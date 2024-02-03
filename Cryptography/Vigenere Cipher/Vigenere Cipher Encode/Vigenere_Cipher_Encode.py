@@ -46,30 +46,28 @@ class UserInput:
     @staticmethod
     def get_file_contents():
         # Prompt the user for the filename or file path
-        # Set the permanent path
-        permanent_path = "Cryptography/Vigenere Cipher/Vigenere Cipher Encode/"
+        while True:
+            # Get user input for the filename or file path
+            file_name = input("Enter the filename or file path: ")
 
-        # Get user input for the filename or file path
-        file_name = input("Enter the filename or file path: ")
+            try:
+                # Open the file in read mode
+                with open(file_name, 'r') as file:
+                    # Read the contents of the file
+                    file_contents = file.read()
 
-        try:
-            # Open the file in read mode
-            with open(file_name, 'r') as file:
-                # Read the contents of the file
-                file_contents = file.read()
+                # Do something with the file contents (e.g., print them)
+                print("Contents of the file:")
+                print(file_contents)
+                return file_contents
 
-            # Do something with the file contents (e.g., print them)
-            print("Contents of the file:")
-            print(file_contents)
-            return file_contents
+            except FileNotFoundError:
+                print(f"File '{file_name}' not found.")
+            
 
-        except FileNotFoundError:
-            print(f"File '{file_name}' not found.")
-            return None
-
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return None
+            except Exception as e:
+                print(f"An error occurred: {e}")
+            
 
 
 # Get user input for the keyword and use the file contents as the message
