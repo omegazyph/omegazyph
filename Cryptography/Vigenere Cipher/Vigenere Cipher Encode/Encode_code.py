@@ -75,7 +75,14 @@ class UserInput:
 file_contents = UserInput.get_file_contents()
 
 # Get user input for the keyword and use the file contents as the message
-vigenere_keyword = input("Enter your keyWord: ")
+while True:
+    vigenere_keyword = input("Enter your keyWord: ")
+    # Validate that the keyword contains only valid characters
+    if all(char.isalpha() and char.islower() for char in vigenere_keyword):
+        break
+    else:
+        print("Invalid characters in the keyword. Please use only lowercase letters.")
+
 
 if file_contents:
     # Display the decoded message
