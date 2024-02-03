@@ -73,6 +73,7 @@ file_contents = UserInput.get_file_contents()
 
 # Get user input for the keyword and use the file contents as the message
 vigenere_keyword = input("Enter your keyWord: ")
+
 if file_contents:
     # Display the decoded message
     print("Here is your Decoded message:\n" + vigenere_decode(file_contents, vigenere_keyword))
