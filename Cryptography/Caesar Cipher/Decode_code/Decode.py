@@ -5,11 +5,11 @@ Caesar Cipher
 by Wayne Stock
 Created 2024-01-06
 modified 2024-02-02
-This program encodes a message from a file using the Caesar cipher and puts it in a new file.
+This program decodes a message from a file using the Caesar cipher and puts it in a new file.
 '''
 
 # to open a file with the meassage to read
-with open('Cryptography/Caesar Cipher/Decode_code/plain_text.txt') as file1:
+with open('Cryptography/Caesar Cipher/Decode_code/Decode.txt') as file1:
     content = file1.read()
 
 
@@ -59,7 +59,7 @@ def encode():
     # Print the encoded message
     #print("\nYour coded message.\n" + outgoing_message)
     
-    with open('Cryptography/Caesar Cipher/decode_code/Coded_text.txt', 'w') as file2:
+    with open('Cryptography/Caesar Cipher/decode_code/plain_text', 'w') as file2:
         file2.write(outgoing_message)
 
 # Call the function to execute the encoding process
