@@ -18,9 +18,9 @@ with open('Cryptography/Caesar Cipher/Decode_code/Decode.txt') as file1:
 # Define the alphabet as a constant
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
-def encode():
+def decode():
     """
-    Encodes a message using the Caesar cipher.
+    Decodes a message using the Caesar cipher.
     """
     while True:
         try:
@@ -60,4 +60,4 @@ def encode():
         file2.write(outgoing_message)
 
 # Call the function to execute the encoding process
-encode()
+decode()
