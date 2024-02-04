@@ -94,5 +94,9 @@ while True:
         print("Invalid characters in the keyword. Please use only lowercase letters.")
 
 if file_contents:
+    '''
     # Display the decoded message
     print("Here is your Decoded message:\n" + vigenere_decode(file_contents, vigenere_keyword))
+    '''
+    with open('output.txt', 'w',encoding='utf-8') as file:
+        file.write(vigenere_decode(file_contents, vigenere_keyword))
