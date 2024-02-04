@@ -98,5 +98,19 @@ if file_contents:
     # Display the decoded message
     print("Here is your Decoded message:\n" + vigenere_decode(file_contents, vigenere_keyword))
     '''
-    with open('output.txt', 'w',encoding='utf-8') as file:
+   # Get user input for the file name
+    user_input = input("Enter the filename or press Enter for the default name: ")
+
+    # Check if the user provided a file name
+    if user_input:
+        file_name = user_input
+    else:
+        # Use a default name if no input is provided
+        file_name = "default_filename.txt"
+
+    # Now you can use the 'file_name' variable in your code
+    print(f"Using file name: {file_name}")
+
+    # Open the file in write mode ('w')
+    with open(file_name, 'w', encoding='utf-8') as file:
         file.write(vigenere_decode(file_contents, vigenere_keyword))
