@@ -7,22 +7,22 @@ Created: 2024-02-03
 This program encodes a file using Vigenere Cipher into another file.
 '''
 
+# Warning message
 print("\nWarning: Make sure your file is in the directory!")
 
 # ALPHABET is a constant representing the alphabet for encryption and decryption
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
-
-def vigenere_decode(message, keyword):
+def vigenere_encode(message, keyword):
     """
-    Decrypt the message using the Vigenere Cipher.
+    Encrypt the message using the Vigenere Cipher.
 
     Args:
-    - message (str): The message to be decoded.
-    - keyword (str): The keyword used for decryption.
+    - message (str): The message to be encrypted.
+    - keyword (str): The keyword used for encryption.
 
     Returns:
-    - str: The decoded message.
+    - str: The encrypted message.
     """
     keyword_phrase = ""
     keyword_index = 0
@@ -38,18 +38,17 @@ def vigenere_decode(message, keyword):
             keyword_phrase += character
 
     encoded_message = ""
-    # Decrypt the message using the Vigenere Cipher
+    # Encrypt the message using the Vigenere Cipher
     for i in range(len(message)):
         if message[i] in ALPHABET:
             old_character_index = ALPHABET.find(message[i])
             offset_index = ALPHABET.find(keyword_phrase[i])
-            new_character = ALPHABET[(old_character_index - offset_index) % 26]
+            new_character = ALPHABET[(old_character_index + offset_index) % 26]
             encoded_message += new_character
         else:
             encoded_message += message[i]
 
     return encoded_message
-
 
 class UserInput:
     @staticmethod
@@ -79,7 +78,6 @@ class UserInput:
 
             except Exception as e:
                 print(f"An error occurred: {e}")
-
 
 # Get file contents using the UserInput class
 file_contents = UserInput.get_file_contents()
@@ -113,4 +111,4 @@ if file_contents:
 
     # Open the file in write mode ('w')
     with open(file_name, 'w', encoding='utf-8') as file:
-        file.write(vigenere_decode(file_contents, vigenere_keyword))
+        file.write(vigenere_encode(file_contents, vigenere_keyword))
