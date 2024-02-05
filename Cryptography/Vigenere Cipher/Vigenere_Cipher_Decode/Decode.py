@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-
+'''
+Vigenere Cipher Decode
+by wayne stock
+created 2024-02-05
+this will decode the vigenere code from one file to another
+'''
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
