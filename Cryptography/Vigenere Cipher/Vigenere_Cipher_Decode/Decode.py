@@ -71,8 +71,19 @@ class UserInput:
 # Get file contents using the UserInput class
 file_contents = UserInput.get_file_contents()
 
-  
-#vigenere_message = input("Enter your message to Decode:\n")
-vigenere_keyword = input("Enter the KeyWord:\n")
 
-print("Here is the message:\n" + Main.vigenere_decode(file_contents, vigenere_keyword))
+class Key:
+  while True:
+    vigenere_keyword = input("Enter your keyWord: ")
+    # Validate that the keyword contains only valid characters
+    if all(char.isalpha() and char.islower() for char in vigenere_keyword):
+        break
+    else:
+        print("Invalid characters in the keyword. Please use only lowercase letters.")
+
+
+
+  #vigenere_message = input("Enter your message to Decode:\n")
+  #vigenere_keyword = input("Enter the KeyWord:\n")
+
+print("Here is the message:\n" + Main.vigenere_decode(file_contents, Key.vigenere_keyword))
