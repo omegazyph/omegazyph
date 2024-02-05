@@ -6,9 +6,10 @@ created 2024-02-05
 this will decode the vigenere code from one file to another
 '''
 
+
 ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 
-class main:
+class Main:
 
   def vigenere_decode(message, keyword):
     keyword_phrase = ""
@@ -36,8 +37,42 @@ class main:
     
     return decoded_message
 
-class UserInput:
-  vigenere_message = input("Enter your message to Decode:\n")
-  vigenere_keyword = input("Enter the KeyWord:\n")
 
-print("Here is the message:\n" + vigenere_decode(vigenere_message, vigenere_keyword))
+
+class UserInput:
+    @staticmethod
+    def get_file_contents():
+        """
+        Prompt the user for the filename or file path and read the file contents.
+
+        Returns:
+        - str: The contents of the file.
+        """
+        while True:
+            file_name = input("Enter the filename or file path: ")
+
+            try:
+                with open(file_name, 'r', encoding='utf-8') as file:
+                    file_contents = file.read()
+
+                print("Contents of the file:")
+                print(file_contents)
+                return file_contents
+
+            except FileNotFoundError:
+                print(f"File '{file_name}' not found.")
+
+            except PermissionError:
+                print(f"Permission error: Unable to read file '{file_name}'.")
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+
+# Get file contents using the UserInput class
+file_contents = UserInput.get_file_contents()
+
+  
+#vigenere_message = input("Enter your message to Decode:\n")
+vigenere_keyword = input("Enter the KeyWord:\n")
+
+print("Here is the message:\n" + Main.vigenere_decode(file_contents, vigenere_keyword))
