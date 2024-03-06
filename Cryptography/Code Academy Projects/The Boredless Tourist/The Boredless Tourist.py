@@ -3,3 +3,5 @@ destinations = ["Paris, France", "Shanghai, China", "Los Angeles, USA", "Sao Pau
 test_traveler = ['Erin Wilkes', 'Shanghai, China', ['historical site', 'art']]
 
 
+def get_distination_index(destination):
+    
