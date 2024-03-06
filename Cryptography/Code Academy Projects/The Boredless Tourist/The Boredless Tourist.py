@@ -8,3 +8,5 @@ def get_distination_index(destination):
   return destination_index
 
 print(get_distination_index("Los Angeles, USA"))    
+print(get_distination_index("Paris, France"))
+print(get_distination_index("Hyderabad,India"))
