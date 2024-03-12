@@ -30,7 +30,7 @@ Welcome to Blackjack! This is a terminal-based program that allows you to play t
 
 1. **Installation**: Clone or download the Blackjack repository to your local machine.
 2. **Dependencies**: Ensure you have Python installed on your system.
-3. **Launching the Game**: Navigate to the project directory and run the `blackjack.py` file in your terminal to start the game.
+3. **Launching the Game**: Navigate to the project directory and run the `python blackjack.py` file in your terminal to start the game.
 4. **Customization**: Follow on-screen prompts to adjust game settings according to your preferences before starting a new game.
 5. **Enjoy**: Have fun playing Blackjack in your terminal and test your skills against the dealer!
 
