@@ -22,9 +22,11 @@ class Employee:
   def getName(self):
     # Accesses the name variable
     return self.name
+'''
 
 bob = Employee("Bob", 36, "perishables")
 bob.working()
 
 jane = Employee("Jane", 18, "Deli")
 jane.working()
+'''
