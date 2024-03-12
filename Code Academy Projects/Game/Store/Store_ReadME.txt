@@ -3,4 +3,4 @@ inventory of food items
 
 you could then have a 
 shopper class
-that can purchase items fkorm the store
+that can purchase items from the store
