@@ -70,7 +70,16 @@ class Blackjack:
         return hand.get_value() > 21
 
     def play(self):
-        print("Welcome to Blackjack!")
+        title = """ 
+            ====================================================================
+            BBBBB   L       A      CCCC   K   K      JJJJJ   A     CCCC  K   K
+            B   B   L      A A    C       K  K         J    A A   C      K  K
+            BBBB    L     AAAAA   C       KKK          J   AAAAA  C      KKK
+            B   B   L     A   A   C       K  K    J    J   A   A  C      K  K
+            BBBBB   LLLL  A   A   CCCC    K   K    JJJJ    A   A   CCCC  K   K
+            ====================================================================
+            """
+        print(title)
 
         self.deal_initial_cards()
 
