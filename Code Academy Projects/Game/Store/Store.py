@@ -17,7 +17,7 @@ class Employee:
     self.department = department
 
   def working(self):
-    print("{name} is {age} working in {department}".format(name = self.name,age = self.age , department= self.department))
+    print("{name} is {age} working in {department}".format(name = self.namgite,age = self.age , department= self.department))
   
   def __repr__(self):
     return "I have {name} woking in {department} that is {age} years old".format(name = self.name, department = self.department, age = self.age)
@@ -55,7 +55,8 @@ class Shopper:
 
   def __repr__(self):
     return " The customer {name} is {age} and has id {id}.".format(name = self.name, age = self.age, id = self.id)
-#shopper info
+
+'''#shopper info
 richard = Shopper("Richard", 21, True)
 print(repr(richard))
 #richard.id_check()
@@ -63,3 +64,4 @@ print(repr(richard))
 mary = Shopper("Mary", 12, False)
 print(repr(mary))
 #mary.id_check()
+'''
