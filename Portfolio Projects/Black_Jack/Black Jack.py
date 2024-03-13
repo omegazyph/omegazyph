@@ -13,8 +13,14 @@ class Player:
         self.account = []
 
     def add_money(self):
-        add = int(input("{name} How much would you like to bring to the table:\n>> ".format(name = self.name)))
-        self.account.append(add)
+        choice = input("{name} would you like to add more money to the table:\n>> ".format(name = self.name).lower())
+        if choice == "yes":
+            add = int(input("{name} How much would you like to bring to the table:\n>> ".format(name = self.name)))
+            self.account.append(add)
+        else:
+            print("{name} Good Luck!".format(name = self.name))
+
+    
 
     def __repr__(self):
         return "{name} has {money} left on the table.".format(name = self.name, money = self.account)
