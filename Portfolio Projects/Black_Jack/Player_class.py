@@ -5,9 +5,7 @@
 # It is the game of 21 playing aginst the dealer
 ################################################
 
-class Black_jack:
-    def __init__():
-        pass
+import random
 
 
 class Player:
@@ -44,8 +42,11 @@ class Player:
     def __repr__(self):
         return "{name} has {money} left on the table.".format(name = self.name, money = self.account)
 
+
+
+
 #player info
-new_player = Player("Player_1", 0)
+new_player = Black_jack("Player_1", 0)
 new_player.add_money()
 new_player.betting()
 print(repr(new_player))
