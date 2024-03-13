@@ -1,5 +1,5 @@
 ###################################
-# BlackJack
+# BlackJack Player Class
 # By Wayne Stock
 # Started 2024-03-12
 # It is the game of 21 playing aginst the dealer
@@ -46,7 +46,7 @@ class Player:
 
 
 #player info
-new_player = Black_jack("Player_1", 0)
+new_player = Player("Player_1", 0)
 new_player.add_money()
 new_player.betting()
 print(repr(new_player))
