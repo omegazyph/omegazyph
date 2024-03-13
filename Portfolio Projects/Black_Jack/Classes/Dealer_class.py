@@ -1,3 +1,5 @@
+from Classes.Hand_class import *
+
 class Dealer:
     def __init__(self):
         self.hand = Hand()
