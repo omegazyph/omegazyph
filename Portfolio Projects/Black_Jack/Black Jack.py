@@ -5,31 +5,39 @@
 # It is the game of 21 playing aginst the dealer
 ################################################
 
+class Black_jack:
+    def __init__():
+        pass
+
 
 class Player:
     def __init__(self, input_name, input_bet):
         self.name = input_name
         self.bet = input_bet
-        self.account = []
+        self.account = 0
 
     def add_money(self):
         choice = input("{name} would you like to add more money to the table:\n>> ".format(name = self.name).lower())
         if choice == "yes":
             add = int(input("{name} How much would you like to bring to the table:\n>> ".format(name = self.name)))
-            self.account.append(add)
+            add += self.account
         else:
             print("{name} you need money to play".format(name = self.name))
 
     def betting(self):
         money = int(input("{name} How much would you like to Bet:\n>> ".format(name = self.name)))
+    
+
         game = int(input("choose a number 1 or 2:\n>> "))
         if game == 1: # will add money to the account
             print("YOU WIN")
-            self.account = [num + money for num in self.account]
+            add = money + money *2
+            self.account += add
             
-        else:
+        elif game == 2:
             print("Sorry you lose")
-            self.account = [num - money for num in self.account]
+            self.account -= money
+            
 
 
 
