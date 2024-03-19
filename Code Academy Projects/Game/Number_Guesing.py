@@ -12,7 +12,7 @@ class Number_Guesser:
       self.player_guesses[name] = -1
       
     # Update to choose a random number
-      self.secret_number = randint(1,11)
+      self.secret_number = randint(1,10)
 
 
 #####################################################
