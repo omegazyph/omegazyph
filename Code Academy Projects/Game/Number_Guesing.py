@@ -18,8 +18,8 @@ class Number_Guesser:
 #####################################################
   def add_player_guess(self, name, guess):
     # Fill in this method
-    for name in Number_Guesser():
-        print(name)
+    for name in self.player_guesses:
+      print(name,guess)
         
     
     
