@@ -18,8 +18,8 @@ class Number_Guesser:
 #####################################################
   def add_player_guess(self, name, guess):
     # Fill in this method
-    for name in self.player_guesses:
-      print(name,guess)
+    if name in self.player_guesses:
+      print(name," has guesed ",guess)
         
     
     
@@ -34,10 +34,13 @@ class Number_Guesser:
       else:
         print(player[0], "needs to guess!") 
 
+
 game1 = Number_Guesser(["Thuy", "Joe", "Diya"])
+
 game1.add_player_guess("Roger", 10)
 game1.add_player_guess("Diya", 8)
 game1.add_player_guess("Thuy", 1)
 game1.add_player_guess("Joe", 5)
+
 game1.print_guesses()
 game1.print_answer()
