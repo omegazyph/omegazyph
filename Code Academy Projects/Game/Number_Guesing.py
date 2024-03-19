@@ -1,5 +1,5 @@
 # Import random class
-import random
+from random import randint
 
 class Number_Guesser:
   
@@ -12,7 +12,7 @@ class Number_Guesser:
       self.player_guesses[name] = -1
       
     # Update to choose a random number
-      self.secret_number = -1
+      self.secret_number = randint(1,11)
 
 
 #####################################################
