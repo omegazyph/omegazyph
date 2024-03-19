@@ -8,7 +8,7 @@ def buy_items():
   
   return 0
 
-total = buy_iems(starting_money, starting_num_items, item_price)
+total = buy_items(starting_money, starting_num_items, item_price)
 print("You were able to buy " + str(total) + " items.")
   
 # For testing purposes
