@@ -19,7 +19,7 @@ class Number_Guesser:
     # Method to add player guesses
     if name in self.player_guesses:
       self.player_guesses[name] = guess  # Update the guess for the player
-      print(name," has guessed ",guess)
+
 ######################################################     
 
   def print_answer(self):
