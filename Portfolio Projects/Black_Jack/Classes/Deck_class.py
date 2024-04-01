@@ -22,3 +22,4 @@ class Deck:
     def deal_card(self):
         # Method to deal a card from the deck
         return self.cards.pop()  # Remove and return the last card from the list of cards
+    
