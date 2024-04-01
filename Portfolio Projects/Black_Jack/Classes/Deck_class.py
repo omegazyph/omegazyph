@@ -1,6 +1,6 @@
 import random
 from Classes.Card_class import *
-
+from Classes.Deck_class_ASII import *
 class Deck:
     def __init__(self):
         # Constructor method to initialize a Deck object
@@ -21,5 +21,7 @@ class Deck:
 
     def deal_card(self):
         # Method to deal a card from the deck
-        return self.cards.pop()  # Remove and return the last card from the list of cards
-    
+        if len(self.cards) > 0:
+            return self.cards.pop()  # Remove and return the last card from the list of cards
+        else:
+            return None
