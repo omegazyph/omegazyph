@@ -60,8 +60,9 @@ class Deck:
             return None
 
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, balance):
         self.name = name
+        self.balance = balance  # Initialize player's balance
         self.hand = Hand()
 
     def add_card_to_hand(self, card):
@@ -134,10 +135,20 @@ def dealer_turn(deck, dealer):
 # Function to start the blackjack game
 def blackjack_game():
     player_name = input("Enter your name: ")  # Prompt the player to enter their name
-    player = Player(player_name)  # Create a player object
+    player_balance = int(input("Enter your initial balance: "))  # Prompt the player to enter their initial balance
+    player = Player(player_name, player_balance)  # Create a player object
     dealer = Dealer()  # Create a dealer object
     deck = Deck()  # Create a deck object
     deck.shuffle()  # Shuffle the deck
+
+    # Betting
+    while True:
+        bet = int(input("Place your bet: "))  # Prompt the player to place a bet
+        if bet <= player.balance:
+            player.balance -= bet  # Deduct the bet amount from player's balance
+            break
+        else:
+            print("Insufficient balance. Please place a lower bet.")
 
     # Deal initial cards
     deal_initial_cards(deck, player, dealer)
@@ -159,11 +170,16 @@ def blackjack_game():
     dealer_score = dealer.get_hand_value()  # Get dealer's hand value
     print("\nGame over!")
     if player_score > dealer_score:  # Player wins
+        player.balance += bet * 2  # Player wins double the bet amount
         print(f"{player.name} wins with a hand value of {player_score}!")
     elif player_score < dealer_score:  # Dealer wins
         print(f"Dealer wins with a hand value of {dealer_score}.")
     else:  # It's a tie
+        player.balance += bet  # Return the bet amount to player
         print("It's a tie!")
+
+    # Display player's balance
+    print(f"{player.name}'s balance: {player.balance}")
 
 # Start the game
 blackjack_game()
