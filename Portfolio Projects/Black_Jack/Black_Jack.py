@@ -18,7 +18,7 @@ class Hand:
         for card in self.cards:
             if card.value.isdigit():
                 value += int(card.value)
-            elif card.value in ['Jack', 'Queen', 'King']:
+            elif card.value in ['J', 'Q', 'K']:
                 value += 10
             else:
                 num_aces += 1
