@@ -25,8 +25,8 @@ print(upgrade_info)
 
 #Update Exploit Database
 print("\nInstall and update Exploit Database")
-upgrade_info = run_command("sudo apt-get install exploitdb -y")
-print(upgrade_info)
+exploit_info = run_command("sudo apt-get install exploitdb -y")
+print(exploit_info)
 
 
 #Update Searchsploit
