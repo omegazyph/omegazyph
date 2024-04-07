@@ -34,6 +34,14 @@ print("\nUpgrading Searchsploit....")
 searchploit_info = run_command("sudo apt-get searchsploit -u")
 print(searchploit_info)
 
+#Update Nmap
+print("\nUpdateing nmap....")
+nmap_info = run_command("sudo nmap --script-updatedb")
+print(nmap_info)
+
+########################################################
+# Cleaning
+
 # Autoremove unused packages
 print("\nRemoving any obsolete packages and their configuration files...")
 autoremove_info = run_command("sudo apt-get autoremove --purge -y")
