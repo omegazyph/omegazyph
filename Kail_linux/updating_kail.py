@@ -31,8 +31,8 @@ print(upgrade_info)
 
 #Update Searchsploit
 print("\nUpgrading Searchsploit....")
-upgrade_info = run_command("sudo apt-get searchsploit -u")
-print(upgrade_info)
+searchploit_info = run_command("sudo apt-get searchsploit -u")
+print(searchploit_info)
 
 # Autoremove unused packages
 print("\nRemoving any obsolete packages and their configuration files...")
