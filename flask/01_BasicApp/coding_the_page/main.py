@@ -14,7 +14,7 @@ app = Flask(__name__)
 # Start a web page
 @app.route("/profile/<name>")
 def profile(name):
-    return render_template("profile.html", name=name)
+    return render_template("profile.html", name=name) # looks for profile.html in Templates
 
 
 # run the app
