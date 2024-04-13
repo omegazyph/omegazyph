@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags for character set and viewport -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title of the webpage -->
     <title>My Website</title>
+    <!-- Link to the external stylesheet -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css')}}">
 </head>
 <body>
-    <!-- Content of the webpage goes here -->
+    <!-- Content of the webpage -->
+    <!-- Displaying a greeting with a variable 'name' -->
     <h1>Hey There {{ name }}</h1>
 </body>
 </html>

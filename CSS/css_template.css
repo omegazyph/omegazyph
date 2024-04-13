@@ -1,6 +1,6 @@
 /* styles.css */
 
-/* Resetting default margin and padding for all elements */
+/* Resetting default margin, padding, and box-sizing for all elements */
 * {
     margin: 0;
     padding: 0;
@@ -9,38 +9,54 @@
 
 /* Setting styles for the body element */
 body {
+    /* Sets the font family for the entire document */
     font-family: Arial, sans-serif;
+    /* Sets the background color of the body */
     background-color: #f0f0f0;
+    /* Sets the default text color for the body */
     color: #333;
 }
 
 /* Styling the header */
 header {
+    /* Sets the background color of the header */
     background-color: #007bff;
+    /* Sets the text color of the header */
     color: #fff;
+    /* Adds padding to the header */
     padding: 10px;
+    /* Centers the text within the header */
     text-align: center;
 }
 
 /* Styling for main content area */
 main {
+    /* Adds padding around the main content area */
     padding: 20px;
 }
 
 /* Styling for links */
 a {
+    /* Sets the color of links */
     color: #007bff;
+    /* Removes underlines from links */
     text-decoration: none;
 }
 
+/* Styling for links when hovered over */
 a:hover {
+    /* Adds underline when links are hovered over */
     text-decoration: underline;
 }
 
 /* Styling for footer */
 footer {
+    /* Sets the background color of the footer */
     background-color: #333;
+    /* Sets the text color of the footer */
     color: #fff;
+    /* Adds padding to the footer */
     padding: 10px;
+    /* Centers the text within the footer */
     text-align: center;
 }
