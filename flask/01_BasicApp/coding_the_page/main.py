@@ -1,14 +1,20 @@
 #imports
-from flask import Flask
+from flask import Flask, render_template
+
+# new files 
+#static (files the never change like css)
+#Templates (for html files)
+
+
 
 # name of the app
 app = Flask(__name__)
 
 
 # Start a web page
-@app.route("/")
-def index():
-    return "Hompage"
+@app.route("/profile/<name>")
+def profile(name):
+    return render_template("profile.html", name=name)
 
 
 # run the app
