@@ -1,5 +1,6 @@
 import tkinter as tk  # Import the Tkinter module
 
+
 class StartingPage(tk.Tk):  # Define a class for the starting page, inheriting from Tkinter's Tk class
     def __init__(self):
         super().__init__()  # Initialize the parent class (Tk)
@@ -36,14 +37,22 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
         order.pack()
         #endregion
 
+        # region
+        def print_entry_text():
+            entry_text = order.get()  # Get the text from the entry field
+            print(entry_text)  # Print the text to the console
+
+        #endregion
+
+
 
         # region Buttons
         # Create a button widget
         self.back_button = tk.Button(self, text="Back to Starting Page", command=self.open_starting_page)
         self.back_button.pack(side="left")  # Pack the button widget into the window
         
-        self.enter_button = tk.Button(self, text="Enter Your Info", command=self.open_starting_page) 
-        self.enter_button.pack(side="right")  # Pack the button widget into the window
+        self.submit_button = tk.Button(self, text="Submit", command=print_entry_text) 
+        self.submit_button.pack(side="right")  # Pack the button widget into the window
         # endregion
 
     def open_starting_page(self):  # Define a method to open the starting page
