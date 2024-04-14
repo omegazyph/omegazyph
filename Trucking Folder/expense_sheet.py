@@ -1,5 +1,5 @@
 import tkinter as tk  # Import the Tkinter module
-
+from tkinter import messagebox
 
 class StartingPage(tk.Tk):  # Define a class for the starting page, inheriting from Tkinter's Tk class
     def __init__(self):
@@ -31,17 +31,26 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
         self.label.pack(pady=30)  # Pack the label widget into the window with some padding
         #endregion
 
+
+
         #region Entry Fields
-        order = tk.Entry(self)
-        order.insert(0, "Order# ")  # Set the initial value of the entry field
+        order = tk.Entry(self) #Order number 
+        order.insert(0, "Order#")  # Set the initial value of the entry field
         order.pack()
         #endregion
 
-        # region
-        def print_entry_text():
-            entry_text = order.get()  # Get the text from the entry field
-            print(entry_text)  # Print the text to the console
 
+
+        # region print text and alert
+        def print_entry_text():
+            order_text = order.get()  # Get the text from the entry field
+            if order_text == 'Order#' or order_text == "":
+                show_alert()
+            else:
+                print(order_text)  # Print the text to the console
+        
+        def show_alert():
+            messagebox.showinfo("Alert", "Order number can not be empty")
         #endregion
 
 
@@ -55,9 +64,13 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
         self.submit_button.pack(side="right")  # Pack the button widget into the window
         # endregion
 
+
+
     def open_starting_page(self):  # Define a method to open the starting page
         self.destroy()  # Close the current window
         StartingPage().mainloop()  # Create an instance of the StartingPage class and run its event loop
+
+
 
 if __name__ == "__main__":  # Check if the script is being run directly
     app = StartingPage()  # Create an instance of the StartingPage class
