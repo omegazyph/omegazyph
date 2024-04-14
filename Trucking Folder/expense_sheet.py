@@ -24,14 +24,25 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
         self.title("Next Page")  # Set the title of the window
         self.geometry("400x300")  # Set the size of the window
 
-        self.label = tk.Label(self, text="This is the Next Page", font=("Helvetica", 20))  # Create a label widget
+        #region Labals
+        # Create a label widget
+        self.label = tk.Label(self, text="Enter your Info", font=("Helvetica", 20))
         self.label.pack(pady=30)  # Pack the label widget into the window with some padding
-        
+        #endregion
+
+        #region Entry Fields
+        order = tk.Entry(self)
+        order.insert(0, "Order# ")  # Set the initial value of the entry field
+        order.pack()
+        #endregion
+
+
         # region Buttons
-        self.back_button = tk.Button(self, text="Back to Starting Page", command=self.open_starting_page)  # Create a button widget
+        # Create a button widget
+        self.back_button = tk.Button(self, text="Back to Starting Page", command=self.open_starting_page)
         self.back_button.pack(side="left")  # Pack the button widget into the window
         
-        self.enter_button = tk.Button(self, text="Enter Your Info", command=self.open_starting_page)  # Create a button widget
+        self.enter_button = tk.Button(self, text="Enter Your Info", command=self.open_starting_page) 
         self.enter_button.pack(side="right")  # Pack the button widget into the window
         # endregion
 
