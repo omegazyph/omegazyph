@@ -4,10 +4,10 @@ class StartingPage(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("Welcome to Tkinter App")
+        self.title("Welcome to Trucker Expense App")
         self.geometry("400x300")
 
-        self.label = tk.Label(self, text="Welcome to Tkinter App", font=("Helvetica", 20))
+        self.label = tk.Label(self, text="Welcome to Trucker Expense App", font=("Helvetica", 20))
         self.label.pack(pady=30)
 
         self.button = tk.Button(self, text="Next Page", command=self.open_next_page)
