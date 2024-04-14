@@ -25,13 +25,11 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
         self.title("Next Page")  # Set the title of the window
         self.geometry("400x300")  # Set the size of the window
 
-        #region Labals
+        #region Labels
         # Create a label widget
         self.label = tk.Label(self, text="Enter your Info", font=("Helvetica", 20))
         self.label.pack(pady=30)  # Pack the label widget into the window with some padding
         #endregion
-
-
 
         #region Entry Fields
         order = tk.Entry(self) #Order number 
@@ -39,9 +37,7 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
         order.pack()
         #endregion
 
-
-
-        # region print text and alert
+        # region Print Text and Alert
         def print_entry_text():
             order_text = order.get()  # Get the text from the entry field
             if order_text == 'Order#' or order_text == "":
@@ -53,8 +49,6 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
             messagebox.showinfo("Alert", "Order number can not be empty")
         #endregion
 
-
-
         # region Buttons
         # Create a button widget
         self.back_button = tk.Button(self, text="Back to Starting Page", command=self.open_starting_page)
@@ -64,13 +58,9 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
         self.submit_button.pack(side="right")  # Pack the button widget into the window
         # endregion
 
-
-
     def open_starting_page(self):  # Define a method to open the starting page
         self.destroy()  # Close the current window
         StartingPage().mainloop()  # Create an instance of the StartingPage class and run its event loop
-
-
 
 if __name__ == "__main__":  # Check if the script is being run directly
     app = StartingPage()  # Create an instance of the StartingPage class
