@@ -5,7 +5,7 @@ class StartingPage(tk.Tk):
         super().__init__()
 
         self.title("Welcome to Trucker Expense App")
-        self.geometry("400x300")
+        self.geometry("500x300")
 
         self.label = tk.Label(self, text="Welcome to Trucker Expense App", font=("Helvetica", 20))
         self.label.pack(pady=30)
