@@ -26,9 +26,14 @@ class NextPage(tk.Tk):  # Define a class for the next page, inheriting from Tkin
 
         self.label = tk.Label(self, text="This is the Next Page", font=("Helvetica", 20))  # Create a label widget
         self.label.pack(pady=30)  # Pack the label widget into the window with some padding
-
-        self.button = tk.Button(self, text="Back to Starting Page", command=self.open_starting_page)  # Create a button widget
-        self.button.pack()  # Pack the button widget into the window
+        
+        # region Buttons
+        self.back_button = tk.Button(self, text="Back to Starting Page", command=self.open_starting_page)  # Create a button widget
+        self.back_button.pack(side="left")  # Pack the button widget into the window
+        
+        self.enter_button = tk.Button(self, text="Enter Your Info", command=self.open_starting_page)  # Create a button widget
+        self.enter_button.pack(side="right")  # Pack the button widget into the window
+        # endregion
 
     def open_starting_page(self):  # Define a method to open the starting page
         self.destroy()  # Close the current window
