@@ -13,15 +13,18 @@ class Password_manager:
                 key_file.write(key)
                 print ('wrote a new Key')
         except Exception as e:
-            print("Error: ", e )
+            print("Error:",e)
 
 
     # Function to load the key from the file
     def load_key():
-        file = open("key.key", 'rb')
-        key = file.read()
-        file.close()
-        return key 
+        try:
+            file = open("key.key", 'rb')
+            key = file.read()
+            file.close()
+            return key
+        except:
+            print("Can't find the key: ") 
 
     
 
