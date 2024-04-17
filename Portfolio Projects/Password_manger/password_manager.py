@@ -26,17 +26,18 @@ class Password_manager:
             return key
         except:
             print("Can't find the key: ") 
-            
+
     # Asking for the master password and loading the key
-    master_pwd = input("What is the master password? :> ")
-    if master_pwd == "hello":
-        key = load_key()
-        fer = Fernet(key)
-    else:
-        print("Wrong Password!")
-        quit()
-        #optional
-        #print("get the Fuck out")
+    def master_passwd():
+        master_pwd = input("What is the master password? :> ")
+        if master_pwd == "hello":
+            key = Password_manager.load_key()
+            fer = Password_manager.Fernet(key)
+        else:
+            print("Wrong Password!")
+            quit()
+            #optional
+            #print("get the Fuck out")
 
     
 
@@ -69,6 +70,8 @@ class Password_manager:
                 f.write(site + '|' + name + '|' + Password_manager.fer.encrypt(pwd.encode()).decode() + "\n")
         except Exception as e:
             print('Error:',e)
+
+Password_manager.master_passwd()
 
 # Main loop for interacting with the user
 while True:
