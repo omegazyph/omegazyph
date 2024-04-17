@@ -1,57 +1,77 @@
 from cryptography.fernet import Fernet
 
-print("do not use | ")
+class PasswordManager:
+    def __init__(self):
+        self.key_file = "key.key"
+        self.passwords_file = "passwords.txt"
+        self.fer = None
 
-class Password_Manager:
-    # Function to generate and write a new key to a file
-    def write_key():
+    def write_key(self):
+        """Generate and write a new key to a file."""
         key = Fernet.generate_key()
-        with open("key.key", 'wb') as key_file:
+        with open(self.key_file, 'wb') as key_file:
             key_file.write(key)
-            print ('wrote a new new')
+        print("Generated and wrote a new key")
 
+    def load_key(self):
+        """Load the encryption key from the file."""
+        try:
+            with open(self.key_file, 'rb') as key_file:
+                key = key_file.read()
+            return key
+        except FileNotFoundError:
+            print("Key file not found.")
+            return None
+        except Exception as e:
+            print("Error loading key:", e)
+            return None
 
-    # Function to load the key from the file
-    def load_key():
-        file = open("key.key", 'rb')
-        key = file.read()
-        file.close()
-        return key 
+    def initialize_fernet(self):
+        """Initialize the Fernet instance with the loaded key."""
+        key = self.load_key()
+        if key:
+            self.fer = Fernet(key)
+            return True
+        return False
 
-    # Asking for the master password and loading the key
-    master_pwd = input("What is the master password? :> ")
-    key = load_key()
-    fer = Fernet(key)
+    def view_passwords(self):
+        """View existing passwords."""
+        try:
+            with open(self.passwords_file, 'r') as f:
+                for line in f:
+                    user, passw = line.strip().split("|")
+                    print("User:", user, "| Password:", self.fer.decrypt(passw.encode()).decode())
+        except FileNotFoundError:
+            print("Passwords file not found.")
+        except Exception as e:
+            print("Error viewing passwords:", e)
 
-    # Function to create a password (not implemented)
-    def create_pwd():
-        pass
+    def add_password(self):
+        """Add a new password."""
+        name = input("Account Name: ")
+        pwd = input("Password: ")
+        encrypted_pwd = self.fer.encrypt(pwd.encode()).decode()
+        with open(self.passwords_file, 'a') as f:
+            f.write(name + '|' + encrypted_pwd + "\n")
+        print("Password added successfully.")
 
-    # Function to view existing passwords
-    def view():
-        with open('passwords.txt', 'r') as f:
-            for line in f.readlines():
-                data = line.rstrip()
-                user, passw = data.split("|")
-                print("User:",user, "| Password:", fer.decrypt(passw.encode()).decode())
+def main():
+    # Initialize PasswordManager instance
+    password_manager = PasswordManager()
+    password_manager.initialize_fernet()
 
-    # Function to add a new password
-    def add():
-        name = input("Account Name :> ")
-        pwd = input("Password :> ")
-        with open('passwords.txt', 'a') as f:
-            f.write(name + '|' + fer.encrypt(pwd.encode()).decode() + "\n")
+    # Main loop for interacting with the user
+    while True:
+        mode = input("Would you like to add a new password or view existing ones (view, add), press Q to Quit: ").lower()
+        if mode == "q":
+            break
 
-# Main loop for interacting with the user
-while True:
-    mode = input("Would you like to add a new password or view existing ones (view, add), press Q to Quit:> ").lower()
-    if mode == "q":
-        break
+        if mode == "view":
+            password_manager.view_passwords()
+        elif mode == "add":
+            password_manager.add_password()
+        else:
+            print("Invalid selection")
 
-    if mode == "view":
-        Password_Manager.view()
-    elif mode == "add":
-        Password_Manager.add()
-    else:
-        print("Invalid selection")
-        continue
+if __name__ == "__main__":
+    main()
