@@ -1,7 +1,12 @@
 Programes i'm working on:
-    quiz_game.py
-    number_quesser.py
-    rock_paper_scissors.py 
-        need to fix it the user and the computer picks the smae thing
-    choose_your_own_adventure.py
-    password_manager.py
+    1: quiz_game.py
+
+    2: number_quesser.py
+
+    3: rock_paper_scissors.py 
+            need to fix it the user and the computer picks the smae thing
+    
+    4: choose_your_own_adventure.py
+    
+    5: password_manager.py
+            thinking about adding a password make
