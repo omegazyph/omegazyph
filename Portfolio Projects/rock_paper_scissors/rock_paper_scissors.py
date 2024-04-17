@@ -19,7 +19,7 @@ while True:
     print("Computer picked", computer_pick + ".")
 
     if user_input == "rock" and computer_pick == "scissors":
-        print("Yot win!")
+        print("You win!")
         user_wins += 1
     
     elif user_input == "paper" and computer_pick == "rock":
