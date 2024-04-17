@@ -1,35 +1,34 @@
 from cryptography.fernet import Fernet
 
-print("do not use | ")
+print("do not use | ")  # Print a warning message
 
 # Function to generate and write a new key to a file
-
 def write_key():
+    """Generates a new encryption key and writes it to a file."""
     key = Fernet.generate_key()
     with open("key.key", 'wb') as key_file:
         key_file.write(key)
-        print ('wrote a new key')
-
+        print('Wrote a new key')
 
 # Function to load the key from the file
 def load_key():
+    """Loads the encryption key from a file."""
     try:
         file = open("key.key", 'rb')
         key = file.read()
         file.close()
         return key 
-    
     except FileNotFoundError:
-        print("key file not found")
-        choice = input("would you like to create a key? (yes/no) <: ")
+        print("Key file not found")
+        # Prompt user to create a new key if it doesn't exist
+        choice = input("Would you like to create a key? (yes/no) <: ")
         if choice == "yes":
             write_key()
-            print(" you need to retart the program ")
+            print("You need to restart the program")
             quit()
         else:
-            print("if you already have a key, put it in the current working dirtory")
+            print("If you already have a key, put it in the current working directory")
             quit()
-
 
 # Asking for the master password and loading the key
 master_pwd = input("What is the master password? :> ")
@@ -38,36 +37,39 @@ fer = Fernet(key)
 
 # Function to create a password (not implemented)
 def create_pwd():
+    """Function to create a password (not implemented yet)."""
     pass
 
 # Function to view existing passwords
 def view():
+    """Function to view existing passwords."""
     try:
         with open('passwords.txt', 'r') as f:
             for line in f.readlines():
                 data = line.rstrip()
                 user, passw = data.split("|")
-                print("User:",user, "| Password:", fer.decrypt(passw.encode()).decode())
+                print("User:", user, "| Password:", fer.decrypt(passw.encode()).decode())
     except FileNotFoundError:
-        choice = input("can't find the password file, would you like to start one? (yes/no) <:").lower()
+        # If password file doesn't exist, prompt user to create one
+        choice = input("Can't find the password file. Would you like to create one? (yes/no) <:").lower()
         if choice == "yes":
-            print("Please enter:\n")
+            print("Please enter:")
             add()
         elif choice == "no":
-            print("I need to create the file so i can store the passwords")
-            print("If you have a file already please put the file in the working dirertry")
+            print("I need to create the file so I can store the passwords.")
+            print("If you have a file already, please put the file in the working directory.")
             quit()
         else:
             print("Invalid selection")
+            quit()
 
 # Function to add a new password
 def add():
-    name = input("Account Name :> ")
-    pwd = input("Password :> ")
-
+    """Function to add a new password."""
+    name = input("Account Name: ")
+    pwd = input("Password: ")
     with open('passwords.txt', 'a') as f:
         f.write(name + '|' + fer.encrypt(pwd.encode()).decode() + "\n")
-
 
 # Main loop for interacting with the user
 while True:
