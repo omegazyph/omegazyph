@@ -2,6 +2,13 @@ from cryptography.fernet import Fernet
 
 print("do not use | ")  # Print a warning message
 
+def bcolor():
+    pass
+
+def banner():
+    pass
+
+
 # Function to generate and write a new key to a file
 def write_key():
     """Generates a new encryption key and writes it to a file."""
