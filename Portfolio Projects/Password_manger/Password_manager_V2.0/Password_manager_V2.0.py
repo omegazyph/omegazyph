@@ -58,7 +58,7 @@ def view():
             print("If you have a file already please put the file in the working dirertry")
             quit()
         else:
-            print("Invaild Entery")
+            print("Invalid selection")
 
 # Function to add a new password
 def add():
