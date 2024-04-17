@@ -8,5 +8,9 @@ Programes i'm working on:
     
     4: choose_your_own_adventure.py
     
-    5: password_manager.py
-            thinking about adding a password make
+    5: password_manager.py  Working ON now
+            thinking about adding a password maker
+            put the file in classes
+            get the password file an the key file in the same folder
+            block the user form using |
+            need to fix the master password

@@ -2,46 +2,48 @@ from cryptography.fernet import Fernet
 
 print("do not use | ")
 
-# Function to generate and write a new key to a file
-''' run if need a Key
-def write_key():
-    key = Fernet.generate_key()
-    with open("key.key", 'wb') as key_file:
-        key_file.write(key)
-        print ('wrote a new new')
-write_key()'''
+class Password_manager():
 
-# Function to load the key from the file
-def load_key():
-    file = open("key.key", 'rb')
-    key = file.read()
-    file.close()
-    return key 
+    # Function to generate and write a new key to a file
+    # don't call this function until you need a Key
+    def write_key():
+        key = Fernet.generate_key()
+        with open("key.key", 'wb') as key_file:
+            key_file.write(key)
+            print ('wrote a new new')
 
-# Asking for the master password and loading the key
-master_pwd = input("What is the master password? :> ")
-key = load_key()
-fer = Fernet(key)
 
-# Function to create a password (not implemented)
-def create_pwd():
-    pass
+    # Function to load the key from the file
+    def load_key():
+        file = open("key.key", 'rb')
+        key = file.read()
+        file.close()
+        return key 
 
-# Function to view existing passwords
-def view():
-    with open('passwords.txt', 'r') as f:
-        for line in f.readlines():
-            data = line.rstrip()
-            user, passw = data.split("|")
-            print("User:",user, "| Password:", fer.decrypt(passw.encode()).decode())
+    # Asking for the master password and loading the key
+    master_pwd = input("What is the master password? :> ")
+    key = load_key()
+    fer = Fernet(key)
 
-# Function to add a new password
-def add():
-    name = input("Account Name :> ")
-    pwd = input("Password :> ")
+    # Function to create a password (not implemented)
+    def create_pwd():
+        pass
 
-    with open('passwords.txt', 'a') as f:
-        f.write(name + '|' + fer.encrypt(pwd.encode()).decode() + "\n")
+    # Function to view existing passwords
+    def view():
+        with open('passwords.txt', 'r') as f:
+            for line in f.readlines():
+                data = line.rstrip()
+                user, passw = data.split("|")
+                print("User:",user, "| Password:", fer.decrypt(passw.encode()).decode())
+
+    # Function to add a new password
+    def add():
+        name = input("Account Name :> ")
+        pwd = input("Password :> ")
+
+        with open('passwords.txt', 'a') as f:
+            f.write(name + '|' + fer.encrypt(pwd.encode()).decode() + "\n")
 
 # Main loop for interacting with the user
 while True:
@@ -50,9 +52,9 @@ while True:
         break
 
     if mode == "view":
-        view()
+        Password_manager.view()
     elif mode == "add":
-        add()
+        Password_manager.add()
     else:
-        print("Invalid mode")
+        print("Invalid selection")
         continue
