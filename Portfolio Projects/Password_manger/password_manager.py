@@ -1,3 +1,4 @@
+print("do not use | ")
 master_pwd = input("What is the master password? :> ")
 
 def create_pwd():
@@ -9,7 +10,7 @@ def view():
         for line in f.readlines():
             data = line.rstrip()
             user, passw = data.split("|")
-            
+
 def add():
     name = input("Account Name :> ")
     pwd = input("Password :> ")
