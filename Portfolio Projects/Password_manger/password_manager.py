@@ -30,24 +30,33 @@ class Password_manager:
 
     # Function to create a password (not implemented)
     def create_pwd():
-        pass
+        try:
+            pass
+        except:
+            pass
 
     # Function to view existing passwords
     def view():
-        with open('passwords.txt', 'r') as f:
-            for line in f.readlines():
-                data = line.rstrip()
-                user, passw = data.split("|")
-                print("User:",user, "| Password:", Password_manager.fer.decrypt(passw.encode()).decode())
+        try:
+            with open('passwords.txt', 'r') as f:
+                for line in f.readlines():
+                    data = line.rstrip()
+                    user, passw = data.split("|")
+                    print("User:",user, "| Password:", Password_manager.fer.decrypt(passw.encode()).decode())
+        except Exception as e:
+            print("Error:",e)
 
     # Function to add a new password
     def add():
-        name = input("Account Name :> ")
-        pwd = input("Password :> ")
+        try:
+            name = input("Account Name :> ")
+            pwd = input("Password :> ")
 
-        with open('passwords.txt', 'a') as f:
-            f.write(name + '|' + Password_manager.fer.encrypt(pwd.encode()).decode() + "\n")
-
+            with open('passwords.txt', 'a') as f:
+                f.write(name + '|' + Password_manager.fer.encrypt(pwd.encode()).decode() + "\n")
+        except Exception as e:
+            print('Error:',e)
+            
 # Main loop for interacting with the user
 while True:
     # Asking for the master password and loading the key
