@@ -42,11 +42,23 @@ def create_pwd():
 
 # Function to view existing passwords
 def view():
-    with open('passwords.txt', 'r') as f:
-        for line in f.readlines():
-            data = line.rstrip()
-            user, passw = data.split("|")
-            print("User:",user, "| Password:", fer.decrypt(passw.encode()).decode())
+    try:
+        with open('passwords.txt', 'r') as f:
+            for line in f.readlines():
+                data = line.rstrip()
+                user, passw = data.split("|")
+                print("User:",user, "| Password:", fer.decrypt(passw.encode()).decode())
+    except FileNotFoundError:
+        choice = input("can't find the password file, would you like to start one? (yes/no) <:").lower()
+        if choice == "yes":
+            print("Please enter:\n")
+            add()
+        elif choice == "no":
+            print("I need to create the file so i can store the passwords")
+            print("If you have a file already please put the file in the working dirertry")
+            quit()
+        else:
+            print("Invaild Entery")
 
 # Function to add a new password
 def add():
