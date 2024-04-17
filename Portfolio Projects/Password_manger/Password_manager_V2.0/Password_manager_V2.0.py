@@ -3,13 +3,13 @@ from cryptography.fernet import Fernet
 print("do not use | ")
 
 # Function to generate and write a new key to a file
-''' run if need a Key
+
 def write_key():
     key = Fernet.generate_key()
     with open("key.key", 'wb') as key_file:
         key_file.write(key)
         print ('wrote a new new')
-write_key()'''
+
 
 # Function to load the key from the file
 def load_key():
