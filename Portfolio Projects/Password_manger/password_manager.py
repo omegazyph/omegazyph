@@ -20,10 +20,7 @@ class Password_manager:
         file.close()
         return key 
 
-    # Asking for the master password and loading the key
-    master_pwd = input("What is the master password? :> ")
-    key = load_key()
-    fer = Fernet(key)
+    
 
     # Function to create a password (not implemented)
     def create_pwd():
@@ -35,7 +32,7 @@ class Password_manager:
             for line in f.readlines():
                 data = line.rstrip()
                 user, passw = data.split("|")
-                print("User:",user, "| Password:", fer.decrypt(passw.encode()).decode())
+                print("User:",user, "| Password:", Password_manager.fer.decrypt(passw.encode()).decode())
 
     # Function to add a new password
     def add():
@@ -43,10 +40,21 @@ class Password_manager:
         pwd = input("Password :> ")
 
         with open('passwords.txt', 'a') as f:
-            f.write(name + '|' + fer.encrypt(pwd.encode()).decode() + "\n")
+            f.write(name + '|' + Password_manager.fer.encrypt(pwd.encode()).decode() + "\n")
 
 # Main loop for interacting with the user
 while True:
+    # Asking for the master password and loading the key
+    master_pwd = input("What is the master password? :> ")
+    if master_pwd == "hello":
+        key = Password_manager.load_key()
+        fer = Fernet(key)
+    else:
+        print("Wrong Password! try again")
+        continue
+        #optional
+        #print("get the Fuck out")
+
     mode = input("Would you like to add a new password or view existing ones (view, add), press Q to Quit:> ").lower()
     if mode == "q":
         break
