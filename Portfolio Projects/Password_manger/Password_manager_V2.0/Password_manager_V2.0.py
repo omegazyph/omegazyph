@@ -18,14 +18,18 @@ def load_key():
         key = file.read()
         file.close()
         return key 
+    
     except FileNotFoundError:
         print("key file not found")
-        choice = input("would you like to create a key? <: ")
+        choice = input("would you like to create a key? (yes/no) <: ")
         if choice == "yes":
             write_key()
-            
-        else:
+            print(" you need to retart the program ")
             quit()
+        else:
+            print("if you already have a key, put it in the current working dirtory")
+            quit()
+
 
 # Asking for the master password and loading the key
 master_pwd = input("What is the master password? :> ")
