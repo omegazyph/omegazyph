@@ -2,8 +2,9 @@ from cryptography.fernet import Fernet
 
 print("do not use | ")
 
-class Password_manager:
 
+class Password_manager:
+    
     # Function to generate and write a new key to a file
     # don't call this function until you need a Key
     def write_key():
@@ -25,6 +26,17 @@ class Password_manager:
             return key
         except:
             print("Can't find the key: ") 
+            
+    # Asking for the master password and loading the key
+    master_pwd = input("What is the master password? :> ")
+    if master_pwd == "hello":
+        key = load_key()
+        fer = Fernet(key)
+    else:
+        print("Wrong Password!")
+        quit()
+        #optional
+        #print("get the Fuck out")
 
     
 
@@ -49,28 +61,17 @@ class Password_manager:
     # Function to add a new password
     def add():
         try:
-            name = input("Account Name :> ")
-            pwd = input("Password :> ")
+            site = input("What is the Site name <:")
+            name = input("User Name <: ")
+            pwd = input("Password <: ")
 
             with open('passwords.txt', 'a') as f:
-                f.write(name + '|' + Password_manager.fer.encrypt(pwd.encode()).decode() + "\n")
+                f.write(site + '|' + name + '|' + Password_manager.fer.encrypt(pwd.encode()).decode() + "\n")
         except Exception as e:
             print('Error:',e)
-            
+
 # Main loop for interacting with the user
 while True:
-    # Asking for the master password and loading the key
-    master_pwd = input("What is the master password? :> ")
-    if master_pwd == "hello":
-        key = Password_manager.load_key()
-        fer = Fernet(key)
-    else:
-        print("Wrong Password! try again")
-        continue
-        #optional
-        #print("get the Fuck out")
-
-    
     mode = input("Would you like to add a new password or view existing ones (view, add), press Q to Quit:> ").lower()
     if mode == "q":
         break
