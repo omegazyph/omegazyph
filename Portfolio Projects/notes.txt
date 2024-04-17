@@ -1,3 +1,5 @@
 Programes i'm working on:
 quiz_game.py
 number_quesser.py
+rock_paper_scissors.py 
+    need to fix it the user and the computer picks the smae thing
