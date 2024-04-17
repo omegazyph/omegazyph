@@ -20,6 +20,7 @@ class Password_Manager:
 
     # Asking for the master password and loading the key
     master_pwd = input("What is the master password? :> ")
+    # need to fix this at the end
     key = load_key()
     fer = Fernet(key)
 
