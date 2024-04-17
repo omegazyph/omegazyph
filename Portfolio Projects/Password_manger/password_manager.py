@@ -1,3 +1,5 @@
+from cryptography.fernet import Fernet
+
 print("do not use | ")
 master_pwd = input("What is the master password? :> ")
 
