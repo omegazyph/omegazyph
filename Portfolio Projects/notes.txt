@@ -13,4 +13,4 @@ Programes i'm working on:
             put the file in classes
             get the password file an the key file in the same folder
             block the user form using |
-            need to fix the master password
+            need to fix the master password to be more secure

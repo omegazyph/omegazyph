@@ -7,10 +7,13 @@ class Password_manager:
     # Function to generate and write a new key to a file
     # don't call this function until you need a Key
     def write_key():
-        key = Fernet.generate_key()
-        with open("key.key", 'wb') as key_file:
-            key_file.write(key)
-            print ('wrote a new new')
+        try:
+            key = Fernet.generate_key()
+            with open("key.key", 'wb') as key_file:
+                key_file.write(key)
+                print ('wrote a new Key')
+        except Exception as e:
+            print("Error: ", e )
 
 
     # Function to load the key from the file
@@ -55,6 +58,7 @@ while True:
         #optional
         #print("get the Fuck out")
 
+    
     mode = input("Would you like to add a new password or view existing ones (view, add), press Q to Quit:> ").lower()
     if mode == "q":
         break
