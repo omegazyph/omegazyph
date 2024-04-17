@@ -10,6 +10,7 @@ def view():
         for line in f.readlines():
             data = line.rstrip()
             user, passw = data.split("|")
+            print("User:",user, "| Password:", passw)
 
 def add():
     name = input("Account Name :> ")
