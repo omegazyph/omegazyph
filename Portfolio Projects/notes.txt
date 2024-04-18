@@ -12,6 +12,6 @@ Programes i'm working on:
             thinking about adding a password maker
             put the file in classes
             get the password file an the key file in the same folder
-            block the user form using |
-            need to fix the master password to be more secure
+          X block the user form using |
+          X need to fix the master password to be more secure
           X make a new password_manager_V2.0.py 

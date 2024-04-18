@@ -1,6 +1,5 @@
 from cryptography.fernet import Fernet
 
-print("do not use | ")  # Print a warning message
 
 def bcolor(color):
     colors = {
@@ -126,7 +125,13 @@ def view():
 def add():
     """Function to add a new password."""
     name = input(white_code + "Account Name: ")
+    if '|' in name:
+        print(red_code + "Please do not use '|' character in the account name.")
+        return   
     pwd = input(white_code + "Password: ")
+    if '|' in pwd:
+        print(red_code + "Please do not use '|' character in the account name.")
+        return
     with open('passwords.txt', 'a') as f:
         f.write(name + '|' + fer.encrypt(pwd.encode()).decode() + "\n")
 
