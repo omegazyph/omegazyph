@@ -37,10 +37,6 @@ A simple command-line password manager written in Python. This program allows us
 
 4. Follow the prompts to perform various actions such as adding passwords, viewing passwords, etc.
 
-## Screenshots
-
-(Optional: Add screenshots of your program in action)
-
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
