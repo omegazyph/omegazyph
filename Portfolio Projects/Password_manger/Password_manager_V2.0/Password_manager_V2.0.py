@@ -123,7 +123,6 @@ def view():
 
 # Function to add a new password
 def add():
-    """Function to add a new password."""
     name = input(white_code + "Account Name: ")
     if '|' in name:
         print(red_code + "Please do not use '|' character in the account name.")
