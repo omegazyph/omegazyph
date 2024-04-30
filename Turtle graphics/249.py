@@ -17,7 +17,7 @@ t.pensize(3)
 # Loop to draw the circles
 for i in range(200):
     # Loop to change colors after drawing each circle
-    for color in ("Deeppink","Lime","Red"):
+    for color in ("Deeppink","Lime","Red","Green","Yellow"):
         # Set the pen color to the current color in the loop
         t.color(color)
         # Draw a circle with radius decreasing as i increases
