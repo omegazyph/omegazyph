@@ -4,8 +4,7 @@ Screen = Tk()
 Screen.title("Mad Libs Generator")
 Screen.geometry('400x400')
 Screen.config(bg="Black")
-
-
+Label(text='Which Would you like',foreground='white', background='black').place(x=150, y=35)
 #creating buttons
 Story1Button = Button(Screen, 
                       text='A memorable day', 
@@ -34,19 +33,28 @@ def Story1(win):
  
     tl.geometry(newGeometry='500x550')
  
-    Label(tl, text='Story:',  wraplength=tl.winfo_width()).place(x=160, y=310)
-    Label(tl, text=text,wraplength=tl.winfo_width()).place(x=0, y=330)
+    Label(tl, 
+          text='Story:',  
+          wraplength=tl.winfo_width()).place(x=160, y=310)
+    
+    Label(tl, 
+          text=text,
+          wraplength=tl.winfo_width()).place(x=0, y=330)
+    
  
-  NewScreen = Toplevel(win, bg='yellow')
+  NewScreen = Toplevel(win, bg='black')
   NewScreen.title("A memorable day")
   NewScreen.geometry('500x500')
-  Label(NewScreen, text='Memorable Day').place(x=100, y=0)
-  Label(NewScreen, text='Name:').place(x=0, y=35)
-  Label(NewScreen, text='Enter a game:').place(x=0, y=70)
-  Label(NewScreen, text='Enter a city:').place(x=0, y=110)
-  Label(NewScreen, text='Enter the name of a player:').place(x=0, y=150)
-  Label(NewScreen, text='Enter the name of a drink:').place(x=0, y=190)
-  Label(NewScreen, text='Enter the name of a snack:').place(x=0, y=230)
+
+  Label(NewScreen, text='Please Fill in:',foreground='white', background='black').place(x=0, y=20)
+  Label(NewScreen, text='Name:',foreground='white', background='black').place(x=0, y=35)
+  Label(NewScreen, text='Enter a game:',foreground='white', background='black').place(x=0, y=70)
+  Label(NewScreen, text='Enter a city:',foreground='white', background='black').place(x=0, y=110)
+  Label(NewScreen, text='Enter the name of a player:',foreground='white', background='black').place(x=0, y=150)
+  Label(NewScreen, text='Enter the name of a drink:',foreground='white', background='black').place(x=0, y=190)
+  Label(NewScreen, text='Enter the name of a snack:',foreground='white', background='black').place(x=0, y=230)
+ 
+
   Name = Entry(NewScreen, width=17)
   Name.place(x=250, y=35)
   game = Entry(NewScreen, width=17)
