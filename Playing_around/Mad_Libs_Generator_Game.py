@@ -74,21 +74,21 @@ def Story2(win):
         '''
 
         tl.geometry('500x550')
-        Label(tl, text='Story:', wraplength=tl.winfo_width()).place(x=160, y=310)
-        Label(tl, text=text, wraplength=tl.winfo_width()).place(x=0, y=330)
+        Label(tl, text='Story:', wraplength=tl.winfo_width(), background='black',foreground='white').place(x=160, y=310)
+        Label(tl, text=text, wraplength=tl.winfo_width(), background='black',foreground='white').place(x=0, y=330)
 
     # Open a new window (Toplevel) for Story 2
-    NewScreen = Toplevel(win, bg='red')
+    NewScreen = Toplevel(win, bg='Black')
     NewScreen.title("Ambitions")
     NewScreen.geometry('500x500')
 
     # Labels for input fields
-    Label(NewScreen, text='Ambitions').place(x=150, y=0)
-    Label(NewScreen, text='Enter a profession:').place(x=0, y=35)
-    Label(NewScreen, text='Enter a noun:').place(x=0, y=70)
-    Label(NewScreen, text='Enter a feeling:').place(x=0, y=110)
-    Label(NewScreen, text='Enter an emotion:').place(x=0, y=150)
-    Label(NewScreen, text='Enter a verb:').place(x=0, y=190)
+    Label(NewScreen, text='Ambitions', background='black',foreground='white').place(x=150, y=0)
+    Label(NewScreen, text='Enter a profession:', background='black',foreground='white').place(x=0, y=35)
+    Label(NewScreen, text='Enter a noun:', background='black',foreground='white').place(x=0, y=70)
+    Label(NewScreen, text='Enter a feeling:', background='black',foreground='white').place(x=0, y=110)
+    Label(NewScreen, text='Enter an emotion:', background='black',foreground='white').place(x=0, y=150)
+    Label(NewScreen, text='Enter a verb:', background='black',foreground='white').place(x=0, y=190)
 
     # Entry fields for user input
     Profession = Entry(NewScreen, width=17)
@@ -103,7 +103,7 @@ def Story2(win):
     Verb.place(x=250, y=190)
 
     # Submit button to generate the story
-    SubmitButton = Button(NewScreen, text="Submit", background="Blue", font=('Times', 12),
+    SubmitButton = Button(NewScreen, text="Submit", background="lightblue", font=('Times', 12),
                           command=lambda: final(NewScreen, Profession.get(), Noun.get(), Feeling.get(),
                                                 Emotion.get(), Verb.get()))
     SubmitButton.place(x=150, y=270)
