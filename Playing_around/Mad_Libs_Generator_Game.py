@@ -1,3 +1,16 @@
+"""
+Mad Libs Generator
+
+This program generates stories based on user input using the Mad Libs game format.
+Users can choose between two story options: "A memorable day" and "Ambitions".
+For each story, the user is prompted to fill in various fields such as name, profession, noun, etc.
+Once the user submits their input, the program generates a story with the filled-in details.
+
+Created by Wayne Stock
+created on 2024-05-01
+
+"""
+
 from tkinter import *
 
 # Create the main window
