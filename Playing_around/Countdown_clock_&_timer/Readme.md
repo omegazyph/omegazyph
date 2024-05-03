@@ -26,7 +26,7 @@ This application creates a graphical user interface (GUI) for a countdown timer.
 - Python 3.x
 - tkinter (for GUI)
 - win10toast (for desktop notifications)
-- winsound (for playing notification sound)
+- winsound (for playing windows notification sound)
 
 ## Installation
 
