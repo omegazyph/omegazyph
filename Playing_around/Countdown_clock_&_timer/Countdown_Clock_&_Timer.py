@@ -14,6 +14,7 @@ from datetime import datetime
 from win10toast import ToastNotifier
 import winsound
 
+
 # Function to initiate countdown
 def countdown():
     # Get user input for hours, minutes, and seconds
@@ -38,10 +39,8 @@ def countdown():
     
     # Check if notification is enabled
     if check.get():
-        try:
             winsound.Beep(440, 1000)  # Beep sound
-        except Exception as e:
-                
+
     # Display "Time's Up" message
     Label(window, 
           text="Time's Up", 
@@ -53,7 +52,7 @@ def countdown():
     toast = ToastNotifier()
     toast.show_toast("Notification", 
                      "Timer is Off", 
-                     duration=20, 
+                     duration=30, 
                      icon_path=None, 
                      threaded=True)
 
