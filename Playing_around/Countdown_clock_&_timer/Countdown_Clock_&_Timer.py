@@ -44,7 +44,7 @@ def countdown():
         t -= 1
     
     # Check if notification is enabled
-    if check.get():
+    if (check.get() == True):
             winsound.Beep(440, 1000)  # Beep sound
 
     # Display "Time's Up" message
@@ -85,8 +85,7 @@ Label(window,
       fg=fg_color).pack()
 
 # Define variables for user input
-check = tk.BooleanVar(value=True)
-check.set(True)
+check = tk.BooleanVar()
 hour = tk.IntVar()
 minus = tk.IntVar()
 secon = tk.IntVar()
@@ -131,7 +130,7 @@ Entry(window,
 # Checkbox for enabling notification
 Checkbutton(window,
             text='Check for Music', 
-            onvalue=True, 
+            onvalue=True,
             variable=check,
             bg=bg_color,
             fg=fg_color).pack()
