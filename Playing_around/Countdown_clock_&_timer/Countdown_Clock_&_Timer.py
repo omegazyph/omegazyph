@@ -15,6 +15,12 @@ from win10toast import ToastNotifier
 import winsound
 
 
+# Define background color variables
+bg_color = 'black'
+fg_color = 'white'
+btn_color = 'lightblue'
+
+
 # Function to initiate countdown
 def countdown():
     # Get user input for hours, minutes, and seconds
@@ -45,7 +51,7 @@ def countdown():
     Label(window, 
           text="Time's Up", 
           font=('bold', 20),
-          background='black',
+          bg=bg_color,
           foreground='red').place(x=250, y=440)
     
     # Display notification on desktop
@@ -60,29 +66,23 @@ def countdown():
 window = Tk()
 window.geometry('600x600')  # Set window size
 window.title('Countdown Clock & Timer')  # Set window title
-window.config(background='black')
+window.config(bg=bg_color)
 
-# Header
-Label(window, 
-      text="Countdown Timer Application",
-      font=('Calibri', 20, 'bold'),
-      background='black',
-      foreground='white').pack(pady=20)
 
 # Main label
 Label(window, 
       text="Countdown Clock and Timer",
-      font=('Calibri 15'),
-      background='black',
-      foreground='white').pack(pady=20)
+      font=('Calibri',20 ,'bold'),
+      bg=bg_color,
+      fg=fg_color).pack(pady=20)
 
 # Display current time
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 Label(window, 
       text=current_time,
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 
 # Define variables for user input
 check = tk.BooleanVar()
@@ -94,54 +94,57 @@ secon = tk.IntVar()
 Label(window, 
       text="Enter time in HH:MM:SS", 
       font=('bold'),
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 
 Label(window,
       text="Enter the hours",
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 Entry(window,
       textvariable=hour, 
       width=30,
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 
 Label(window,
       text="Enter the minutes",
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 Entry(window, 
       textvariable=minus, 
       width=30,
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 
 Label(window,
       text="Enter the Seconds",
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 Entry(window, 
       textvariable=secon, 
       width=30,
-      background='black',
-      foreground='white').pack()
+      bg=bg_color,
+      fg=fg_color).pack()
 
 # Checkbox for enabling notification
-Checkbutton(text='Check for Music', 
+Checkbutton(window,
+            text='Check for Music', 
             onvalue=True, 
             variable=check,
-            background='black',
-            foreground='white').pack()
+            bg=bg_color,
+            fg=fg_color).pack()
+
+
 
 # Button to initiate countdown
 Button(window, 
        text="Set Countdown", 
        command=countdown, 
-       bg='lightblue').pack()
+       bg=btn_color).pack()
 
 # Label to display countdown timer
-timer_label = Label(window, background='black', foreground='white')
+timer_label = Label(window, bg=bg_color, fg=fg_color)
 timer_label.pack()
 
 # Update window and run main loop
