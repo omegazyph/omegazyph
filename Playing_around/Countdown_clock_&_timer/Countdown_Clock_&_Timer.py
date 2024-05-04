@@ -85,7 +85,8 @@ Label(window,
       fg=fg_color).pack()
 
 # Define variables for user input
-check = tk.BooleanVar()
+check = tk.BooleanVar(value=True)
+check.set(True)
 hour = tk.IntVar()
 minus = tk.IntVar()
 secon = tk.IntVar()
