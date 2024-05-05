@@ -13,6 +13,11 @@ created on 2024-05-01
 
 from tkinter import *
 
+
+#colors Varables
+bg_color = 'black'
+fg_color = 'white'
+
 # Create the main window
 Screen = Tk()
 Screen.title("Mad Libs Generator")
@@ -20,7 +25,7 @@ Screen.geometry('400x400')
 Screen.config(bg="black")
 
 # Label to prompt the user to choose a story
-Label(text='Which Would you like', foreground='white', background='black').place(x=150, y=35)
+Label(text='Which Would you like', fg=fg_color, bg=bg_color).place(x=150, y=35)
 
 # Button for Story 1
 Story1Button = Button(Screen,
@@ -54,8 +59,8 @@ def Story1(win):
         tl.geometry(newGeometry='500x550')
         
         # Display the final story
-        Label(tl, text='Story:', wraplength=tl.winfo_width(), background='black', foreground='white').place(x=160, y=310)
-        Label(tl, text=text, wraplength=tl.winfo_width(), background='black', foreground='white').place(x=0, y=330)
+        Label(tl, text='Story:', wraplength=tl.winfo_width(), bg=bg_color, fg=fg_color).place(x=160, y=310)
+        Label(tl, text=text, wraplength=tl.winfo_width(), bg=bg_color, fg=fg_color).place(x=0, y=330)
 
     # Open a new window (Toplevel) for Story 1
     NewScreen = Toplevel(win, bg='black')
@@ -63,13 +68,13 @@ def Story1(win):
     NewScreen.geometry('500x500')
 
     # Labels for input fields
-    Label(NewScreen, text='Memorable Day', background='black', foreground='white').place(x=100, y=0)
-    Label(NewScreen, text='Name:', background='black', foreground='white').place(x=0, y=35)
-    Label(NewScreen, text='Enter a game:', background='black', foreground='white').place(x=0, y=70)
-    Label(NewScreen, text='Enter a city:', background='black', foreground='white').place(x=0, y=110)
-    Label(NewScreen, text='Enter the name of a player:', background='black', foreground='white').place(x=0, y=150)
-    Label(NewScreen, text='Enter the name of a drink:', background='black', foreground='white').place(x=0, y=190)
-    Label(NewScreen, text='Enter the name of a snack:', background='black', foreground='white').place(x=0, y=230)
+    Label(NewScreen, text='Memorable Day', bg=bg_color, fg=fg_color).place(x=100, y=0)
+    Label(NewScreen, text='Name:', bg=bg_color, fg=fg_color).place(x=0, y=35)
+    Label(NewScreen, text='Enter a game:', bg=bg_color, fg=fg_color).place(x=0, y=70)
+    Label(NewScreen, text='Enter a city:', bg=bg_color, fg=fg_color).place(x=0, y=110)
+    Label(NewScreen, text='Enter the name of a player:', bg=bg_color, fg=fg_color).place(x=0, y=150)
+    Label(NewScreen, text='Enter the name of a drink:', bg=bg_color, fg=fg_color).place(x=0, y=190)
+    Label(NewScreen, text='Enter the name of a snack:', bg=bg_color, fg=fg_color).place(x=0, y=230)
 
     # Entry fields for user input
     Name = Entry(NewScreen, width=17)
@@ -108,8 +113,8 @@ def Story2(win):
         # Set the geometry for the Toplevel window
         tl.geometry('500x550')
         # Display the final story
-        Label(tl, text='Story:', wraplength=tl.winfo_width(), background='black', foreground='white').place(x=160, y=310)
-        Label(tl, text=text, wraplength=tl.winfo_width(), background='black', foreground='white').place(x=0, y=330)
+        Label(tl, text='Story:', wraplength=tl.winfo_width(), bg=bg_color, fg=fg_color).place(x=160, y=310)
+        Label(tl, text=text, wraplength=tl.winfo_width(), bg=bg_color, fg=fg_color).place(x=0, y=330)
 
     # Open a new window (Toplevel) for Story 2
     NewScreen = Toplevel(win, bg='Black')
@@ -117,12 +122,12 @@ def Story2(win):
     NewScreen.geometry('500x500')
 
     # Labels for input fields
-    Label(NewScreen, text='Ambitions', background='black', foreground='white').place(x=150, y=0)
-    Label(NewScreen, text='Enter a profession:', background='black', foreground='white').place(x=0, y=35)
-    Label(NewScreen, text='Enter a noun:', background='black', foreground='white').place(x=0, y=70)
-    Label(NewScreen, text='Enter a feeling:', background='black', foreground='white').place(x=0, y=110)
-    Label(NewScreen, text='Enter an emotion:', background='black', foreground='white').place(x=0, y=150)
-    Label(NewScreen, text='Enter a verb:', background='black', foreground='white').place(x=0, y=190)
+    Label(NewScreen, text='Ambitions', bg=bg_color, fg=fg_color).place(x=150, y=0)
+    Label(NewScreen, text='Enter a profession:', bg=bg_color, fg=fg_color).place(x=0, y=35)
+    Label(NewScreen, text='Enter a noun:', bg=bg_color, fg=fg_color).place(x=0, y=70)
+    Label(NewScreen, text='Enter a feeling:', bg=bg_color, fg=fg_color).place(x=0, y=110)
+    Label(NewScreen, text='Enter an emotion:', bg=bg_color, fg=fg_color).place(x=0, y=150)
+    Label(NewScreen, text='Enter a verb:', bg=bg_color, fg=fg_color).place(x=0, y=190)
 
     # Entry fields for user input
     Profession = Entry(NewScreen, width=17)
