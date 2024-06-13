@@ -2,7 +2,8 @@
 Program: Password Generator
 Author: Wayne Stock
 Date: 2024-05-03
-Description: This program generates a random password based on user input for length and repetition of characters.
+Description: This program generates a random password based on user input for length and repetition of 
+characters.
 """
 
 import random
