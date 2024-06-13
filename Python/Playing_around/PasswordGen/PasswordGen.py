@@ -21,7 +21,7 @@ def generate_password():
         # Get user input for repetition and length of the password
         repeat = int(repeat_entry.get())
         length = int(length_entry.get())
-    except:
+    except Exception:
         # Show error message if input is not valid
         messagebox.showerror(message="Please key in the required inputs")
         return
