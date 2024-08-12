@@ -14,7 +14,7 @@ color("white")
 penup()
 
 # Move to starting position
-goto(-160, y=160)
+goto(-160, 160)
 
 # Start drawing
 pendown()
@@ -26,14 +26,14 @@ circle(-500, extent=40)
 right(90)
 forward(17)
 right(89.5)
-circle(radius=500, extent=39)
+circle(500, extent=39)
 right(90)
 forward(17)
 end_fill()
 
 # Move to the second position
 penup()
-goto(-155, y=133)
+goto(-155, 133)
 pendown()
 
 # Draw the second petal
@@ -50,15 +50,15 @@ forward(280)
 right(160)
 forward(280)
 left(80)
-circle(radius=300, extent=15)
-circle(radius=20, extent=70)
+circle(300, extent=15)
+circle(20, 70)
 left(80)
-circle(radius=30, extent=-80)
+circle(30, -80)
 end_fill()
 
 # Move to the third position
 penup()
-goto(-20, y=155)
+goto(-20, 155)
 pendown()
 
 # Set pen color and fill color
