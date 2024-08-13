@@ -15,9 +15,20 @@ tables = {
   6: {},
   7: {},
 }
-
+# Welcome the Guest
 print('Hello Welcome to Jiho Restaurant')
+
+#ask for there name
 Guest_name = input("Can i get your name: ")
+
+#show them to there table
+print('Thank you',Guest_name,'Right this way')
+
+#showing the table
+print('Here you go',Guest_name,'a waitress will be here shortly')
+
+#tablenumber
+table_number = input('What is the number number 1-7: ')
 
 def assign_table(table_number, name, vip_status=False): 
   
