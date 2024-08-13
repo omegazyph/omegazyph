@@ -32,16 +32,27 @@ Guest_name = input("Can i get your name: ")
 print("Thank you",Guest_name,"Right this way I'll take you to your table")
 time.sleep(5)
 
-# showing the table
-print("Here you go",Guest_name,"a waitress will be here shortly")
 
 # See if the guest is a vip
 Guest_vip = input(Guest_name,"are you a vip mamber: yes or no")
+if Guest_vip == 'yes':
+   vip_status = True
+else:
+   vip_status = False
+"""
+Need to add a try expte statement here later    
+"""
+
+
+# showing the table
+print("Here you go",Guest_name,"a waitress will be here shortly")
 
 
 
 # tablenumber
 table_number = input("What is the number number 1-7: ")
+'''add a if statement here or try statement'''
+
 
 
 
