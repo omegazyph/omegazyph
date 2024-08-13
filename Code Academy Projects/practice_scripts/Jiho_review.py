@@ -32,7 +32,7 @@ def assign_table(table_number, name, vip_status=False):
   tables[table_number]['order'] = {}
 
 assign_table(guest_table_number,guest_name)
-print(tables[2])
+#print(tables[2])
 
 
 
