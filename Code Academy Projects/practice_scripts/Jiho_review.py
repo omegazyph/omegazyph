@@ -27,17 +27,7 @@ def assign_table(table_number, name, vip_status=False):
   tables[table_number]['order'] = {}
 
 assign_table(guest_table_number,guest_name)
-#print(tables[2])
-
-
-
-
-
-
-
-
-
-
+#print(tables[guest_table_number])
 
 
 
@@ -53,8 +43,10 @@ def assign_food_items(table_number, **order_items):
   tables[table_number]['order']['food_items'] = food
   tables[table_number]['order']['drinks'] = drinks
 
-assign_food_items(guest_table_number, food=[guest_food], drinks=[guest_drinks])
-print(tables[guest_table_number])
+assign_food_items(guest_table_number, 
+                  food=[guest_food], 
+                  drinks=[guest_drinks])
+#print(tables[guest_table_number])
 
 
 
@@ -67,9 +59,14 @@ print(tables[guest_table_number])
 
 
 
+# Split the order
 
 def calculate_price_per_person(total, tip, split):
     total_tip = total * (tip/100)
     split_price = (total + total_tip) / split
-    print('split price',split_price)
-#calculate_price_per_person(*tables[1]['order']['total'])
+    print('split price',split_price,"per person")
+
+    
+calculate_price_per_person(*tables[1]['order']['total'])
+
+#print(tables)
