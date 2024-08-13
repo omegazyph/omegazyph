@@ -20,11 +20,11 @@ tables = {
   6: {},
   7: {},
 }
-guest_name = input('What is your name: ')
 
+#user setup
+guest_name = input('What is your name: ')
 guest_table_number = int(input("What's the table number: "))
 
-# functions
 def assign_table(table_number, name, vip_status=False): 
   
   tables[table_number]['name'] = name
@@ -39,11 +39,38 @@ assign_table(guest_table_number,guest_name)
 
 
 
+
+
+
+
+
+
+
+
+
+
+items_ordered = input("What would they like: ")
+
 def assign_food_items(table_number, **order_items):
   food = order_items.get('food')
   drinks = order_items.get('drinks')
   tables[table_number]['order']['food_items'] = food
   tables[table_number]['order']['drinks'] = drinks
+
+print(assign_food_items(guest_table_number))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def calculate_price_per_person(total, tip, split):
     total_tip = total * (tip/100)
