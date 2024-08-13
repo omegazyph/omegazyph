@@ -1,8 +1,3 @@
-#imports
-import time
-
-
-
 tables = {
   1: {
     'name': 'Jiho',
@@ -48,8 +43,9 @@ assign_table(guest_table_number,guest_name)
 
 
 
-
-items_ordered = input("What would they like: ")
+# Table order
+guest_drinks = input("What would they like to drink: ")
+guest_food = input("What would they like to eat:")
 
 def assign_food_items(table_number, **order_items):
   food = order_items.get('food')
@@ -57,8 +53,8 @@ def assign_food_items(table_number, **order_items):
   tables[table_number]['order']['food_items'] = food
   tables[table_number]['order']['drinks'] = drinks
 
-print(assign_food_items(guest_table_number))
-
+assign_food_items(guest_table_number, food=[guest_food], drinks=[guest_drinks])
+print(tables[guest_table_number])
 
 
 
