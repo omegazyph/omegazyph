@@ -20,42 +20,9 @@ tables = {
   6: {},
   7: {},
 }
+guest_name = input('What is your name: ')
 
-# Welcome the Guest
-print("Hello Welcome to Jiho Restaurant")
-
-# ask for there name
-Guest_name = input("Can i get your name: ")
-
-
-# show them to there table
-print("Thank you",Guest_name,"Right this way I'll take you to your table")
-time.sleep(5)
-
-
-# See if the guest is a vip
-Guest_vip = input(Guest_name,"are you a vip mamber: yes or no")
-if Guest_vip == 'yes':
-   vip_status = True
-else:
-   vip_status = False
-"""
-Need to add a try expte statement here later    
-"""
-
-
-# showing the table
-print("Here you go",Guest_name,"a waitress will be here shortly")
-
-
-
-# tablenumber
-table_number = input("What is the number number 1-7: ")
-'''add a if statement here or try statement'''
-
-
-
-
+guest_table_number = int(input("What's the table number: "))
 
 # functions
 def assign_table(table_number, name, vip_status=False): 
@@ -63,6 +30,12 @@ def assign_table(table_number, name, vip_status=False):
   tables[table_number]['name'] = name
   tables[table_number]['vip_status'] = vip_status
   tables[table_number]['order'] = {}
+
+assign_table(guest_table_number,guest_name)
+print(tables[2])
+
+
+
 
 
 
