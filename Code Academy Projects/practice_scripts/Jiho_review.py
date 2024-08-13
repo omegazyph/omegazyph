@@ -16,10 +16,14 @@ tables = {
   7: {},
 }
 
+
 def assign_table(table_number, name, vip_status=False): 
+  
   tables[table_number]['name'] = name
   tables[table_number]['vip_status'] = vip_status
   tables[table_number]['order'] = {}
+
+
 
 def assign_food_items(table_number, **order_items):
   food = order_items.get('food')
@@ -30,4 +34,7 @@ def assign_food_items(table_number, **order_items):
 def calculate_price_per_person(total, tip, split):
     total_tip = total * (tip/100)
     split_price = (total + total_tip) / split
-    print(split_price)
+    print('split price',split_price)
+
+calculate_price_per_person(*tables[1]['order']['total'])
+#print(tables[1]['order']['total'])
