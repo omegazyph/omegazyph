@@ -18,7 +18,7 @@ tables = {
 }
 
 # Collect user input for name and table number
-guest_name = input('What is your name: ')
+guest_name = input("What is your name: ")
 guest_table_number = int(input("What's the table number: "))
 
 # Function to assign a table with the guest's name and VIP status
@@ -50,8 +50,8 @@ def assign_food_items(table_number, **order_items):
 
 # Assign food and drink items to the table based on user input
 assign_food_items(guest_table_number, 
-                  food=guest_food,  # Single food item
-                  drinks=guest_drinks)  # Single drink item
+                  food=[guest_food],
+                  drinks=[guest_drinks])
 #print(tables[guest_table_number])  # Uncomment to debug order assignment
 
 # Collect and process financial details from the user
