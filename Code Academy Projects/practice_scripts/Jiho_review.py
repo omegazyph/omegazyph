@@ -27,8 +27,6 @@ print("Hello Welcome to Jiho Restaurant")
 # ask for there name
 Guest_name = input("Can i get your name: ")
 
-# sleep
-time.sleep(5)
 
 # show them to there table
 print("Thank you",Guest_name,"Right this way I'll take you to your table")
@@ -37,12 +35,18 @@ time.sleep(5)
 # showing the table
 print("Here you go",Guest_name,"a waitress will be here shortly")
 
+# See if the guest is a vip
+Guest_vip = input(Guest_name,"are you a vip mamber: yes or no")
+
+
+
 # tablenumber
 table_number = input("What is the number number 1-7: ")
 
 
 
 
+# functions
 def assign_table(table_number, name, vip_status=False): 
   
   tables[table_number]['name'] = name
