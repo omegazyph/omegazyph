@@ -16,6 +16,8 @@ tables = {
   7: {},
 }
 
+print('Hello Welcome to Jiho Restaurant')
+Guest_name = input("Can i get your name: ")
 
 def assign_table(table_number, name, vip_status=False): 
   
@@ -35,6 +37,4 @@ def calculate_price_per_person(total, tip, split):
     total_tip = total * (tip/100)
     split_price = (total + total_tip) / split
     print('split price',split_price)
-
-calculate_price_per_person(*tables[1]['order']['total'])
-#print(tables[1]['order']['total'])
+#calculate_price_per_person(*tables[1]['order']['total'])
