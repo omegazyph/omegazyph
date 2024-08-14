@@ -3,20 +3,22 @@
 # Bash Script Template
 # Author: Wayne Stock
 # Date: 2024-01-21
-# Description: This is a simple bash script template that includes the author's name, current date,
-# and provides a starting point for writing custom scripts.
+# Description: This script provides a basic template with the author's name, 
+# the current date, and a placeholder for custom script logic.
 
 # Main part of the script
 echo "Hello, this is a bash script template."
 
-# Variables
-your_name="Wayne Stock"
-current_date=$(date)
+# Define variables
+your_name="Wayne Stock"       # The author's name
+current_date=$(date)          # Get the current date and time
 
-# Displaying information
-echo "Author: $your_name"
-echo "Date: $current_date"
+# Display information
+echo "Author: $your_name"      # Output the author's name
+echo "Date: $current_date"     # Output the current date and time
 
-# Your script logic goes here
+# Insert custom script logic below this line
+# Example: Add commands here to perform specific tasks
 
+# Notify completion
 echo "Script complete. Goodbye!"
