@@ -12,7 +12,7 @@ def test_shipping(f):
   except TypeError:
     print("calculate_shipping_cost() did not provide default argument for shipping_type")
     return
-  if not type(costs) is str:
+  if type(costs) is not str:
     print("calculate_shipping_cost() did not format the result in a string")
     return
   if costs != "$1.04":
