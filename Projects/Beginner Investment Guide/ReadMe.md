@@ -30,41 +30,38 @@ Beginner-Investment-Guide/
 │
 └── README.md
 
-
 ## Folders and Files
 
 * data/: Contains CSV files with sample data on stocks, bonds, and ETFs.
 
-    + stocks.csv: Data related to stocks.
-    + bonds.csv: Data related to bonds.
-    + etfs.csv: Data related to ETFs.
+  * stocks.csv: Data related to stocks.
+    * bonds.csv: Data related to bonds.
+    * etfs.csv: Data related to ETFs.
 
 * docs/: Documentation for the project.
 
-    + user_guide.md: A guide for end-users.
-    + API_documentation.md: Documentation for the program's API.
+  * user_guide.md: A guide for end-users.
+    * API_documentation.md: Documentation for the program's API.
 
 * src/: Source code for the program.
 
-    + main.py: The main entry point of the application.
-    + investment_calculator.py: Functions to calculate potential returns on investments.
-    + portfolio_analyzer.py: Tools to analyze user portfolios and provide recommendations.
-    + risk_assessment.py: Functions to assess investment and portfolio risk levels.
+  * main.py: The main entry point of the application.
+    * investment_calculator.py: Functions to calculate potential returns on investments.
+    * portfolio_analyzer.py: Tools to analyze user portfolios and provide recommendations.
+    * risk_assessment.py: Functions to assess investment and portfolio risk levels.
 
 * tests/: Unit tests to ensure the reliability and correctness of the code.
 
-    + test_investment_calculator.py: Tests for the investment calculator functions.
-    + test_portfolio_analyzer.py: Tests for the portfolio analyzer functions.
-    + test_risk_assessment.py: Tests for the risk assessment functions.
-
+  * test_investment_calculator.py: Tests for the investment calculator functions.
+    * test_portfolio_analyzer.py: Tests for the portfolio analyzer functions.
+    * test_risk_assessment.py: Tests for the risk assessment functions.
 
 ## Getting Started
 
 To set up and use the Beginner Investment Guide, follow these steps:
 
 1. Clone the repository:
-    git clone https://github.com/yourusername/beginner-investment-guide.git
-
+    git clone <https://github.com/yourusername/beginner-investment-guide.git>
 
 2. Navigate to the project directory:
     cd beginner-investment-guide
@@ -74,7 +71,6 @@ To set up and use the Beginner Investment Guide, follow these steps:
 
 4. Run the program:
     python src/main.py
-
 
 ## Contribution
 
@@ -86,4 +82,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 * By Wayne stock
 * Started on 2024-09-03
-
