@@ -74,8 +74,6 @@ The script will provide output messages as it performs each step.
 
     Non-Interactive: The -y flag is used with apt-get commands, meaning the script will automatically confirm prompts without requiring user input.
 
-    Error Handling: This version of the script does not include explicit set -e (exit on error) or other advanced error handling mechanisms. If a command fails, the script might continue to the next step. For critical production environments, consider adding robust error handling.
-
     Searchsploit: The script correctly uses searchsploit -u for updating the database directly, correcting a common pattern seen in some scripts that incorrectly try to use apt-get for this.
 
 ## Author
