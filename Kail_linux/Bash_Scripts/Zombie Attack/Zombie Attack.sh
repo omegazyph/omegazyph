@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Author: Wayne Stock
+# Date: 2025-07-07
+
 # This is a shebang line. It tells the operating system to execute this script using bash.
 
 # This script is designed to continuously launch background processes.
