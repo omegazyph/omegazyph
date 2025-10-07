@@ -52,6 +52,7 @@ def encode_message(plaintext, cipher_map):
             # Randomly select one substitute from the list
             substitutes = cipher_map[char]
             ciphertext.append(random.choice(substitutes))
+            ciphertext.append(" ")
         else:
             # Keep spaces, punctuation, etc., as they are
             ciphertext.append(char)
