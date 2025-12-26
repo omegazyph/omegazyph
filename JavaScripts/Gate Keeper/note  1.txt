@@ -1,0 +1,12 @@
+Gate Keeper will password any page, the password being the name of the file.  
+
+For example: mypage.html. 
+password would be "mypage".  
+
+the Stat page will go to the Gate Keeper and then enter the name of the file. that is the password 
+
+So all you have to do is rename the page you want to protect to a longer and more complicated file name, and that will be the password that will access that page.  No, you don't have to add anything to the protected page.  
+
+Note:
+it seems this script can only protect pages that end in .html, not .htm  so be sure to rename the extensin too.
+
