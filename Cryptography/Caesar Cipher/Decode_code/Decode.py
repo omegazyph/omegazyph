@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 '''
 Caesar Cipher
 by Wayne Stock
