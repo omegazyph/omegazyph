@@ -1,3 +1,15 @@
+"""
+-------------------------------------------------------------------------
+PROJECT  : Homophonic Cipher
+FILE     : encode.py
+AUTHOR   : omegazyph
+DATE     : 10/07/2025
+UPDATED  : 12/29/2025
+DESCRIPTION: Encodes plaintext by mapping single characters to multiple 
+             possible substitutes defined in a JSON cipher map.
+-------------------------------------------------------------------------
+"""
+
 import json
 import random
 
@@ -16,9 +28,8 @@ def load_cipher_map(filename="cipher_map.json"):
 def homophonic_encode(plaintext, cipher_map):
     """
     Encrypts plaintext using the homophonic cipher map.
-
     - Converts all letters to uppercase for lookup.
-    - Selects a random symbol for each letter.
+    - Selects a random symbol for each letter (Homophonic Substitution).
     - Keeps non-alphabetic characters (like spaces) as is.
     """
     if not cipher_map:
@@ -27,15 +38,15 @@ def homophonic_encode(plaintext, cipher_map):
     ciphertext = []
     
     for char in plaintext:
-        # Convert character to uppercase for dictionary lookup (as planned)
+        # Convert character to uppercase to match the JSON map keys
         upper_char = char.upper()
         
         if upper_char in cipher_map:
-            # Randomly select one substitute from the list for the letter
+            # Randomly select one substitute from the list to flatten frequency
             substitute = random.choice(cipher_map[upper_char])
             ciphertext.append(substitute)
         else:
-            # Keep the character as is (for spaces, punctuation, numbers)
+            # Keep punctuation, spaces, and numbers original
             ciphertext.append(char)
             
     return "".join(ciphertext)
@@ -43,16 +54,16 @@ def homophonic_encode(plaintext, cipher_map):
 # --- Main execution block ---
 if __name__ == "__main__":
     # 1. Load the map
-    cipher_map = load_cipher_map()
+    mapping = load_cipher_map()
     
-    if cipher_map:
+    if mapping:
         # 2. Get user input
-        plaintext = input("Enter the text to encode: ")
+        user_input = input("Enter the text to encode: ")
         
         # 3. Perform encoding
-        encoded_text = homophonic_encode(plaintext, cipher_map)
+        encoded_text = homophonic_encode(user_input, mapping)
         
         # 4. Print results
-        print("\n--- Ciphertext ---")
+        print("\n--- Ciphertext Output ---")
         print(encoded_text)
-        print("------------------\n")
+        print("-------------------------\n")
