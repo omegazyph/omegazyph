@@ -1,12 +1,39 @@
-Gate Keeper will password any page, the password being the name of the file.  
+*************************************************************
+* PROJECT: Gate Keeper
+* FILE: Notes.txt
+* DESCRIPTION: Documentation and Usage Instructions
+*************************************************************
 
-For example: mypage.html. 
-password would be "mypage".  
+SUMMARY:
+Gate Keeper is a lightweight security script that uses a 
+"Filename-as-Password" logic. It allows you to protect any 
+HTML page without hardcoding passwords into your JavaScript.
 
-the Stat page will go to the Gate Keeper and then enter the name of the file. that is the password 
+HOW IT WORKS:
+1. The password for any page is simply the name of the file itself.
+   Example: To protect a file, rename it to "SecretRoom.html".
+   The password is now "SecretRoom".
 
-So all you have to do is rename the page you want to protect to a longer and more complicated file name, and that will be the password that will access that page.  No, you don't have to add anything to the protected page.  
+2. The Start Page (index.html) triggers a centered popup window.
+3. The user enters the "Password" (filename) into the popup.
+4. The script attempts to fetch [Input].html and redirects the 
+   main browser window to that location.
 
-Note:
-it seems this script can only protect pages that end in .html, not .htm  so be sure to rename the extensin too.
+SECURITY ADVANTAGE:
+You do not have to add any special code to your protected pages.
+To change a password, simply rename the .html file on your server.
+For higher security, use long, complicated filenames (e.g., 
+"k9_Xj22_security.html").
 
+TECHNICAL NOTES:
+* FILE EXTENSIONS: This script is hardcoded to look for ".html".
+  It will NOT find files ending in ".htm". Ensure all target 
+  files use the full four-letter extension.
+
+* CASE SENSITIVITY: Passwords are case-sensitive because 
+  server filenames are case-sensitive.
+
+* DIRECTORY STRUCTURE:
+  - Keep target pages in the same root folder as gatekeep.html.
+  - Keep logic files in the /JavaScripts/ folder.
+*************************************************************
