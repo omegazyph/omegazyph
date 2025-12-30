@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 '''
 Vigenere Cipher Decode
 by wayne stock
