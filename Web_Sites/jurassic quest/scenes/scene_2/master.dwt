@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../../styles/style0.css">
+
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Scene 2</title>
+
+<nav>
+<!-- in the file style0.css -->
+</nav>
+
+</head>
+
+<body>
+<div class="active">
+	<ul style="left: 10px; top: 145px">
+		<li><a class="active" href="index_2.html">Home</a></li>
+		<li><a href="Allosaurus%20-%20facts.html">Allosaurus - Facts</a></li>
+		<li><a href="Compsognathus%20-%20Facts.html">Compsognathus - Facts</a></li>
+		<li><a href="Sordes%20-%20Facts.html">Sordes - Facts</a></li>
+		<li><a href="Stegosaurus%20-%20Facts.html">Stegosaurus - Facts</a></li>
+		
+	</ul>
+</div>	
+</body>
+
+</html>
