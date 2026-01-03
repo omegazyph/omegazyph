@@ -27,7 +27,7 @@ ATTEMPTS_REMAINING=3
 while [[ $ATTEMPTS_REMAINING -gt 0 ]]; do
     
     echo -e "\n===================================="
-    echo "    ENCRYPTED GATEWAY (Level 4)"
+    echo "    ENCRYPTED GATEWAY"
     echo "    Security Status: ACTIVE"
     echo "===================================="
     
