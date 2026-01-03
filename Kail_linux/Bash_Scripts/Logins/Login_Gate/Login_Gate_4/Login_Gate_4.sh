@@ -70,5 +70,5 @@ done
 # --- Lockdown Sequence ---
 echo -e "\n[!!!] CRITICAL SECURITY BREACH [!!!]"
 echo "Maximum attempts reached. Sheriff has been notified."
-echo "I'm calling your mother... and the Sheriff."
+
 exit 1 # Failure exit
