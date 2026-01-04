@@ -2,22 +2,39 @@
 
 # ==============================================================================
 # SCRIPT NAME:    256_cipher.sh
-# DESCRIPTION:    Level 1
-#                 creates a hash in 256sha 
+# DESCRIPTION:    Level 1 - Generates a SHA-256 hash from user input.
 # AUTHOR:         Wayne Stock
-# Started         jan 3, 2026
 # DATE:           Jan 3, 2026
-# Updated         Jan 3, 2026
-# VERSION:        1.0
+# VERSION:        1.1
 # ==============================================================================
 
+# --- Visual Header ---
 echo -e "\n===================================="
-    echo  "      256sha ENCRYPTION  v1.0"
-    echo  "===================================="
+echo "      SHA-256 ENCRYPTION v1.1"
+echo "===================================="
 
+# --- User Input ---
+# The -s flag hides the input (silent mode) so the password isn't visible on screen
+read -sp "Enter the password to hash: " entered_password
+echo -e "\n" # Adds a newline after the hidden input
 
-read -p "Enter the password: " entered_password
-
+# --- Hashing Process ---
+# echo -n ensures no trailing newline is added to the string before hashing
+# sha256sum calculates the hash
+# awk '{print $1}' strips the trailing "-" character usually output by sha256sum
 INPUT_HASH=$(echo -n "$entered_password" | sha256sum | awk '{print $1}')
 
-echo $INPUT_HASH
+# --- Results ---
+echo "[*] Generated SHA-256 Hash:"
+echo "----------------------------------------------------------------"
+echo "$INPUT_HASH"
+echo "----------------------------------------------------------------"
+
+# Optional: Save to file for use with your cracker script
+read -p "Would you like to save this to inputhash.txt? (y/n): " save_choice
+if [[ "$save_choice" == "y" || "$save_choice" == "Y" ]]; then
+    echo "$INPUT_HASH" > inputhash.txt
+    echo "[SUCCESS] Hash saved to inputhash.txt"
+fi
+
+echo -e "\nProcess Complete."
