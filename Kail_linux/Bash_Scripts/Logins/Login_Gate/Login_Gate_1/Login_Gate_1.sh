@@ -5,7 +5,7 @@
 # DESCRIPTION:    A secure command-line login gate with masked password input.
 # AUTHOR:         Wayne Stock
 # DATE:           Jan 2, 2026
-# VERSION:        1.1
+# VERSION:        1.0
 # USAGE:          ./Login_Gate_1.sh
 # ==============================================================================
 
