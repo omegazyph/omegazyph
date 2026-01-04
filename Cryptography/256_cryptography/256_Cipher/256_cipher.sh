@@ -5,7 +5,7 @@
 # DESCRIPTION:    Level 1 - Generates a SHA-256 hash from user input.
 # AUTHOR:         Wayne Stock
 # DATE:           Jan 3, 2026
-# VERSION:        1.1
+# VERSION:        1.0
 # ==============================================================================
 
 # --- Visual Header ---
