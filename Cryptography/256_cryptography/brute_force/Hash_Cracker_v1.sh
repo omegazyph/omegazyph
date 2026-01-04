@@ -2,8 +2,8 @@
 
 # ==============================================================================
 # SCRIPT NAME:    Hash_Cracker_v1.sh
-# DESCRIPTION:    A robust SHA-256 dictionary cracker (Level 1).
-#                 Handles Windows/Linux line endings and newline variations.
+# DESCRIPTION:    Dictionary-based SHA-256 cracker. 
+#                 Features: Clean string handling and dual-mode newline checking.
 # AUTHOR:         Wayne Stock
 # DATE:           Jan 3, 2026
 # VERSION:        1.3
@@ -15,10 +15,12 @@ echo "      SHA-256 BRUTE_FORCE v1.3"
 echo "===================================="
 
 # --- Resources ---
+# Configuration for input files
 LIST="password_list.txt"
 INPUT_HASH="inputhash.txt"
 
 # --- Pre-Flight System Check ---
+# Ensure required files exist before starting the process
 if [[ ! -f "$LIST" ]]; then
     echo "[CRITICAL ERROR]: Wordlist ($LIST) missing."
     exit 1
@@ -30,31 +32,35 @@ if [[ ! -f "$INPUT_HASH" ]]; then
 fi
 
 # --- Preparation ---
-# Read the target hash and convert to lowercase just in case
+# 1. Extract the hash (awk gets the first column)
+# 2. Convert to lowercase (tr) to prevent case-match failures
 TARGET_HASH=$(awk '{print $1}' "$INPUT_HASH" | tr '[:upper:]' '[:lower:]')
 
 echo -e "[*] Starting Brute Force..."
 echo -e "[*] Target Hash: $TARGET_HASH\n"
 
 # --- Brute Force Loop ---
-# Use || [[ -n "$WORD" ]] to ensure the very last line is checked
+# 'IFS= read -r' prevents backslash escaping
+# '|| [[ -n "$WORD" ]]' ensures the script processes the final line if it has no newline
 while IFS= read -r WORD || [[ -n "$WORD" ]]; do
     
-    # 1. CLEANUP: Remove hidden Windows (\r), tabs, and spaces
+    # 1. SANITIZATION:
+    # tr -d '\r' removes hidden Windows carriage returns
+    # xargs trims any accidental leading/trailing spaces
     CLEAN_WORD=$(echo "$WORD" | tr -d '\r' | xargs)
 
-    # Skip empty lines
+    # Skip current iteration if the line is empty
     [[ -z "$CLEAN_WORD" ]] && continue
 
-    # 2. GENERATE BOTH HASH TYPES:
-    # Some tools hash with a newline (echo), some without (printf). We check both.
+    # 2. DUAL-HASH GENERATION:
+    # We check two variants because different tools generate hashes differently:
+    #   - HASH_WITH_NL: Simulates 'echo "password"' (includes a newline)
+    #   - HASH_NO_NL:   Simulates 'printf "password"' (no newline)
     HASH_WITH_NL=$(echo "$CLEAN_WORD" | sha256sum | awk '{print $1}')
     HASH_NO_NL=$(printf "%s" "$CLEAN_WORD" | sha256sum | awk '{print $1}')
 
-    # 3. DEBUG (Optional): Uncomment the line below to see every attempt
-    # echo "Checking: [$CLEAN_WORD]"
-
-    # 4. COMPARISON: Check against the target hash
+    # 3. COMPARISON:
+    # Check if either generated hash matches our target
     if [[ "$HASH_WITH_NL" == "$TARGET_HASH" || "$HASH_NO_NL" == "$TARGET_HASH" ]]; then
         echo -e "\n[SUCCESS] Match Found!"
         echo -e "------------------------------------------------"
@@ -67,5 +73,6 @@ while IFS= read -r WORD || [[ -n "$WORD" ]]; do
 done < "$LIST"
 
 # --- Termination ---
+# Loop finished without finding a match
 echo -e "\n[FAILURE] No match found in the wordlist."
 exit 1

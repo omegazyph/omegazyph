@@ -1,76 +1,54 @@
-# 🔐 Secure Gateway System (Level 7)
+# SHA-256 Hash Toolset (Level 1)
 
-## 📝 Overview
+Created by **Wayne Stock** *Date: Jan 3, 2026*
 
-The **Secure Gateway System** is a modular Bash-based security suite developed to protect sensitive data. Version 1.7 represents the "Hardened" edition, featuring **Defensive Programming** techniques, external vault authentication, and automated audit logging. This system is designed to be resilient against both human error and automated brute-force attacks.
+## Description
 
-## 📂 System Architecture
+This project consists of two Bash scripts designed to demonstrate the basics of cryptographic hashing and dictionary-based password recovery (cracking).
 
-To maintain a "Separation of Concerns," the system is divided into four distinct files:
+1. **256_cipher.sh**: A generator that takes a plain-text password and converts it into a SHA-256 hash.
+2. **Hash_Cracker_v1.sh**: A recovery tool that compares a target hash against a list of common passwords to find a match.
 
-| File | Type | Description |
-| :--- | :--- | :--- |
-| **`Login_Gate_7.sh`** | Script | The core logic engine featuring Rate Limiting and an ANSI-colored UI. |
-| **`256_cipher.sh`** | Tool | Level 1 utility to generate SHA-256 hashes for the vault. |
-| **`.vault.txt`** | Database | A hidden store for authorized `username:hash` pairs. |
-| **`.login_attempts.log`** | Audit | A persistent, color-coded history of all access attempts. |
-| **`secret_data.txt`** | Resource | The protected content (Trucking Manifest for Van, TX). |
+---
 
-## 🛠️ Advanced Security Features
+## Files in this Project
 
-* **Rate Limiting (Anti-Brute Force):** Implements a mandatory 2-second `sleep` delay after a failed login to stop rapid-fire automated guessing.
-* **Input Sanitization:** Checks for empty strings (`[[ -z ]]`) to ensure fields are not empty before the system wastes CPU cycles on hashing.
-* **SHA-256 Cryptography:** Passwords are never stored in plain text; only cryptographic fingerprints are compared.
-* **Case-Insensitive Normalization:** Converts input to lowercase using `tr`, preventing login failure due to simple capitalization errors.
-* **Forensic Logging:** Records every entry with ANSI color-coding (Green for Success, Red for Failure, Yellow for Lockouts).
+* `256_cipher.sh` — The hashing tool.
+* `Hash_Cracker_v1.sh` — The brute-force/dictionary tool.
+* `password_list.txt` — Your dictionary of potential passwords.
+* `inputhash.txt` — The target file where the hash is stored for cracking.
 
-## 🚀 Installation & Setup
+---
 
-### 1. File Permissions
+## Prerequisites
 
-Secure the environment by running the following commands in your terminal:
+Before running the cracker, ensure you have a file named `password_list.txt` in the same directory containing one password per line.
 
-(bash)
+---
 
-## Grant execution rights to the scripts
+## How to Use
 
-chmod +x Login_Gate_7.sh
+### Step 1: Generate a Hash
+
+Run the cipher script to create a target hash.
+
+```bash
 chmod +x 256_cipher.sh
+./256_cipher.sh
 
-## Restrict the vault so only the owner can read it
+Input your password and select 'y' to save it to inputhash.txt.
+Step 2: Crack the Hash
 
-chmod 600 .vault.txt
-
-## Secure the sensitive manifest
-
-chmod 600 secret_data.txt
-
-## 2.Execution
-
-Launch the gateway using the following command:
+Run the cracker script to see if the password exists in your wordlist.
 Bash
 
-./Login_Gate_7.sh
+chmod +x Hash_Cracker_v1.sh
+./Hash_Cracker_v1.sh
 
-## 📋 Security Philosophy
+Technical Details
 
-The goal of Level 7 is Defensive Programming. By controlling the speed of the login process and validating input before processing, the script protects underlying system resources from unnecessary load and common attack vectors. This "slow-down" approach (Rate Limiting) makes automated dictionary attacks practically impossible by significantly increasing the "time-cost" for the attacker.
+    Algorithm: SHA-256
 
-## 📊 Administrative Monitoring
+    Encoding: Handles both Linux (LF) and Windows (CRLF) line endings.
 
-To review the audit trail or watch login attempts in real-time, use:
-Bash
-
-## View the full history
-
-cat .login_attempts.log
-
-## Monitor attempts live as they happen
-
-tail -f .login_attempts.log
-
-Developer: Wayne Stock
-
-Version: 1.1 (Hardened Security)
-
-Date: January 3, 2026
+    Security: Uses silent input (read -s) to prevent passwords from being displayed in plain text during entry.

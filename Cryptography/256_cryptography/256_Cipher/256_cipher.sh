@@ -2,39 +2,45 @@
 
 # ==============================================================================
 # SCRIPT NAME:    256_cipher.sh
-# DESCRIPTION:    Level 1 - Generates a SHA-256 hash from user input.
+# DESCRIPTION:    Generates a SHA-256 hash from user input and saves it to a file.
 # AUTHOR:         Wayne Stock
 # DATE:           Jan 3, 2026
-# VERSION:        1.0
+# VERSION:        1.2
 # ==============================================================================
 
 # --- Visual Header ---
+# Clear the screen or just provide a clean start for the user
 echo -e "\n===================================="
-echo "      SHA-256 ENCRYPTION v1.1"
+echo "      SHA-256 HASH GENERATOR v1.0"
 echo "===================================="
 
 # --- User Input ---
-# The -s flag hides the input (silent mode) so the password isn't visible on screen
+# -s: Silent mode (password characters won't show on screen)
+# -p: Prompt message
 read -sp "Enter the password to hash: " entered_password
-echo -e "\n" # Adds a newline after the hidden input
+echo -e "\n" # Adds a newline for visual spacing after hidden input
 
 # --- Hashing Process ---
-# echo -n ensures no trailing newline is added to the string before hashing
-# sha256sum calculates the hash
-# awk '{print $1}' strips the trailing "-" character usually output by sha256sum
-INPUT_HASH=$(echo -n "$entered_password" | sha256sum | awk '{print $1}')
+# We use echo without '-n' here to ensure the resulting hash matches 
+# the format expected by the cracker script (includes trailing newline).
+INPUT_HASH=$(echo "$entered_password" | sha256sum | awk '{print $1}')
 
-# --- Results ---
+# --- Results Display ---
 echo "[*] Generated SHA-256 Hash:"
 echo "----------------------------------------------------------------"
 echo "$INPUT_HASH"
 echo "----------------------------------------------------------------"
 
-# Optional: Save to file for use with your cracker script
+# --- Save to File ---
+# Prompt the user if they want to export this hash for the Cracker script
 read -p "Would you like to save this to inputhash.txt? (y/n): " save_choice
+
 if [[ "$save_choice" == "y" || "$save_choice" == "Y" ]]; then
+    # Write the hash string to inputhash.txt, overwriting any previous content
     echo "$INPUT_HASH" > inputhash.txt
-    echo "[SUCCESS] Hash saved to inputhash.txt"
+    echo -e "\n[SUCCESS] Hash saved to inputhash.txt"
+else
+    echo -e "\n[*] Hash was not saved."
 fi
 
-echo -e "\nProcess Complete."
+echo -e "Process Complete.\n"
