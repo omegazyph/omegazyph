@@ -12,7 +12,7 @@ VERSION:        1.1
 """
 
 import subprocess
-import sys
+#import sys
 
 def run_command(description, command):
     """
