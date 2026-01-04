@@ -2,7 +2,7 @@
 
 # ==========================================================
 # SCRIPT NAME:  Downloads_CleanBot.sh
-# AUTHOR:       Wayne
+# AUTHOR:       Omegazyph
 # DATE:         January 4, 2026
 # VERSION:      v1.0.0
 # DESCRIPTION:  A system utility to automatically organize 

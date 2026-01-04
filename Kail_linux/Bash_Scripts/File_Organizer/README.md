@@ -1,6 +1,6 @@
 # Downloads_CleanBot 🤖
 
-**Author:** Wayne  
+**Author:** Omegazyph
 **Date:** January 4, 2026  
 **Version:** 1.0.0  
 
