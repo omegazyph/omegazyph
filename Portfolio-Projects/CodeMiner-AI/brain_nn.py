@@ -3,28 +3,26 @@ Script Name: brain_nn.py
 Author: omegazyph
 Created: 2026-01-05
 Last Updated: 2026-01-05
-Description: Upgraded Neural Network using LSTM. 
-             Simplified imports to remove 'unused torch' warning.
+Description: High-capacity LSTM model. Cleaned imports to resolve 
+             linter 'unused' warnings.
 """
 
-import torch.nn as nn
+from torch import nn
 
 class NeuralCodeBrain(nn.Module):
-    def __init__(self, vocab_size, embedding_dim=64, hidden_dim=128):
+    def __init__(self, vocab_size):
         super(NeuralCodeBrain, self).__init__()
-        self.embedding = nn.Embedding(vocab_size, embedding_dim)
+        # 512 neurons to prevent your Blackjack & Password scripts from mixing
+        self.hidden_size = 512 
+        self.num_layers = 2 
         
-        # LSTM layer for sequence memory
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
-        
-        # Output layer to map hidden states back to vocabulary
-        self.fc = nn.Linear(hidden_dim, vocab_size)
+        self.embedding = nn.Embedding(vocab_size, 512)
+        # 2 layers of LSTM help the brain 'categorize' different projects
+        self.lstm = nn.LSTM(512, 512, num_layers=2, batch_first=True)
+        self.fc = nn.Linear(512, vocab_size)
 
     def forward(self, x, hidden=None):
         x = self.embedding(x)
-        
-        # The LSTM processes the sequence and returns a new hidden state
-        output, hidden = self.lstm(x, hidden)
-        
-        logits = self.fc(output)
-        return logits, hidden
+        out, hidden = self.lstm(x, hidden)
+        out = self.fc(out)
+        return out, hidden
