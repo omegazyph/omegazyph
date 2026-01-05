@@ -1,15 +1,5 @@
-"""
-Script Name: data_loader.py
-Author: omegazyph
-Created: 2026-01-05
-Last Updated: 2026-01-05
-Description: The Knowledge Base. Add more Python code here to make 
-             your AI smarter and more versatile.
-"""
-
 def load_sample_data():
-    # Adding more diverse Python patterns
-    knowledge = """
+    return """
 def greet(name):
     print("Hello " + name)
 
@@ -32,4 +22,3 @@ class Robot:
     def say_hi(self):
         print("I am " + self.name)
 """
-    return knowledge

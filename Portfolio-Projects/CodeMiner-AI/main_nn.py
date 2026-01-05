@@ -55,7 +55,7 @@ def run_chat_mode():
             # Since we are using characters, we need to generate MORE 
             # (150 chars instead of 50 words)
             for _ in range(150):
-                last_logit = logits[:, -1, :] / 0.8
+                last_logit = logits[:, -1, :] / 0.1
                 probs = F.softmax(last_logit, dim=-1)
                 next_token = torch.multinomial(probs, num_samples=1)
                 
