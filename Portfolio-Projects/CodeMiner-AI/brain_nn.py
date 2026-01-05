@@ -1,71 +1,30 @@
 """
-Script Name: main_nn.py
+Script Name: brain_nn.py
 Author: omegazyph
 Created: 2026-01-05
 Last Updated: 2026-01-05
-Description: Master script for LSTM-powered AI. This version is 
-             fully optimized for Ruff/Linter standards.
+Description: Upgraded Neural Network using LSTM. 
+             Simplified imports to remove 'unused torch' warning.
 """
 
-import torch
-import torch.nn.functional as F
-import os
-from data_loader import load_sample_data
-from tokenizer import WordTokenizer
-from trainer import train_model
-from brain_nn import NeuralCodeBrain
+import torch.nn as nn
 
-def run_chat_mode():
-    text = load_sample_data()
-    tk = WordTokenizer(text)
-    encoded = tk.encode(text)
-    
-    model_path = "python_brain.pth"
-    model = NeuralCodeBrain(tk.vocab_size)
-    
-    if os.path.exists(model_path):
-        print(f"--- Loading Memory Brain from {model_path} ---")
-        model.load_state_dict(torch.load(model_path))
-    else:
-        model = train_model(encoded, tk.vocab_size, epochs=200)
-        torch.save(model.state_dict(), model_path)
-
-    model.eval()
-
-    print("\n--- CodeMiner-AI: No Guidelines Mode ---")
-    print("(Type 'exit' to quit)")
-
-    while True:
-        prompt = input("\nEnter Python prompt: ")
-        if prompt.lower() == 'exit':
-            break
+class NeuralCodeBrain(nn.Module):
+    def __init__(self, vocab_size, embedding_dim=64, hidden_dim=128):
+        super(NeuralCodeBrain, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)
         
-        try:
-            input_ids = tk.encode(prompt)
-            if not input_ids:
-                continue
+        # LSTM layer for sequence memory
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
+        
+        # Output layer to map hidden states back to vocabulary
+        self.fc = nn.Linear(hidden_dim, vocab_size)
 
-            input_tensor = torch.tensor([input_ids])
-            generated_ids = input_ids[:]
-            hidden = None
-            
-            with torch.no_grad():
-                logits, hidden = model(input_tensor, hidden)
-                
-                for _ in range(40):
-                    last_logit = logits[:, -1, :] / 0.8
-                    probs = F.softmax(last_logit, dim=-1)
-                    next_token = torch.multinomial(probs, num_samples=1)
-                    
-                    generated_ids.append(next_token.item())
-                    logits, hidden = model(next_token, hidden)
-
-            print("\n--- AI Suggestion ---")
-            print(tk.decode(generated_ids))
-            
-        except Exception:
-            # Removed 'as e' because it wasn't being used
-            print("I don't recognize one of those characters yet!")
-
-if __name__ == "__main__":
-    run_chat_mode()
+    def forward(self, x, hidden=None):
+        x = self.embedding(x)
+        
+        # The LSTM processes the sequence and returns a new hidden state
+        output, hidden = self.lstm(x, hidden)
+        
+        logits = self.fc(output)
+        return logits, hidden
