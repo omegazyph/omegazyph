@@ -1,33 +1,26 @@
 """
+Script Name: tokenizer.py
 Author: omegazyph
-Description: Upgraded Tokenizer that breaks Python code into words 
-             instead of characters. This is the first step toward 
-             Large Language Model (LLM) logic.
+Created: 2026-01-05
+Last Updated: 2026-01-05
+Description: High-precision character tokenizer. Captures every 
+             single symbol (+, %, =, :) without exception.
 """
 
-import re
-
-class WordTokenizer:
+class WordTokenizer: 
     def __init__(self, text):
-        # This regex splits by spaces and symbols but keeps the symbols
-        self.tokens = re.findall(r"[\w']+|[.,!?;:()\[\]{}]|\s+", text)
-        self.vocab = sorted(list(set(self.tokens)))
-        self.vocab_size = len(self.vocab)
+        # We use set() to find every unique character, including symbols
+        self.chars = sorted(list(set(text)))
+        self.vocab_size = len(self.chars)
         
-        self.token_to_int = { t:i for i,t in enumerate(self.vocab) }
-        self.int_to_token = { i:t for i,t in enumerate(self.vocab) }
+        # Mapping every character to a unique ID
+        self.char_to_int = {ch: i for i, ch in enumerate(self.chars)}
+        self.int_to_char = {i: ch for i, ch in enumerate(self.chars)}
 
     def encode(self, text):
-        # Find all words/symbols in the input
-        input_tokens = re.findall(r"[\w']+|[.,!?;:()\[\]{}]|\s+", text)
-        return [self.token_to_int[t] for t in input_tokens if t in self.token_to_int]
+        # The 'if ch in' ensures we don't crash if a new char appears
+        return [self.char_to_int[ch] for ch in text if ch in self.char_to_int]
 
-    def decode(self, integers):
-        return "".join([self.int_to_token[i] for i in integers])
-
-if __name__ == "__main__":
-    sample = "def hello():"
-    tk = WordTokenizer(sample)
-    encoded = tk.encode(sample)
-    print(f"Tokens found: {tk.tokens}")
-    print(f"Encoded: {encoded}")
+    def decode(self, ids):
+        # Joins the characters back together exactly as they were
+        return "".join([self.int_to_char[i] for i in ids])
