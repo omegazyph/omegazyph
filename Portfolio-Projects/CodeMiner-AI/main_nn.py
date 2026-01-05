@@ -3,8 +3,8 @@ Script Name: main_nn.py
 Author: omegazyph
 Created: 2026-01-05
 Last Updated: 2026-01-05
-Description: Master script for LSTM-powered AI. Fully optimized to 
-             clear all 14 linter errors and handle user prompts.
+Description: Master script for LSTM-powered AI. Hard-coded to 1000 
+             epochs for character-level precision.
 """
 
 import torch
@@ -17,6 +17,7 @@ from brain_nn import NeuralCodeBrain
 
 def run_chat_mode():
     text = load_sample_data()
+    # Ensure this is the character-level tokenizer we updated
     tk = WordTokenizer(text)
     encoded = tk.encode(text)
     
@@ -27,7 +28,8 @@ def run_chat_mode():
         print("--- Loading Memory Brain ---")
         model.load_state_dict(torch.load(model_path, weights_only=True))
     else:
-        model = train_model(encoded, tk.vocab_size, epochs=200)
+        # FORCE 1000 EPOCHS HERE
+        model = train_model(encoded, tk.vocab_size, epochs=1000)
         torch.save(model.state_dict(), model_path)
 
     model.eval()
@@ -41,7 +43,6 @@ def run_chat_mode():
         
         input_ids = tk.encode(prompt)
         if not input_ids:
-            print("AI: I don't recognize those characters.")
             continue
 
         input_tensor = torch.tensor([input_ids])
@@ -51,9 +52,10 @@ def run_chat_mode():
         with torch.no_grad():
             logits, hidden = model(input_tensor, hidden)
             
-            for _ in range(50):
-                # Temperature 1.0 for balanced creativity
-                last_logit = logits[:, -1, :] / 1.0 
+            # Since we are using characters, we need to generate MORE 
+            # (150 chars instead of 50 words)
+            for _ in range(150):
+                last_logit = logits[:, -1, :] / 0.8
                 probs = F.softmax(last_logit, dim=-1)
                 next_token = torch.multinomial(probs, num_samples=1)
                 
