@@ -1,25 +1,37 @@
 """
+Script Name: brain_nn.py
 Author: omegazyph
-Description: A Neural Network brain using PyTorch. This is the 
-             foundation for a ChatGPT-style model.
+Created: 2026-01-05
+Last Updated: 2026-01-05
+Description: Upgraded Neural Network using LSTM (Long Short-Term Memory). 
+             This allows the AI to remember Python syntax (like open 
+             parentheses) across multiple lines of code.
 """
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 class NeuralCodeBrain(nn.Module):
-    def __init__(self, vocab_size, embedding_dim=32):
-        super().__init__()
-        # Embedding turns tokens into vectors (meaningful numbers)
+    def __init__(self, vocab_size, embedding_dim=64, hidden_dim=128):
+        super(NeuralCodeBrain, self).__init__()
+        # Embedding: Converts word IDs into math vectors
         self.embedding = nn.Embedding(vocab_size, embedding_dim)
         
-        # A simple linear layer that "thinks" about the next word
-        self.fc = nn.Linear(embedding_dim, vocab_size)
+        # LSTM: The memory engine that tracks the sequence of Python code
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
+        
+        # FC (Fully Connected): The final layer that picks the next word
+        self.fc = nn.Linear(hidden_dim, vocab_size)
 
-    def forward(self, x):
-        # x is the input token
-        x = self.embedding(x)
-        # Predict the next token
-        logits = self.fc(x)
-        return logits
+    def forward(self, x, hidden=None):
+        # x is the input sequence of tokens
+        embedded = self.embedding(x)
+        
+        # Pass through memory cells
+        # output = the 'thoughts' for each word
+        # hidden = the 'memory' to keep for the next word
+        output, hidden = self.lstm(embedded, hidden)
+        
+        # Map the thoughts to our vocabulary (words)
+        logits = self.fc(output)
+        return logits, hidden
