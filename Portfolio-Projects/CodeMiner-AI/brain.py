@@ -17,7 +17,6 @@ class PatternBrain:
         """
         Reads the numbers and counts the patterns.
         """
-        # We look at every pair of numbers in the data
         for i in range(len(encoded_data) - 1):
             current_num = encoded_data[i]
             next_num = encoded_data[i+1]
@@ -35,29 +34,7 @@ class PatternBrain:
         row_sum = np.sum(row)
         
         if row_sum == 0:
-            return None # The AI hasn't seen this character before
+            return None 
             
-        # Divide the row by the sum to get percentages (0.0 to 1.0)
+        # Convert counts into percentages
         return row / row_sum
-
-# --- Let's test the "Brain" ---
-if __name__ == "__main__":
-    from data_loader import load_sample_data
-    from tokenizer import SimpleTokenizer
-    
-    # 1. Setup
-    text = load_sample_data()
-    tk = SimpleTokenizer(text)
-    encoded = tk.encode(text)
-    
-    # 2. Initialize Brain and Learn
-    brain = PatternBrain(tk.vocab_size)
-    brain.learn(encoded)
-    
-    # 3. Ask the brain: "What usually follows 'd'?"
-    char_to_check = 'd'
-    idx = tk.char_to_int[char_to_check]
-    probs = brain.get_probabilities(idx)
-    
-    print(f"\nAI is looking at character: '{char_to_check}'")
-    print(f"Probabilities for next character IDs: \n{probs}")
