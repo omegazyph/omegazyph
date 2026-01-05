@@ -1,28 +1,35 @@
 """
+Script Name: data_loader.py
 Author: omegazyph
-Description: This is the very first step. It loads the "Knowledge Base" 
-             (raw programming code) that our AI will use to learn 
-             how to program.
+Created: 2026-01-05
+Last Updated: 2026-01-05
+Description: The Knowledge Base. Add more Python code here to make 
+             your AI smarter and more versatile.
 """
 
 def load_sample_data():
-    # This is a small "Universe" of code for our AI to study.
-    # In the future, this could be a whole .py file.
+    # Adding more diverse Python patterns
     knowledge = """
-def greet():
-    print("hello")
+def greet(name):
+    print("Hello " + name)
 
 def add(a, b):
     return a + b
-    
-for i in range(5):
-    greet()
+
+def check_even(num):
+    if num % 2 == 0:
+        return True
+    else:
+        return False
+
+for i in range(10):
+    result = add(i, 5)
+    print(result)
+
+class Robot:
+    def __init__(self, name):
+        self.name = name
+    def say_hi(self):
+        print("I am " + self.name)
 """
     return knowledge
-
-if __name__ == "__main__":
-    # Test if we can see our data
-    raw_code = load_sample_data()
-    print("--- AI Knowledge Base Loaded ---")
-    print(raw_code)
-    print(f"Total characters to learn from: {len(raw_code)}")
