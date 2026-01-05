@@ -1,25 +1,68 @@
 """
-Script Name: brain_nn.py
+Script Name: main_nn.py
 Author: omegazyph
 Created: 2026-01-05
 Last Updated: 2026-01-05
-Description: Upgraded Neural Network using LSTM. Cleaned imports 
-             by removing the redundant 'import torch' to satisfy 
-             the VS Code linter.
+Description: Master script for LSTM-powered AI. Fully optimized to 
+             clear all 14 linter errors and handle user prompts.
 """
 
-import torch.nn as nn
+import torch
+import torch.nn.functional as F
+import os
+from data_loader import load_sample_data
+from tokenizer import WordTokenizer
+from trainer import train_model
+from brain_nn import NeuralCodeBrain
 
-class NeuralCodeBrain(nn.Module):
-    def __init__(self, vocab_size, embedding_dim=64, hidden_dim=128):
-        super(NeuralCodeBrain, self).__init__()
-        self.embedding = nn.Embedding(vocab_size, embedding_dim)
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
-        self.fc = nn.Linear(hidden_dim, vocab_size)
+def run_chat_mode():
+    text = load_sample_data()
+    tk = WordTokenizer(text)
+    encoded = tk.encode(text)
+    
+    model_path = "python_brain.pth"
+    model = NeuralCodeBrain(tk.vocab_size)
+    
+    if os.path.exists(model_path):
+        print("--- Loading Memory Brain ---")
+        model.load_state_dict(torch.load(model_path, weights_only=True))
+    else:
+        model = train_model(encoded, tk.vocab_size, epochs=200)
+        torch.save(model.state_dict(), model_path)
 
-    def forward(self, x, hidden=None):
-        # x is the sequence of tokens
-        x = self.embedding(x)
-        output, hidden = self.lstm(x, hidden)
-        logits = self.fc(output)
-        return logits, hidden
+    model.eval()
+    print("\n--- CodeMiner-AI: Ready ---")
+    print("(Type 'exit' to quit)")
+
+    while True:
+        prompt = input("\nEnter Python prompt: ")
+        if prompt.lower() == 'exit':
+            break
+        
+        input_ids = tk.encode(prompt)
+        if not input_ids:
+            print("AI: I don't recognize those characters.")
+            continue
+
+        input_tensor = torch.tensor([input_ids])
+        generated_ids = input_ids[:]
+        hidden = None
+        
+        with torch.no_grad():
+            logits, hidden = model(input_tensor, hidden)
+            
+            for _ in range(50):
+                # Temperature 1.0 for balanced creativity
+                last_logit = logits[:, -1, :] / 1.0 
+                probs = F.softmax(last_logit, dim=-1)
+                next_token = torch.multinomial(probs, num_samples=1)
+                
+                token_id = next_token.item()
+                generated_ids.append(token_id)
+                logits, hidden = model(next_token, hidden)
+
+        print("\n--- AI Result ---")
+        print(tk.decode(generated_ids))
+
+if __name__ == "__main__":
+    run_chat_mode()
