@@ -1,40 +1,45 @@
 """
 Author: omegazyph
-Description: This script represents the "Learning Center." 
-             It creates a probability map to track how often 
-             characters follow each other in programming code.
+Description: Upgraded Brain. Instead of looking at 1 character, 
+             this model looks at a "Context" (N characters) to 
+             better understand Python syntax and structure.
 """
 
 import numpy as np
 
 class PatternBrain:
-    def __init__(self, vocab_size):
-        # A square grid of zeros. 
-        # Size is (Number of possible chars) x (Number of possible chars)
-        self.matrix = np.zeros((vocab_size, vocab_size))
+    def __init__(self, vocab_size, context_size=3):
+        # context_size=3 means the AI looks at the last 3 characters to guess the 4th
+        self.context_size = context_size
+        self.matrix = {} 
+        self.vocab_size = vocab_size
 
     def learn(self, encoded_data):
         """
-        Reads the numbers and counts the patterns.
+        Reads the numbers and remembers what follows specific sequences.
         """
-        for i in range(len(encoded_data) - 1):
-            current_num = encoded_data[i]
-            next_num = encoded_data[i+1]
+        for i in range(len(encoded_data) - self.context_size):
+            # Take a "window" of characters (e.g., ['d', 'e', 'f'])
+            context = tuple(encoded_data[i : i + self.context_size])
+            next_char = encoded_data[i + self.context_size]
             
-            # Add a 'point' to the grid for this specific pair
-            self.matrix[current_num][next_num] += 1
+            if context not in self.matrix:
+                # Create a list of zeros for every possible next character
+                self.matrix[context] = np.zeros(self.vocab_size)
             
-        print("Learning complete. Pattern grid updated.")
+            self.matrix[context][next_char] += 1
+            
+        print(f"Learning complete. AI now understands {len(self.matrix)} Python patterns.")
 
-    def get_probabilities(self, current_num):
+    def get_probabilities(self, context_sequence):
         """
-        Returns the AI's 'confidence' for what comes next.
+        Looks at the last few characters and returns the probability of the next one.
         """
-        row = self.matrix[current_num]
-        row_sum = np.sum(row)
+        context = tuple(context_sequence[-self.context_size:])
         
-        if row_sum == 0:
-            return None 
+        if context not in self.matrix:
+            return None
             
-        # Convert counts into percentages
+        row = self.matrix[context]
+        row_sum = np.sum(row)
         return row / row_sum
