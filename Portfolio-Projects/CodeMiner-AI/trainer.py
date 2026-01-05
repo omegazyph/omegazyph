@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.optim as optim
 from brain_nn import NeuralCodeBrain
 
-def train_model(encoded_data, vocab_size, epochs=200):
+def train_model(encoded_data, vocab_size, epochs=1000):
     model = NeuralCodeBrain(vocab_size)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.005)
