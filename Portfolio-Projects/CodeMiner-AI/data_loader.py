@@ -3,8 +3,8 @@ Script Name: data_loader.py
 Author: omegazyph
 Created: 2026-01-05
 Last Updated: 2026-01-05
-Description: Instruction-based training data. This teaches the AI 
-             to respond to tasks with actual Python code.
+Description: Expanded Instruction-based training data to improve 
+             task-to-code accuracy.
 """
 
 def load_sample_data():
@@ -16,6 +16,14 @@ def greet(name):
 # Task: Add two numbers
 def add(a, b):
     return a + b
+
+# Task: Subtract two numbers
+def subtract(a, b):
+    return a - b
+
+# Task: Multiply two numbers
+def multiply(a, b):
+    return a * b
 
 # Task: Check if a number is even
 def check_even(num):
@@ -35,4 +43,8 @@ class Robot:
 for i in range(10):
     result = add(i, 5)
     print(result)
+
+# Task: Square a number
+def square(n):
+    return n * n
 """
