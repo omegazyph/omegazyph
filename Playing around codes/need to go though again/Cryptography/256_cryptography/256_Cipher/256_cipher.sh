@@ -33,12 +33,12 @@ echo "----------------------------------------------------------------"
 
 # --- Save to File ---
 # Prompt the user if they want to export this hash for the Cracker script
-read -p "Would you like to save this to inputhash.txt? (y/n): " save_choice
+read -p "Would you like to save this to your_hash.txt? (y/n): " save_choice
 
 if [[ "$save_choice" == "y" || "$save_choice" == "Y" ]]; then
-    # Write the hash string to inputhash.txt, overwriting any previous content
-    echo "$INPUT_HASH" > inputhash.txt
-    echo -e "\n[SUCCESS] Hash saved to inputhash.txt"
+    # Write the hash string to your_hash.txt, overwriting any previous content
+    echo "$INPUT_HASH" > your_hash.txt
+    echo -e "\n[SUCCESS] Hash saved to your_hash.txt"
 else
     echo -e "\n[*] Hash was not saved."
 fi
