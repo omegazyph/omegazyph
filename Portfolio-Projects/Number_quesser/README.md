@@ -1,22 +1,14 @@
-# 🔢 Number Guesser (v1.2)
+# Number Guessing Game
 
-## 📝 Overview
+This is a simple number guessing game implemented in Python. The program generates a random number within a specified range and prompts the user to guess that number. It provides feedback to the user if their guess is too high or too low, and congratulates them when they guess the correct number.
 
-**Number Guesser** is a simple yet addictive logic game where players must identify a randomly generated number within a range of their choosing. The program provides feedback if the guess is too high or too low and tracks your efficiency.
+## How to Play
 
-## ✨ Features
-
-* **Customizable Range:** You define the difficulty by choosing the upper limit of the random number.
-* **Score Tracking:** Tracks the total number of attempts per session.
-* **Best Score Persistence:** Automatically records your "personal best" (fewest guesses) in a local file.
-* **Error Handling:** Robust validation ensures the game doesn't crash on invalid text inputs.
-
-## 🚀 How to Play
-
-1. Run the script: `python3 number_quesser.py`
-2. Enter a maximum number (e.g., 100).
-3. Start guessing! The program will guide you with "above" or "below" hints.
-4. Try to beat the record stored in `guess_score.txt`.
-
----
-**Developer:** omegazyph | **Version:** 1.2 | **Updated:** Jan 5, 2026
+1. Run the `number_guessing_game.py` script in a Python environment.
+2. You will be prompted to enter a number to set the upper limit of the range for the random number generation.
+3. Enter a valid positive integer. If the input is not valid (e.g., not a number or less than or equal to 0), the program will prompt you to enter a valid number.
+4. Once a valid range is set, the program generates a random number within that range.
+5. You will be prompted to make a guess. Enter your guess as a number.
+6. The program will provide feedback if your guess is too high or too low.
+7. Keep guessing until you guess the correct number.
+8. Once you guess the correct number, the program will congratulate you and display the number of guesses it took.

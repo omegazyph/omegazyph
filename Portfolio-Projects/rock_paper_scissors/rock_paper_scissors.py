@@ -1,97 +1,43 @@
-#!/usr/bin/env python3
-"""
-==============================================================================
-SCRIPT NAME:    rock_paper_scissors.py
-DESCRIPTION:    A terminal-based Rock, Paper, Scissors game with name tracking,
-                score counting, and clipboard result sharing.
-AUTHOR:         omegazyph
-DATE CREATED:   05-22-2025
-DATE UPDATED:   2026-01-05
-VERSION:        1.1
-==============================================================================
-"""
-
 import random
-import tkinter as tk  # Used for the clipboard function
 
-def copy_to_clipboard(text):
-    """Copies the final game stats to the system clipboard."""
-    root = tk.Tk()
-    root.withdraw()  # Keeps the main window hidden
-    root.clipboard_clear()
-    root.clipboard_append(text)
-    root.update()  # Required to ensure text stays in clipboard
-    root.destroy()
-    print("\n📋 Match summary copied to clipboard!")
+user_wins = 0  # Variable to track the number of times the user wins
+computer_wins = 0  # Variable to track the number of times the computer wins
 
-def main():
-    """Main game logic for Rock Paper Scissors."""
-    print("====================================")
-    print("    OMEGAZYPH ROCK PAPER SCISSORS")
-    print("====================================\n")
+options = ["rock", "paper", "scissors"]  # List of available options for the game
 
-    # Asking for the player's name for personalized scoring
-    player_name = input("Enter your name: ").strip()
-    if not player_name:
-        player_name = "Player 1"
+# Main game loop
+while True:
+    user_input = input("Type Rock/Paper/Scissors or Q to quit :> ").lower()  # Getting user input
+    
+    if user_input == "q":  # Quitting the game if the user input is 'q'
+        break
 
-    user_wins = 0  # Track user score
-    computer_wins = 0  # Track computer score
-    options = ["rock", "paper", "scissors"]
+    if user_input not in options:  # Skipping the current iteration if the user input is not valid
+        continue
 
-    print(f"Hello {player_name}! Let's begin. (Type Q to quit)")
+    random_number = random.randint(0, 2)  # Generating a random number to represent the computer's choice
+    computer_pick = options[random_number]  # Getting the computer's pick based on the random number
+    
+    print("Computer picked", computer_pick + ".")  # Displaying the computer's pick
 
-    # Main game loop
-    while True:
-        # Getting user input and converting to lowercase for comparison
-        user_input = input("\nType Rock/Paper/Scissors or Q to quit :> ").lower()
+    # Determining the winner of the round
+    if user_input == "rock" and computer_pick == "scissors":
+        print("You win!")
+        user_wins += 1  # Incrementing user wins count
         
-        # Exit condition
-        if user_input == "q":
-            break
-
-        # Input validation: check if the choice exists in our list
-        if user_input not in options:
-            print("Invalid choice. Please pick Rock, Paper, or Scissors.")
-            continue
-
-        # Generating the computer's choice
-        random_number = random.randint(0, 2)
-        computer_pick = options[random_number]
+    elif user_input == "paper" and computer_pick == "rock":
+        print("You win!")
+        user_wins += 1
         
-        print(f"Computer picked {computer_pick}.")
+    elif user_input == "scissors" and computer_pick == "paper":
+        print("You win!")
+        user_wins += 1
+        
+    else:
+        print("You Lost!")
+        computer_wins += 1  # Incrementing computer wins count
 
-        # Determining the winner of the round
-        if user_input == computer_pick:
-            print("🤝 It's a tie!")
-
-        elif user_input == "rock" and computer_pick == "scissors":
-            print("✨ You win!")
-            user_wins += 1
-            
-        elif user_input == "paper" and computer_pick == "rock":
-            print("✨ You win!")
-            user_wins += 1
-            
-        elif user_input == "scissors" and computer_pick == "paper":
-            print("✨ You win!")
-            user_wins += 1
-            
-        else:
-            print("❌ You Lost!")
-            computer_wins += 1
-
-    # Printing the final session results
-    print("\n" + "="*30)
-    print(f"FINAL STATS FOR {player_name.upper()}")
-    print(f"Your Wins: {user_wins}")
-    print(f"Computer Wins: {computer_wins}")
-    print("="*30)
-
-    # Format result string and copy to clipboard
-    result_text = f"{player_name} won {user_wins} times against the computer!"
-    copy_to_clipboard(result_text)
-    print("Goodbye!")
-
-if __name__ == "__main__":
-    main()
+# Printing the final results
+print("You won", user_wins, "times.")
+print("The computer won", computer_wins, "times.")
+print("Goodbye!")

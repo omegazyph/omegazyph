@@ -1,22 +1,52 @@
-# 🪨 Rock, Paper, Scissors (v1.1)
+# Rock, Paper, Scissors Game
 
-## 📝 Overview
+This Python script allows you to play the classic Rock, Paper, Scissors game against the computer.
 
-A professional terminal-based version of the classic Rock, Paper, Scissors game developed by **omegazyph**. This script features robust input handling, session-based scoring, and clipboard integration.
+## How to Play
 
-## ✨ Features
+1. **Input**: Type "rock", "paper", or "scissors" to choose your move. You can also type "Q" to quit the game.
+2. **Outcome**: After you make your choice, the computer will randomly select its move, and the winner of the round will be determined based on the rules.
+3. **Scoring**: The game keeps track of how many times you and the computer win, and the final results are displayed when you choose to quit.
 
-* **User Identification:** Tracks scores specifically for your name.
-* **Intelligent Scoring:** Correctly identifies wins, losses, and ties.
-* **Clipboard Reporting:** Automatically copies a summary of your wins when you exit.
-* **Clean UI:** Uses visual separators and emojis for a better terminal experience.
+## Example
 
-## 🚀 How to Play
+Got it! Here's the README.md file condensed into one page:
 
-1. Run the script: `python3 rock_paper_scissors.py`
-2. Enter your name when prompted.
-3. Choose your move (Rock, Paper, or Scissors).
-4. Type `Q` to finish the session and copy your stats.
+markdown
 
----
-**Developer:** omegazyph | **Version:** 1.1 | **Updated:** 2026-01-05
+# Rock, Paper, Scissors Game
+
+This Python script allows you to play the classic Rock, Paper, Scissors game against the computer.
+
+## How to Play
+
+1. **Input**: Type "rock", "paper", or "scissors" to choose your move. You can also type "Q" to quit the game.
+2. **Outcome**: After you make your choice, the computer will randomly select its move, and the winner of the round will be determined based on the rules.
+3. **Scoring**: The game keeps track of how many times you and the computer win, and the final results are displayed when you choose to quit.
+
+## Example
+
+Type Rock/Paper/Scissors or Q to quit :> rock
+Computer picked scissors.
+You win!
+Type Rock/Paper/Scissors or Q to quit :> paper
+Computer picked rock.
+You win!
+Type Rock/Paper/Scissors or Q to quit :> scissors
+Computer picked rock.
+You lost!
+Type Rock/Paper/Scissors or Q to quit :> q
+You won 2 times.
+The computer won 1 times.
+Goodbye!
+
+
+## How to Run
+
+To run the script, simply execute the Python file `rock_paper_scissors.py` in your terminal or Python environment:
+
+```bash
+python rock_paper_scissors.py
+
+
+Feel free to adjust the content or formatting according to your preferences! Let me know if you need further assistance.

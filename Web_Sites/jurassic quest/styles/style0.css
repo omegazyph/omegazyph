@@ -1,0 +1,101 @@
+﻿/*
+-------------------------------------------------------------------------
+PROJECT    : Jurassic Quest
+FILE       : style0.css
+AUTHOR     : omegazyph
+CREATED    : 09-15-2017
+UPDATED    : 12-31-2025
+DESCRIPTION: 
+    Main stylesheet for the site. Manages the dino tile background,
+    navigation logo, and side menu (ul) styling.
+-------------------------------------------------------------------------
+*/
+
+/* Imports the structural layout rules from the external file */
+@import url(layout_1.css);
+
+/* Navigation bar: 
+   Displays the wide 2014 logo as a background image.
+   Set to 45% width and 109px height to fit the logo dimensions.
+*/
+nav {
+    background-repeat: no-repeat;
+    background-position: left;
+    background-image: url('../images/2014 web-logo wide.png');
+    height: 109px;
+    width: 45%;
+    left: auto;
+    background-attachment: scroll;
+}
+
+/* Centers the main content area of the page */
+section {
+    text-align: center;
+}
+
+/* Global Page Styles:
+   Removes default margins and applies the tiling dinosaur background.
+*/
+body {
+    margin: 0;
+    background-image: url('../images/dino tile 32.jpg');
+}
+
+/* Main title styling - centered and extra large */
+h1 {
+    text-align: center;
+    font-size: xx-large;
+}
+
+/* Sub-header styling with a thin border */
+h2 {
+    border: thin;
+    text-align: center;
+}
+
+/* Side Navigation Menu (Unordered List):
+   Fixed to the side of the screen so it doesn't move when scrolling.
+*/
+ul {
+    list-style-type: none; /* Removes bullet points */
+    margin: 0;
+    padding: 0;
+    width: auto;
+    background-color: #f1f1f1; /* Light grey background */
+    position: fixed; /* Keeps the menu visible while scrolling */
+    height: auto;
+    overflow: auto; /* Adds scrollbars if menu is too long */
+}
+
+/* Styling for individual menu links */
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+/* The "Active" or currently selected page link (Green) */
+li a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Hover effect: changes color when the mouse is over the link */
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+/* Container for images with justified text captions */
+.img-with-text {
+    text-align: justify;
+    width: 300px;
+}
+
+/* Fieldset Layout:
+   Floats the scene boxes to the left so they sit side-by-side.
+*/
+#fieldset1 {
+    float: left;
+}

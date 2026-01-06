@@ -1,106 +1,62 @@
-#!/usr/bin/env python3
-"""
-==============================================================================
-SCRIPT NAME:    secure_pass_gen.py
-DESCRIPTION:    A Tkinter-based application that generates secure, random 
-                passwords using strings of letters, digits, and symbols.
-AUTHOR:         omegazyph
-DATE CREATED:   2024-04-23
-DATE UPDATED:   2026-01-05
-VERSION:        2.1
-==============================================================================
-"""
+######################################################################
+# SecurePassGen
+# Created by Wayne Stock (omegazyph)
+# created on 2024-04-23
+# This program uses Tkinter to create a password for the user.
+#######################################################################
 
 # Imports
 import random
 import string
 import tkinter as tk
-from tkinter import messagebox, Label, Entry, Button
+from tkinter import messagebox, simpledialog, Text, Toplevel, Button, Label, Entry
 
 # Main App Class
 class App(tk.Tk):
-    """Main application class for the Secure Password Generator."""
     def __init__(self):
         super().__init__()
         self.title("Secure Password Generator")  # Set the title of the window
-        self.geometry('400x250')  # Set the initial size of the window
+        self.geometry('400x200')  # Set the initial size of the window
         self.configure(background="#f0f0f0")  # Set background color of the window
 
-        # Create a Label widget for the title
-        self.main_label = Label(
-            self,
-            text="Secure Password Generator",
-            font=("Helvetica", 16, "bold"),
-            bg="#f0f0f0",
-            fg="#333333"
-        )
-        self.main_label.pack(pady=10)
+        # Create a Label widget with text
+        self.main_label = Label(self,
+                                text="Welcome to Secure Password Generator",  # Text displayed in the label
+                                font=("Helvetica", 16),  # Font and size of the text
+                                bg="#f0f0f0",  # Background color of the label
+                                fg="#333333")  # Text color
+        self.main_label.pack(pady=10)  # Pack the label into the window with some padding
 
         # Create an Entry widget to display the generated password
-        # We use a readonly state later to prevent manual typing in the box
-        self.output_entry = Entry(
-            self, 
-            font=("Helvetica", 12), 
-            bg="white", 
-            fg="black", 
-            bd=1, 
-            relief="solid", 
-            justify="center"
-        )
+        self.output_entry = Entry(self, font=("Helvetica", 12), bg="white", fg="black", bd=0, highlightthickness=0)
         self.output_entry.pack(pady=10, padx=20, fill="x")
 
-        # Create a Button widget to trigger generation
-        self.gen_button = Button(
-            self,
-            text="Generate Password",
-            font=("Helvetica", 10),
-            command=self.generate_password,
-            bg="#4CAF50",
-            fg="white",
-            width=20
-        )
-        self.gen_button.pack(pady=5)
+        # Create a Button widget
+        self.gen_button = Button(self,
+                                 text="Generate Password",  # Text displayed on the button
+                                 command=self.generate_password)  # Function to be called when the button is clicked
+        self.gen_button.pack(pady=10)  # Pack the button into the window with some padding
 
-        # Button to copy the generated password to the clipboard
-        self.copy_button = Button(
-            self,
-            text="Copy to Clipboard",
-            font=("Helvetica", 10),
-            command=self.copy_to_clipboard,
-            bg="#2196F3",
-            fg="white",
-            width=20
-        )
-        self.copy_button.pack(pady=5)
+    # Function to generate password
+    def generate_password(self, length=16, include_uppercase=True, include_lowercase=True, include_digits=True, include_symbols=True):
+        characters = ''
+        if include_uppercase:
+            characters += string.ascii_uppercase
+        if include_lowercase:
+            characters += string.ascii_lowercase
+        if include_digits:
+            characters += string.digits
+        if include_symbols:
+            characters += string.punctuation
 
-    def generate_password(self, length=16):
-        """Logic to build a random string from various character sets."""
-        # Define the possible characters
-        characters = string.ascii_letters + string.digits + string.punctuation
+        if not characters:
+            raise ValueError("At least one character type should be included")
 
-        # Generate a random password of the specified length
-        password = ''.join(random.choice(characters) for i in range(length))
-        
-        # Enable the entry to update the text, then disable it again
-        self.output_entry.config(state='normal')
-        self.output_entry.delete(0, tk.END)
-        self.output_entry.insert(0, password)
-        # Setting to readonly so the user doesn't accidentally change it
-        self.output_entry.config(state='readonly')
-
-    def copy_to_clipboard(self):
-        """Retrieves the password from the entry and puts it on the system clipboard."""
-        password = self.output_entry.get()
-        if password:
-            self.clipboard_clear()
-            self.clipboard_append(password)
-            messagebox.showinfo("Success", "Password copied to clipboard!")
-        else:
-            messagebox.showwarning("Warning", "Generate a password first!")
+        password = ''.join(random.choice(characters) for _ in range(length))  # Generate random password
+        self.output_entry.delete(0, tk.END)  # Clear any previous password
+        self.output_entry.insert(0, password)  # Display the generated password in the entry
 
 # Entry Point
 if __name__ == "__main__":
-    # Create an instance of the App class
-    window = App()
-    # Run the Tkinter event loop to keep the window open
-    window.mainloop()
+    window = App()  # Create an instance of the App class
+    window.mainloop()  # Run the Tkinter event loop
