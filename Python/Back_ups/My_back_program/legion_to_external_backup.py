@@ -15,8 +15,10 @@ import shutil
 def run_backup():
     # --- CONFIGURATION ---
     # Finds the Desktop automatically
-    desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
-    source_folder = os.path.join(desktop_path, "omegazyph") 
+    # Updated to your specific OneDrive Desktop path
+    source_folder = r"C:\Users\omega\OneDrive\Desktop\omegazyph"
+    #desktop_path = os.path.join(os.environ["USERPROFILE"], "Desktop")
+    #source_folder = os.path.join(desktop_path, "omegazyph") 
     
     # Your specific deep folder path on the LaCie drive
     backup_destination = r"Z:\Windows\Documents\Git hub projects\omegazyph_back_up"
