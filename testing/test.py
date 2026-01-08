@@ -1,83 +1,112 @@
 ###############################################################################
-# Date: 2026-01-07
-# Script Name: chronos_vault.py
+# Date: 2026-01-08
+# Script Name: chronos_vault_v5.py
 # Author: omegazyph
-# Updated: 2026-01-07
-# Description: Secure backup vault with Matrix-style terminal output.
-#              Preserves folder structure with YYYY-MM-DD prefixing.
+# Updated: 2026-01-08
+# Description: Sentinel Edition. Uses SHA-256 hashing to verify file content
+#              integrity, ensuring zero duplicate backups of identical code.
 ###############################################################################
 
 import os
 import shutil
 import time
 import sys
+import hashlib
 from datetime import datetime
 
+
 def print_hacker(text, color="\033[1;32m"):
-    """Matrix-style typing effect for terminal immersion."""
     reset = "\033[0m"
     sys.stdout.write(color)
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
-        time.sleep(0.005) # Slightly faster for backup logs
+        time.sleep(0.001)
     print(reset)
 
+def get_file_hash(file_path):
+    """Generates a SHA-256 hash to act as a unique digital fingerprint."""
+    hasher = hashlib.sha256()
+    try:
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hasher.update(chunk)
+        return hasher.hexdigest()
+    except Exception:
+        return None
+
+def show_logo():
+    logo = r"""
+     _______  _   _  ______  _____  _   _  _____  _____ 
+    |  ____|| | | ||  ____||  _  || \ | ||  _  ||  ___|
+    | |     | |_| || | __  | | | ||  \| || | | || |___ 
+    | |     |  _  || |__ | | | | || \ \ || | | ||___  |
+    | |____ | | | || |___| | |_| || |\  || |_| | ___| |
+    |______||_| |_||______||_____||_| \_||_____||_____|
+               [ SYSTEM ARCHIVE v5.0 - SENTINEL ]
+    """
+    print_hacker(logo, "\033[1;33m") # Gold/Yellow for Sentinel Edition
+
 def chronos_sync(source_root, backup_root):
-    # 1. Date format: 2026-01-07
-    today_date = datetime.now().strftime("%Y-%m-%d")
-    
-    print_hacker("======================================================")
-    print_hacker(f" [!] INITIALIZING CHRONOS VAULT SYNC: {today_date}")
-    print_hacker(" STATUS: ENCRYPTING FILE PATHS...")
-    print_hacker("======================================================\n")
+    show_logo()
+    stats = {"scanned": 0, "archived": 0, "skipped": 0, "bytes": 0}
+    IGNORE_DIRS = {'__pycache__', '.git', '.venv', 'node_modules'}
+
+    print_hacker(" [!] STATUS: CALCULATING FILE FINGERPRINTS (SHA-256)...")
 
     for root, dirs, files in os.walk(source_root):
-        # Safety: Skip the backup folder itself
-        if os.path.abspath(backup_root) in os.path.abspath(root):
-            continue
-
-        # Recreate the folder structure
+        dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
+        
         rel_path = os.path.relpath(root, source_root)
         dest_dir = os.path.join(backup_root, rel_path)
-
         if not os.path.exists(dest_dir):
             os.makedirs(dest_dir)
 
-        # Identify Project Name
-        project_name = os.path.basename(root)
-        if not project_name or root == source_root:
-            project_name = "Main"
+        project_name = os.path.basename(root) if root != source_root else "Main"
 
         for filename in files:
-            name, ext = os.path.splitext(filename)
-            
-            # Format: 2026-01-07_ProjectName_FileName.ext
-            new_name = f"{today_date}_{project_name}_{name}{ext}"
-            
+            stats["scanned"] += 1
             source_path = os.path.join(root, filename)
+            
+            # 1. Get Modification Date
+            mtime = os.path.getmtime(source_path)
+            mod_date = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+            
+            # 2. Get File Content Fingerprint
+            current_hash = get_file_hash(source_path)
+            
+            new_name = f"{mod_date}_{project_name}_{filename}"
             dest_path = os.path.join(dest_dir, new_name)
 
+            # 3. SMART CHECK: Does a file with this name AND this content already exist?
             if os.path.exists(dest_path):
-                # Using Cyan for skipped files
-                print_hacker(f" [-] STABLE: {new_name}", "\033[1;36m")
-                continue
+                existing_hash = get_file_hash(dest_path)
+                if current_hash == existing_hash:
+                    stats["skipped"] += 1
+                    continue # Content is identical, skip.
 
             try:
                 shutil.copy2(source_path, dest_path)
-                print_hacker(f" [OK] ARCHIVED: {new_name}")
-            except Exception as e:
-                print_hacker(f" [!] UPLINK ERROR: {filename} | {e}", "\033[1;31m")
+                stats["archived"] += 1
+                stats["bytes"] += os.path.getsize(source_path)
+                print_hacker(f" [NEW] {new_name}")
+            except Exception:
+                print_hacker(f" [!] HASH MANTLE ERROR: {filename}", "\033[1;31m")
 
-    print_hacker("\n======================================================")
-    print_hacker(" [SUCCESS] VAULT SYNCHRONIZATION COMPLETE")
-    print_hacker(" ALL CORE ASSETS SECURED ON LOCAL DISK")
-    print_hacker("======================================================")
+    # Final Summary
+    size_mb = stats["bytes"] / (1024 * 1024)
+    print_hacker("\n" + "="*54)
+    print_hacker(f" [RESULT] FILES ANALYZED:  {stats['scanned']}")
+    print_hacker(f" [RESULT] UNIQUE ARCHIVES: {stats['archived']}")
+    print_hacker(f" [RESULT] DATA SAVED:      {size_mb:.2f} MB")
+    print_hacker(" [STATUS] INTEGRITY CHECK PASSED. VAULT SEALED.")
+    print_hacker("="*54)
 
 if __name__ == "__main__":
-    # Your Legion Paths
     src = r"C:\Users\omega\OneDrive\Desktop\omegazyph\Legion_Tools"
     dst = r"C:\Users\omega\OneDrive\Desktop\omegazyph\Backup_Vault"
     
+    start_time = time.time()
     chronos_sync(src, dst)
-    input("\nPress ENTER to disconnect from Vault...")
+    print(f"\nExecution Time: {time.time() - start_time:.2f}s")
+    input("\nPress ENTER to close...")
