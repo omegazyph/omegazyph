@@ -123,6 +123,7 @@ def main():
     print_color(logo)
     print_color("           -- LEGION PRIME v1.0 | OMEGAZYPH --")
     
+    # run functions
     run_optimizer()
     get_briefing()
     check_hardware_health()
