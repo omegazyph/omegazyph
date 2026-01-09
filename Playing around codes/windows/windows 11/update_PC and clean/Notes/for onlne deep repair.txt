@@ -1,3 +1,0 @@
-admin CMD
-
-DISM /Online /Cleanup-Image /RestoreHealth
