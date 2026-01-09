@@ -7,3 +7,12 @@
 # that tracks hunger, happiness, and health.
 ###############################################################################
 
+
+class pet:
+    def __init__(self):
+        # this means the pet is full
+        self.hunger = 0
+        # this means joyfull
+        self.happiness = 100
+
+        pass
