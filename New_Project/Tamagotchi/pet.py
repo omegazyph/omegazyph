@@ -31,3 +31,19 @@ class VirtualPet:
             self.hunger = 0
             
         self.happiness += 5
+
+    def status(self):
+        """Displays the pet's current stats and mood."""
+        print(f"\n--- {self.name}'s Status ---")
+        print(f"Hunger: {self.hunger}/100")
+        print(f"Happiness: {self.happiness}/100")
+        
+        # Simple mood logic based on stats
+        if self.hunger > 80:
+            print(f"Mood: {self.name} is starving! 🦴")
+        elif self.happiness < 20:
+            print(f"Mood: {self.name} is feeling lonely... ☁️")
+        else:
+            print(f"Mood: {self.name} is doing great! ✨")
+        print("-----------------------\n")
+

@@ -46,7 +46,7 @@ def get_stats():
     current_time = time.time()
     if battery.percent < 15 and not battery.power_plugged:
         # Check if 30 seconds have passed since the last beep
-        if current_time - last_beep_time > 30:
+        if current_time - last_beep_time > 5:
             winsound.Beep(1000, 200) # Short, sharp chirp
             last_beep_time = current_time # Reset the cooldown timer
     
