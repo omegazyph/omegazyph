@@ -23,6 +23,9 @@ class VirtualPet:
 
         # 100 is healthy, 0 is dead
         self.health = 100
+
+        self.level = 1          # Start at Level 1
+        self.experience = 0     # Start with 0 XP
         
         # We track if the pet is still alive/active
         self.is_alive = True
@@ -31,8 +34,9 @@ class VirtualPet:
 
     def feed(self):
         """Reduces hunger and slightly increases happiness."""
-        print(f"You fed {self.name}!")
+        print(f"\nYou fed {self.name}!")
         self.hunger -= 20
+        self.gain_xp(20) # Reward 20 XP for feeding
         
         # Safety check: Hunger shouldn't be negative
         if self.hunger < 0:
@@ -46,6 +50,7 @@ class VirtualPet:
         print(self.get_visual()) # This calls our new ASCII function
         print("="*20)
         print(f"Name:      {self.name}")
+        print(f"Level:     {self.level} (XP: {self.experience}/{self.level * 100})")
         print(f"Health:    {self.health}/100")
         print(f"Hunger:    {self.hunger}/100")
         print(f"Happiness: {self.happiness}/100")
@@ -57,9 +62,10 @@ class VirtualPet:
             print(f"Internal Error: {self.name} is not responding...")
             return
 
-        print(f"You pet {self.name}. They look so happy!")
+        print(f"\nYou pet {self.name}. They look so happy!")
         self.happiness += 20
         self.hunger += 5  # Playing makes them a tiny bit hungrier
+        self.gain_xp(10) # Reward 10 XP for petting
         
         # Cap happiness at 100
         if self.happiness > 100:
@@ -116,6 +122,18 @@ class VirtualPet:
         # Default happy state
         return "   (^_^) \n    /| \\\n   / |  \\"
     
+    def gain_xp(self, amount):
+        """Adds XP and checks for a level up."""
+        self.experience += amount
+        # Formula: Level up every 100 XP
+        if self.experience >= (self.level * 100):
+            self.level += 1
+            self.experience = 0 # Reset XP for the next level
+            print(f"✨ LEVEL UP! {self.name} is now Level {self.level}! ✨")
+            # Maybe boost health as a reward?
+            self.health = 100
+
+
 
 def main():
     # 1. Setup: Ask for the pet's name
@@ -147,7 +165,6 @@ def main():
         elif choice == "wait":
             print(f"\nYou watch {my_pet.name} play for a bit.")
             my_pet.pass_time()
-            my_pet.check_vitals()
             print("\n")
 
         elif choice == "quit":
