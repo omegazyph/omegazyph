@@ -77,18 +77,37 @@ class VirtualPet:
             self.happiness = 0
             print(f"Warning: {self.name} is very sad.")
 
-            
-'''
-##########################################################################
-# testing 
-# Create the pet
-my_pet = VirtualPet("Buddy")
+def main():
+    # 1. Setup: Ask for the pet's name
+    pet_name = input("What would you like to name your pet? ")
+    my_pet = VirtualPet(pet_name)
 
-# Check status, feed it, then check again
-my_pet.status()
-my_pet.feed()
-my_pet.status()
-my_pet.pet_me()
-my_pet.status()
-#########################################################################
-'''
+    # 2. The Game Loop
+    while my_pet.is_alive:
+        my_pet.status()
+        
+        # Get user input
+        print("Actions: [feed] [pet] [wait] [quit]")
+        choice = input(f"What will you do with {my_pet.name}? ").lower().strip()
+
+        # 3. Handle the choices
+        if choice == "feed":
+            my_pet.feed()
+        elif choice == "pet":
+            my_pet.pet_me()
+        elif choice == "wait":
+            print(f"You watch {my_pet.name} play for a bit.")
+            my_pet.pass_time()
+        elif choice == "quit":
+            print("Thanks for playing!")
+            break
+        else:
+            print("Invalid action. Try again.")
+
+        # Every action (except quit) makes time pass slightly
+        if choice != "quit":
+            my_pet.pass_time()
+
+# This tells Python to run the main function when the script starts
+if __name__ == "__main__":
+    main()
