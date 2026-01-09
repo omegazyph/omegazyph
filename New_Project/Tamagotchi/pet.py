@@ -21,5 +21,13 @@ class VirtualPet:
         
         print(f"Aww! {self.name} has been born!")
 
-# This is where we will create the pet object later
-# my_pet = VirtualPet("Buddy")
+    def feed(self):
+        """Reduces hunger and slightly increases happiness."""
+        print(f"You fed {self.name}!")
+        self.hunger -= 20
+        
+        # Safety check: Hunger shouldn't be negative
+        if self.hunger < 0:
+            self.hunger = 0
+            
+        self.happiness += 5
