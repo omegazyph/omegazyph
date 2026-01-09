@@ -87,19 +87,25 @@ def main():
         my_pet.status()
         
         # Get user input
-        print("Actions: [feed] [pet] [wait] [quit]")
+        print("Actions: [feed] [pet] [wait] [quit]\n")
         choice = input(f"What will you do with {my_pet.name}? ").lower().strip()
 
         # 3. Handle the choices
         if choice == "feed":
             my_pet.feed()
+            print("\n")
+
         elif choice == "pet":
             my_pet.pet_me()
+            print("\n")
+
         elif choice == "wait":
-            print(f"You watch {my_pet.name} play for a bit.")
+            print(f"\nYou watch {my_pet.name} play for a bit.")
             my_pet.pass_time()
+            print("\n")
+
         elif choice == "quit":
-            print("Thanks for playing!")
+            print("\nThanks for playing!")
             break
         else:
             print("Invalid action. Try again.")
