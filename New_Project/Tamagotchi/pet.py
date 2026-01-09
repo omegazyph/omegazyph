@@ -39,7 +39,7 @@ class VirtualPet:
         print(f"Happiness: {self.happiness}/100")
         
         # Simple mood logic based on stats
-        if self.hunger > 70:
+        if self.hunger > 80:
             print(f"Mood: {self.name} is starving! 🦴")
         elif self.happiness < 20:
             print(f"Mood: {self.name} is feeling lonely... ☁️")
