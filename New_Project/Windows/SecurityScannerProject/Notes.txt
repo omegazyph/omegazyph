@@ -1,0 +1,19 @@
+How this works (The Logic)
+
+    Registry Keys: 
+        Spyware usually adds a record to HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run. 
+        When Windows boots, it checks this "folder" and runs every path listed inside.
+
+    The Scanner: 
+        The Python script acts as a viewer for that specific registry folder.
+
+    Removal: 
+        By using winreg.DeleteValue, the script "uninstalls" the instruction that tells Windows to open the spyware. 
+        
+        Note: 
+            This stops the program from starting, but the actual file might still be on your hard drive.
+    ##############################################################
+
+
+
+
