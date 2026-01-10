@@ -1,68 +1,83 @@
 """
-Date: 2026-01-10
+Date: 2026-01-05
 Script Name: spyware_scanner.py
 Author: omegazyph
 Updated: 2026-01-10
-Description: This program scans the Windows Registry 'Run' keys for persistence 
-             mechanisms often used by spyware and allows the user to remove them.
+Description: Unified tool that backups the registry 'Run' keys and 
+             then scans for startup persistence.
 """
 
-import winreg # Used to interact with the Windows Registry
+import winreg
 import os
+import subprocess
+from datetime import datetime
 
-def scan_registry_persistence():
-    # The registry path where programs are set to run at startup for the current user
-    registry_path = r"Software\Microsoft\Windows\CurrentVersion\Run"
+def run_backup():
+    """Uses Windows reg.exe to create a safety checkpoint."""
+    # We target both User and Machine hives for full security
+    targets = {
+        "HKCU": r"HKCU\Software\Microsoft\Windows\CurrentVersion\Run",
+        "HKLM": r"HKLM\Software\Microsoft\Windows\CurrentVersion\Run"
+    }
     
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_dir = "backups"
+    
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+
+    print("[*] Initializing Safety Backups...")
+    
+    all_success = True
+    for label, path in targets.items():
+        backup_file = os.path.join(backup_dir, f"{label}_{timestamp}.reg")
+        # subprocess.run is the Pythonic way to call 'reg export'
+        result = subprocess.run(['reg', 'export', path, backup_file, '/y'], 
+                                capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            print(f"[SUCCESS] {label} backup created: {os.path.basename(backup_file)}")
+        else:
+            print(f"[!] Warning: {label} backup failed. (You may need Admin rights for HKLM)")
+            if label == "HKCU": all_success = False # HKCU failure is a dealbreaker
+            
+    return all_success
+
+def scan_keys():
+    """Reads the registry to see what starts with Windows."""
+    path = r"Software\Microsoft\Windows\CurrentVersion\Run"
+    found = []
+    
+    # Scan Current User
     try:
-        # Open the key for reading
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry_path, 0, winreg.KEY_READ)
-        
-        print(f"{'ID':<5} | {'Application Name':<25} | {'File Path'}")
-        print("-" * 70)
-        
-        entries = []
-        index = 0
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, path, 0, winreg.KEY_READ)
+        i = 0
         while True:
             try:
-                # Loop through all values under this registry key
-                name, value, _ = winreg.EnumValue(key, index)
-                entries.append((name, value))
-                print(f"{index:<5} | {name:<25} | {value}")
-                index += 1
-            except OSError:
-                # OSError marks the end of the list
-                break
-        
+                name, val, _ = winreg.EnumValue(key, i)
+                found.append({"loc": "HKCU", "name": name, "val": val})
+                i += 1
+            except OSError: break
         winreg.CloseKey(key)
-        return entries
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return []
+        print(f"[ERROR] Could not scan HKCU: {e}")
 
-def delete_persistence_entry(entry_name):
-    # Re-open the key with 'Set Value' permissions to allow deletion
-    registry_path = r"Software\Microsoft\Windows\CurrentVersion\Run"
-    try:
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry_path, 0, winreg.KEY_SET_VALUE)
-        winreg.DeleteValue(key, entry_name)
-        winreg.CloseKey(key)
-        print(f"\n[!] Successfully removed: {entry_name}")
-    except Exception as e:
-        print(f"[X] Failed to delete entry: {e}")
+    return found
 
 if __name__ == "__main__":
-    print("--- omegazyph's Spyware Persistence Scanner ---\n")
-    found_apps = scan_registry_persistence()
+    print("=== omegazyph Security Scanner (Windows 11) ===\n")
     
-    if found_apps:
-        user_input = input("\nEnter the ID to remove an entry, or 'q' to quit: ")
-        if user_input.isdigit():
-            idx = int(user_input)
-            if 0 <= idx < len(found_apps):
-                app_to_remove = found_apps[idx][0]
-                confirm = input(f"Confirm deletion of '{app_to_remove}'? (y/n): ")
-                if confirm.lower() == 'y':
-                    delete_persistence_entry(app_to_remove)
+    # The backup happens AUTOMATICALLY here
+    if run_backup():
+        print("\n[*] Starting Registry Scan...")
+        items = scan_keys()
+        
+        if items:
+            print(f"\n{'ID':<4} | {'Source':<8} | {'Name':<25} | {'Path'}")
+            print("-" * 85)
+            for idx, item in enumerate(items):
+                print(f"{idx:<4} | {item['loc']:<8} | {item['name']:<25} | {item['val']}")
+        else:
+            print("[*] No entries found.")
     else:
-        print("No startup entries found in this registry hive.")
+        print("[ABORT] Backup failed. Please check folder permissions.")

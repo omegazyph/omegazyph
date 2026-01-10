@@ -20,3 +20,8 @@ $RECYCLE.BIN/
 # Uncomment the line below if your CSV contains private/sensitive data
 *.csv
 *.reg
+
+# --- github Junk ---
+.github
+# Snyk Security Extension - AI Rules (auto-generated)
+.github/instructions/snyk_rules.instructions.md
