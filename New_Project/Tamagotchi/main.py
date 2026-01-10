@@ -22,7 +22,8 @@ def main():
         print("No save found.")
         pet_name = input("What would you like to name your new pet? ")
         my_pet = VirtualPet(pet_name)
-
+        print(f"Aww! Your new pet {my_pet.name} was born!")
+        
     # 2. The Game Loop
     while my_pet.is_alive:
         # Clear terminal for Windows 11

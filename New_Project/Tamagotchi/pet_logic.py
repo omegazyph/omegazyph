@@ -22,7 +22,7 @@ class VirtualPet:
         self.level = 1
         self.experience = 0
         self.is_alive = True
-        print(f"Aww! {self.name} has been born!")
+        
 
     def feed(self):
         """Reduces hunger and slightly increases happiness."""
