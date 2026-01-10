@@ -1,9 +1,0 @@
-###############################################################################
-# Date: 2026-01-09
-# Script Name: pet.py
-# Author: omegazyph
-# Updated: 2026-01-09
-# Description: A logic-based virtual pet (Tamagotchi clone) 
-# that tracks hunger, happiness, and health.
-###############################################################################
-
