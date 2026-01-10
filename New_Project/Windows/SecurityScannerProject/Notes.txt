@@ -14,6 +14,19 @@ How this works (The Logic)
             This stops the program from starting, but the actual file might still be on your hard drive.
     ##############################################################
 
+🔍 How to Spot "Real" Spyware
 
+    Since your current HKCU (Current User) list is clean, you should check the System-Wide keys next. Spyware often hides there to gain higher permissions.
+
+    When you run your scanner, look for these "Red Flags":
+
+    Random Names: 
+        Files like ax88jql.exe or svchost_updater.exe (malware often mimics real Windows files).
+
+    Suspicious Folders:
+         Anything running out of C:\Users\omega\AppData\Local\Temp or C:\Windows\Temp. Legitimate programs rarely stay in Temp folders.
+
+    No Description: 
+        In Task Manager (Ctrl+Shift+Esc), if you see these processes running but they have no "Publisher" or "Description," be cautious.
 
 

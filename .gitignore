@@ -18,4 +18,5 @@ $RECYCLE.BIN/
 
 # --- Project Specific ---
 # Uncomment the line below if your CSV contains private/sensitive data
-# *.csv
+*.csv
+*.reg
