@@ -114,7 +114,7 @@ class VirtualPet:
         }
         with open(SAVE_PATH, "w") as f:
             json.dump(data, f)
-        print(f"Game saved to {SAVE_PATH}!")
+        print("\nGame Saved!")
 
     @classmethod
     def load_pet(cls):
