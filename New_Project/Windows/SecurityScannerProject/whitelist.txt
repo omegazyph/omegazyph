@@ -1,0 +1,6 @@
+# Add safe app names here (one per line)
+Discord
+Steam
+LenovoVantageToolbar
+Docker Desktop
+MicrosoftEdgeAutoLaunch
