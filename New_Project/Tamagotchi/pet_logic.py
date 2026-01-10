@@ -6,6 +6,13 @@
 # Description: Contains the VirtualPet class logic, stats, and visuals.
 ##########################################################################
 
+import os
+import json
+
+# Get the directory where this script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SAVE_PATH = os.path.join(BASE_DIR, "pet_data.json")
+
 class VirtualPet:
     def __init__(self, name):
         self.name = name
@@ -94,3 +101,36 @@ class VirtualPet:
             self.experience = 0
             print(f"✨ LEVEL UP! {self.name} is now Level {self.level}! ✨")
             self.health = 100
+
+    def save_pet(self):
+        """Saves the pet's current stats to a JSON file."""
+        data = {
+            "name": self.name,
+            "hunger": self.hunger,
+            "happiness": self.happiness,
+            "health": self.health,
+            "level": self.level,
+            "experience": self.experience
+        }
+        with open(SAVE_PATH, "w") as f:
+            json.dump(data, f)
+        print(f"Game saved to {SAVE_PATH}!")
+
+    @classmethod
+    def load_pet(cls):
+        """Reads the JSON file and recreates the pet object."""
+        if os.path.exists(SAVE_PATH):
+            try:
+                with open(SAVE_PATH, "r") as f:
+                    data = json.load(f)
+                    pet = cls(data["name"])
+                    pet.hunger = data["hunger"]
+                    pet.happiness = data["happiness"]
+                    pet.health = data["health"]
+                    pet.level = data["level"]
+                    pet.experience = data["experience"]
+                    return pet
+            except Exception as e:
+                print(f"Error loading save: {e}")
+                return None
+        return None
