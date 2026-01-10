@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Date: 2026-01-10
 # Script Name: backup_registry.sh
 # Author: omegazyph
