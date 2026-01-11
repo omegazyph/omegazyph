@@ -1,6 +1,7 @@
-How this works (The Logic)
+# How this works (The Logic)
 
-    Registry Keys: 
+## Registry Keys
+
         Spyware usually adds a record to HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run. 
         When Windows boots, it checks this "folder" and runs every path listed inside.
 
@@ -12,9 +13,8 @@ How this works (The Logic)
         
         Note: 
             This stops the program from starting, but the actual file might still be on your hard drive.
-    ##############################################################
 
-🔍 How to Spot "Real" Spyware
+## How to Spot "Real" Spyware
 
     Since your current HKCU (Current User) list is clean, you should check the System-Wide keys next. Spyware often hides there to gain higher permissions.
 
@@ -29,4 +29,12 @@ How this works (The Logic)
     No Description: 
         In Task Manager (Ctrl+Shift+Esc), if you see these processes running but they have no "Publisher" or "Description," be cautious.
 
+## Why SHA-256 Hashing is Powerful
 
+While Path Verification (what we just added) tells you if a file exists, Hashing tells you if the file is authentic.
+
+    Detecting "File Hijacking": Malware sometimes infects a legitimate file (like a Lenovo system driver). The file name and path stay the same, but the hash changes.
+
+    Malware Database Checks: You can take the hash of a suspicious file and check it against sites like VirusTotal. If that specific hash is flagged by others, you know it's a virus regardless of what the file is named.
+
+Integrity Monitoring: You can save a list of hashes for your safe apps. Every time you scan, the script re-calculates the hash. If it doesn't match your saved list, the script warns you that the file has been tampered with.
