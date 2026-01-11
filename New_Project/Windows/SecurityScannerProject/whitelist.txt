@@ -1,6 +1,8 @@
 # Add safe app names here (one per line)
 Discord
-Steam
-LenovoVantageToolbar
 Docker Desktop
-MicrosoftEdgeAutoLaunch
+LenovoVantageToolbar
+Steam
+SecurityHealth
+RtkAudUService
+Everything
