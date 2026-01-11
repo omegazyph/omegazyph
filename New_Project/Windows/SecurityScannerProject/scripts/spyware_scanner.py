@@ -4,7 +4,7 @@ Script Name: spyware_scanner.py
 Author: omegazyph
 Updated: 2026-01-11
 Description: A professional-grade CLI tool for managing Windows startup.
-             Features color-coded output, formatted tables, and intuitive commands.
+             Now includes a persistent logging system to track all deletions.
 """
 
 import winreg
@@ -15,7 +15,6 @@ import webbrowser
 from datetime import datetime
 
 # --- COLORS & UI ---
-# ANSI escape codes for a better terminal experience
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
 RED = "\033[91m"
@@ -28,12 +27,29 @@ BOLD = "\033[1m"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 WHITELIST_PATH = os.path.join(PROJECT_ROOT, "whitelist.txt")
+LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
 
 def is_admin():
     try: 
         return ctypes.windll.shell32.IsUserAnAdmin()
     except Exception: 
         return False
+
+def log_action(action, name, hive):
+    """Saves a record of the action to the logs folder."""
+    if not os.path.exists(LOG_DIR):
+        os.makedirs(LOG_DIR)
+    
+    log_file = os.path.join(LOG_DIR, "activity.log")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    log_entry = f"[{timestamp}] ACTION: {action} | NAME: {name} | HIVE: {hive}\n"
+    
+    try:
+        with open(log_file, "a") as f:
+            f.write(log_entry)
+    except Exception as e:
+        print(f"{RED}[!] Failed to write to log: {e}{RESET}")
 
 def load_whitelist():
     if not os.path.exists(WHITELIST_PATH):
@@ -84,13 +100,17 @@ def scan_keys(whitelist):
             pass
     return found
 
-def delete_entry(hive, name):
+def delete_entry(hive, name, label):
     reg_path = r"Software\Microsoft\Windows\CurrentVersion\Run"
     try:
         key = winreg.OpenKey(hive, reg_path, 0, winreg.KEY_SET_VALUE | winreg.KEY_WOW64_64KEY)
         winreg.DeleteValue(key, name)
         winreg.CloseKey(key)
-        print(f"{GREEN}[SUCCESS] Entry removed.{RESET}")
+        
+        # LOG THE DELETION
+        log_action("DELETE", name, label)
+        
+        print(f"{GREEN}[SUCCESS] Entry removed and logged.{RESET}")
         return True
     except Exception as e:
         print(f"{RED}[ERROR] {e}{RESET}")
@@ -100,7 +120,7 @@ def print_header(admin):
     os.system('cls' if os.name == 'nt' else 'clear')
     status = f"{GREEN}Administrator{RESET}" if admin else f"{YELLOW}Standard User{RESET}"
     print(f"{BOLD}{BLUE}==============================================={RESET}")
-    print(f"{BOLD}{BLUE}   OMEGAZYPH REGISTRY SCANNER - v2.0{RESET}")
+    print(f"{BOLD}{BLUE}   OMEGAZYPH REGISTRY SCANNER - v3.0{RESET}")
     print(f"{BOLD}{BLUE}==============================================={RESET}")
     print(f" Status: {status} | {RED}Please Reboot your PC to take effect{RESET}\n")
 
@@ -120,7 +140,7 @@ if __name__ == "__main__":
                     print(f"{idx:<5} | {color}{item['loc']:<8}{RESET} | {item['name']:<30}")
                 
                 print(f"\n{BOLD}COMMANDS:{RESET}")
-                print(f" {GREEN}[ID]{RESET}  Whitelist   {BLUE}[sID]{RESET} Search   {RED}[dID]{RESET} Delete   {BOLD}[r]{RESET} Rescan   {BOLD}[q]{RESET} Quit")
+                print(f" {GREEN}[ID]{RESET} Whitelist  {BLUE}[sID]{RESET} Search  {RED}[dID]{RESET} Delete  {BOLD}[r]{RESET} Rescan  {BOLD}[q]{RESET} Quit")
             else:
                 print(f"{GREEN}✔ Everything looks clean! No unknown items detected.{RESET}")
                 print(f"\n{BOLD}COMMANDS:{RESET} [r] Rescan   [q] Quit")
@@ -136,11 +156,10 @@ if __name__ == "__main__":
             elif cmd.startswith('s') and cmd[1:].isdigit():
                 idx = int(cmd[1:])
                 if idx < len(items):
-                    print(f"{CYAN}[*] Opening browser...{RESET}")
                     webbrowser.open(f"https://www.google.com/search?q={items[idx]['name']}+startup")
             elif cmd.startswith('d') and cmd[1:].isdigit():
                 idx = int(cmd[1:])
                 if idx < len(items):
                     confirm = input(f"{RED}⚠ Confirm Delete '{items[idx]['name']}'? (y/n): {RESET}")
                     if confirm.lower() == 'y':
-                        delete_entry(items[idx]['hive'], items[idx]['name'])
+                        delete_entry(items[idx]['hive'], items[idx]['name'], items[idx]['loc'])
