@@ -67,7 +67,7 @@ def add_to_whitelist(app_name):
 def run_backup():
     targets = {"HKCU": r"HKCU\Software\Microsoft\Windows\CurrentVersion\Run",
                "HKLM": r"HKLM\Software\Microsoft\Windows\CurrentVersion\Run"}
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
     backup_dir = os.path.join(PROJECT_ROOT, "backups")
     if not os.path.exists(backup_dir): 
         os.makedirs(backup_dir)
