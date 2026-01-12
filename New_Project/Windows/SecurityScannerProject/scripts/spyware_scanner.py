@@ -144,8 +144,18 @@ def delete_entry(hive, name, label):
 
 def print_header(admin):
     """UI Header display."""
+
+    header_art = r"""
+  ____  __  __ _____ ____      _    ______       ______  _   _ 
+ / __ \|  \/  | ____/ ___|    / \   |__  /\ \   / /  _ \| | | |
+| |  | | |\/| |  _| | |  _   / _ \    / /  \ \ / /| |_) | |_| |
+| |__| | |  | | |___| |_| | / ___ \  / /_   \ V / |  __/|  _  |
+ \____/|_|  |_|_____|\____|/_/   \_\/____|   |_|  |_|   |_| |_|
+    """
+   
     os.system('cls' if os.name == 'nt' else 'clear')
     status_text = f"{GREEN}Administrator{RESET}" if admin else f"{YELLOW}Standard User{RESET}"
+    print(f"{BOLD}{BLUE}{header_art}{RESET}")
     print(f"{BOLD}{BLUE}===================================================================={RESET}")
     print(f"{BOLD}{BLUE}                OMEGAZYPH REGISTRY SCANNER - v4.0               {RESET}")
     print(f"{BOLD}{BLUE}===================================================================={RESET}")
