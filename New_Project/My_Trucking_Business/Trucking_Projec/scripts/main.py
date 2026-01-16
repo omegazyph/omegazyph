@@ -3,7 +3,8 @@
 # Script Name: main.py
 # Author: omegazyph
 # Updated: 2026-01-16
-# Description: Main Trucking Calculator. Pulls Carrier Fee from config.json.
+# Description: Main Trucking Calculator. Uses a side-by-side layout to fit 
+#              smaller screens. Pulls Carrier Fee from config.json.
 # ---------------------------------------------------------------------------
 
 import tkinter as tk
@@ -16,7 +17,7 @@ class TruckApp:
     def __init__(self, root):
         self.root = root
         self.root.title("omegazyph's Mileage & Settlement Pro")
-        self.root.geometry("500x920")
+        self.root.geometry("900x600") # Wider but much shorter
         self.root.configure(bg="#f4f4f4")
 
         self.base_dir = os.path.dirname(os.path.dirname(__file__))
@@ -33,7 +34,6 @@ class TruckApp:
         self.root.bind('<Return>', lambda event: self.do_math())
 
     def update_displays(self):
-        """Loads both expenses and the carrier fee from JSON files."""
         exp_data = settings.load_json("expenses.json")
         conf_data = settings.load_json("config.json")
         
@@ -41,19 +41,29 @@ class TruckApp:
         daily_rate = monthly_total / 30
         fee_pct = conf_data.get("carrier_fee_percent", 25.0)
         
-        self.footer_var.set(f"Fee: {fee_pct}% | Monthly: ${monthly_total:,.2f} | Daily: ${daily_rate:,.2f}")
+        self.footer_var.set(f"Carrier Fee: {fee_pct}% | Monthly Fixed: ${monthly_total:,.2f} | Daily: ${daily_rate:,.2f}")
 
     def setup_ui(self):
         style = {"bg": "#f4f4f4", "font": ("Segoe UI", 10, "bold")}
-        tk.Label(self.root, text="SETTLEMENT CALCULATOR", font=("Segoe UI", 16, "bold"), bg="#f4f4f4").pack(pady=15)
+        
+        # Header
+        tk.Label(self.root, text="SETTLEMENT CALCULATOR", font=("Segoe UI", 16, "bold"), bg="#f4f4f4").pack(pady=10)
 
-        in_frame = tk.Frame(self.root, bg="#f4f4f4")
-        in_frame.pack(pady=5)
+        # Main Container for Side-by-Side
+        main_container = tk.Frame(self.root, bg="#f4f4f4")
+        main_container.pack(fill="both", expand=True, padx=20)
+
+        # --- LEFT COLUMN: Inputs & Buttons ---
+        left_col = tk.Frame(main_container, bg="#f4f4f4")
+        left_col.pack(side="left", fill="y", padx=10)
+
+        in_frame = tk.Frame(left_col, bg="#f4f4f4")
+        in_frame.pack()
 
         def create_field(label, row):
-            tk.Label(in_frame, text=label, **style).grid(row=row, column=0, sticky="e", pady=5)
-            ent = tk.Entry(in_frame, font=("Segoe UI", 10), width=20)
-            ent.grid(row=row, column=1, padx=10)
+            tk.Label(in_frame, text=label, **style).grid(row=row, column=0, sticky="e", pady=3)
+            ent = tk.Entry(in_frame, font=("Segoe UI", 10), width=15)
+            ent.grid(row=row, column=1, padx=5)
             return ent
 
         self.ent_trip = create_field("Trip/Settlement #:", 0)
@@ -66,18 +76,26 @@ class TruckApp:
         
         self.ent_trip.focus_set()
 
-        btn_frame = tk.Frame(self.root, bg="#f4f4f4")
-        btn_frame.pack(pady=10)
-        tk.Button(btn_frame, text="CALCULATE", command=self.do_math, bg="#2980b9", fg="white", font=style["font"], width=12).grid(row=0, column=0, padx=5)
-        tk.Button(btn_frame, text="CLEAR", command=self.clear_all, bg="#95a5a6", fg="white", font=style["font"], width=12).grid(row=0, column=1, padx=5)
+        # Buttons under Inputs
+        btn_frame = tk.Frame(left_col, bg="#f4f4f4")
+        btn_frame.pack(pady=15)
+        tk.Button(btn_frame, text="CALCULATE", command=self.do_math, bg="#2980b9", fg="white", font=style["font"], width=12).pack(pady=5)
+        tk.Button(btn_frame, text="CLEAR ALL", command=self.clear_all, bg="#95a5a6", fg="white", font=style["font"], width=12).pack(pady=5)
+        tk.Button(left_col, text="Edit Settings", command=lambda: settings.open_settings_window(self.update_displays)).pack(pady=5)
 
-        tk.Label(self.root, textvariable=self.result_var, font=("Consolas", 10), bg="white", relief="sunken", width=55, height=22, padx=10, pady=10, justify="left").pack(pady=10)
+        # --- RIGHT COLUMN: Results & Save ---
+        right_col = tk.Frame(main_container, bg="#f4f4f4")
+        right_col.pack(side="right", fill="both", expand=True, padx=10)
 
-        self.btn_save = tk.Button(self.root, text="SAVE SETTLEMENT REPORT", command=self.save_to_txt, bg="#27ae60", fg="white", font=style["font"], width=25, state="disabled")
-        self.btn_save.pack(pady=5)
+        tk.Label(right_col, textvariable=self.result_var, font=("Consolas", 10), bg="white", 
+                 relief="sunken", width=50, height=22, padx=10, pady=10, justify="left").pack(fill="both", expand=True)
 
-        tk.Button(self.root, text="Edit Settings & Expenses", command=lambda: settings.open_settings_window(self.update_displays)).pack(pady=10)
-        tk.Label(self.root, textvariable=self.footer_var, font=("Segoe UI", 9, "italic"), bg="#f4f4f4", fg="#555").pack(side="bottom", pady=10)
+        self.btn_save = tk.Button(right_col, text="SAVE SETTLEMENT REPORT", command=self.save_to_txt, 
+                                  bg="#27ae60", fg="white", font=style["font"], height=2, state="disabled")
+        self.btn_save.pack(fill="x", pady=10)
+
+        # Footer
+        tk.Label(self.root, textvariable=self.footer_var, font=("Segoe UI", 9, "italic"), bg="#f4f4f4", fg="#555").pack(side="bottom", pady=5)
 
     def do_math(self):
         try:
@@ -98,14 +116,13 @@ class TruckApp:
 
             dist = end - start
             if dist <= 0:
-                messagebox.showwarning("Logic Error", "Check Odometer readings.")
+                messagebox.showwarning("Logic Error", "Distance must be positive.")
                 return
 
             carrier_fee = load_gross * fee_decimal
-            adjusted_gross = load_gross - carrier_fee
-            prorated_fixed = daily_rate * days
-            total_expenses = fuel_cost + prorated_fixed
-            net_profit = adjusted_gross - total_expenses
+            adj_gross = load_gross - carrier_fee
+            fixed_deduct = daily_rate * days
+            net_profit = adj_gross - fuel_cost - fixed_deduct
             
             mpg = dist / gals if gals > 0 else 0
 
@@ -113,20 +130,18 @@ class TruckApp:
             self.report_content = (
                 f"RECORD: SETTLEMENT {t_num}\n"
                 f"DATE:   {datetime.now().strftime('%Y-%m-%d')}\n"
+                f"PERIOD: {days} Days\n"
                 f"{'='*45}\n"
                 f"LOAD GROSS RATE:  ${load_gross:,.2f}\n"
-                f"CARRIER FEE ({fee_decimal*100:.1f}%):-${carrier_fee:,.2f}\n"
-                f"{'-'*45}\n"
-                f"ADJUSTED GROSS:   ${adjusted_gross:,.2f}\n"
+                f"CARRIER FEE:     -${carrier_fee:,.2f}\n"
+                f"ADJUSTED GROSS:   ${adj_gross:,.2f}\n"
                 f"{'='*45}\n"
-                f"FUEL EXPENSE:     ${fuel_cost:,.2f}\n"
-                f"FIXED DEDUCTIONS: ${prorated_fixed:,.2f} ({days} days)\n"
-                f"TOTAL TRIP COSTS: ${total_expenses:,.2f}\n"
+                f"FUEL EXPENSE:    -${fuel_cost:,.2f}\n"
+                f"DAILY FIXED:     -${fixed_deduct:,.2f}\n"
                 f"{'='*45}\n"
                 f"NET PROFIT:       ${net_profit:,.2f}\n"
                 f"{'='*45}\n"
-                f"DISTANCE:         {dist:,.1f} Miles\n"
-                f"FUEL ECONOMY:     {mpg:.2f} MPG\n"
+                f"MILES: {dist:,.1f} | MPG: {mpg:.2f}"
             )
             self.result_var.set(self.report_content)
             self.btn_save.config(state="normal")
@@ -137,7 +152,7 @@ class TruckApp:
         os.makedirs(self.trips_dir, exist_ok=True)
         path = os.path.join(self.trips_dir, self.target_file)
         with open(path, "w") as f: f.write(self.report_content)
-        messagebox.showinfo("Saved", f"Settlement {self.target_file} saved.")
+        messagebox.showinfo("Saved", f"Saved to {self.target_file}")
         self.btn_save.config(state="disabled")
 
     def clear_all(self):
