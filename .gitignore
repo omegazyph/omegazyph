@@ -15,6 +15,7 @@ venv/
 Thumbs.db
 desktop.ini
 $RECYCLE.BIN/
+private/
 
 # --- Project Specific ---
 # Uncomment the line below if your CSV contains private/sensitive data
@@ -23,5 +24,6 @@ $RECYCLE.BIN/
 
 # --- github Junk ---
 .github
+
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
