@@ -3,9 +3,10 @@
 # Script Name: main.py
 # Author: omegazyph
 # Updated: 2026-01-19
-# Description: Standalone Fuel Performance Tracker. 
-#              Calculates MPG and Fuel CPM from raw data.
-#              Saves results into a CSV spreadsheet for long-term tracking.
+# Description: This is a standalone Fuel Performance Tracker for trucking. 
+#              It calculates Miles Per Gallon (MPG) and Fuel Cost Per Mile (CPM).
+#              It saves results into a CSV spreadsheet for business records.
+#              All code is written in full, non-shorthand format.
 # ---------------------------------------------------------------------------
 
 import tkinter as tk
@@ -14,173 +15,261 @@ import os
 import csv
 from datetime import datetime
 
-class FuelTracker:
-    def __init__(self, root):
+class FuelTrackerApplication:
+    def __init__(self, root_window):
         """
-        The __init__ method sets up the main window and all the 
-        visual elements (labels, entries, and buttons).
+        The constructor initializes the main window and sets up the 
+        file paths and user interface components.
         """
-        # Assign the main window to self.root
-        self.root = root
-        self.root.title("omegazyph's Fuel Performance Tracker")
-        self.root.geometry("600x750") 
-        self.root.configure(bg="#f0f0f0")
+        # Set the main window as a property of the class
+        self.root_window = root_window
+        
+        # Set the window title for the Lenovo Legion display
+        self.root_window.title("omegazyph's Professional Fuel Performance Tracker")
+        
+        # Define the window dimensions
+        self.root_window.geometry("600x750")
+        
+        # Set the background color to a light grey
+        self.root_window.configure(bg="#f0f0f0")
 
-        # --- FOLDER AND CSV SETUP ---
-        # Get the path where this script is located
-        self.base_directory = os.path.dirname(os.path.dirname(__file__))
-        # Define the path for the data folder
-        self.data_directory = os.path.join(self.base_directory, "data")
-        # Define the path for the CSV file
-        self.csv_file_path = os.path.join(self.data_directory, "fuel_history.csv")
+        # --- FILE PATH SETUP ---
+        # Get the absolute path of the directory where this script is located
+        self.current_script_directory = os.path.dirname(os.path.abspath(__file__))
+        
+        # Move up one level to the main project folder
+        self.project_base_directory = os.path.dirname(self.current_script_directory)
+        
+        # Define the path for the 'data' folder
+        self.data_storage_directory = os.path.join(self.project_base_directory, "data")
+        
+        # Define the path for the CSV spreadsheet file
+        self.spreadsheet_file_path = os.path.join(self.data_storage_directory, "fuel_history.csv")
 
-        # --- HEADER SECTION ---
-        self.label_header = tk.Label(
-            self.root, 
-            text="TRUCK FUEL PERFORMANCE", 
+        # --- USER INTERFACE HEADER ---
+        self.label_main_header = tk.Label(
+            self.root_window, 
+            text="TRUCK FUEL PERFORMANCE TRACKER", 
             font=("Segoe UI", 18, "bold"), 
             bg="#f0f0f0", 
-            fg="#333333"
+            fg="#2c3e50"
         )
-        self.label_header.pack(pady=20)
+        self.label_main_header.pack(pady=30)
 
-        # --- INPUT CONTAINER ---
-        self.input_frame = tk.Frame(self.root, bg="#f0f0f0")
-        self.input_frame.pack(pady=10)
+        # --- INPUT CONTAINER FRAME ---
+        self.input_fields_frame = tk.Frame(self.root_window, bg="#f0f0f0")
+        self.input_fields_frame.pack(pady=10)
 
-        # --- INPUT FIELDS ---
-        self.label_starting_miles = tk.Label(self.input_frame, text="Starting Mileage:", font=("Segoe UI", 11, "bold"), bg="#f0f0f0")
-        self.label_starting_miles.grid(row=0, column=0, sticky="e", pady=10, padx=10)
-        self.entry_starting_miles = tk.Entry(self.input_frame, font=("Segoe UI", 12), width=20)
-        self.entry_starting_miles.grid(row=0, column=1, pady=10, padx=10)
+        # Standard font style for all input labels
+        self.input_label_style = {"bg": "#f0f0f0", "font": ("Segoe UI", 11, "bold")}
 
-        self.label_ending_miles = tk.Label(self.input_frame, text="Ending Mileage:", font=("Segoe UI", 11, "bold"), bg="#f0f0f0")
-        self.label_ending_miles.grid(row=1, column=0, sticky="e", pady=10, padx=10)
-        self.entry_ending_miles = tk.Entry(self.input_frame, font=("Segoe UI", 12), width=20)
-        self.entry_ending_miles.grid(row=1, column=1, pady=10, padx=10)
+        # 1. STARTING ODOMETER ENTRY
+        self.label_starting_odometer = tk.Label(self.input_fields_frame, text="Starting Odometer Reading:", **self.input_label_style)
+        self.label_starting_odometer.grid(row=0, column=0, sticky="e", pady=10, padx=10)
+        
+        self.entry_starting_odometer = tk.Entry(self.input_fields_frame, font=("Segoe UI", 12), width=20)
+        self.entry_starting_odometer.grid(row=0, column=1, pady=10, padx=10)
 
-        self.label_fuel_gallons = tk.Label(self.input_frame, text="Amount of Fuel (Gallons):", font=("Segoe UI", 11, "bold"), bg="#f0f0f0")
+        # 2. ENDING ODOMETER ENTRY
+        self.label_ending_odometer = tk.Label(self.input_fields_frame, text="Ending Odometer Reading:", **self.input_label_style)
+        self.label_ending_odometer.grid(row=1, column=0, sticky="e", pady=10, padx=10)
+        
+        self.entry_ending_odometer = tk.Entry(self.input_fields_frame, font=("Segoe UI", 12), width=20)
+        self.entry_ending_odometer.grid(row=1, column=1, pady=10, padx=10)
+
+        # 3. FUEL GALLONS ENTRY
+        self.label_fuel_gallons = tk.Label(self.input_fields_frame, text="Total Gallons Purchased:", **self.input_label_style)
         self.label_fuel_gallons.grid(row=2, column=0, sticky="e", pady=10, padx=10)
-        self.entry_fuel_gallons = tk.Entry(self.input_frame, font=("Segoe UI", 12), width=20)
+        
+        self.entry_fuel_gallons = tk.Entry(self.input_fields_frame, font=("Segoe UI", 12), width=20)
         self.entry_fuel_gallons.grid(row=2, column=1, pady=10, padx=10)
 
-        self.label_fuel_cost = tk.Label(self.input_frame, text="Cost of Fuel ($):", font=("Segoe UI", 11, "bold"), bg="#f0f0f0")
-        self.label_fuel_cost.grid(row=3, column=0, sticky="e", pady=10, padx=10)
-        self.entry_fuel_cost = tk.Entry(self.input_frame, font=("Segoe UI", 12), width=20)
-        self.entry_fuel_cost.grid(row=3, column=1, pady=10, padx=10)
+        # 4. FUEL COST ENTRY
+        self.label_total_fuel_cost = tk.Label(self.input_fields_frame, text="Total Fuel Cost (Dollars):", **self.input_label_style)
+        self.label_total_fuel_cost.grid(row=3, column=0, sticky="e", pady=10, padx=10)
+        
+        self.entry_total_fuel_cost = tk.Entry(self.input_fields_frame, font=("Segoe UI", 12), width=20)
+        self.entry_total_fuel_cost.grid(row=3, column=1, pady=10, padx=10)
 
-        # --- BUTTON CONTAINER ---
-        self.button_frame = tk.Frame(self.root, bg="#f0f0f0")
-        self.button_frame.pack(pady=20)
+        # --- ACTION BUTTONS CONTAINER ---
+        self.button_container_frame = tk.Frame(self.root_window, bg="#f0f0f0")
+        self.button_container_frame.pack(pady=20)
 
-        self.button_calculate = tk.Button(self.button_frame, text="CALCULATE", command=self.perform_calculations, bg="#0078d4", fg="white", font=("Segoe UI", 12, "bold"), width=15)
-        self.button_calculate.grid(row=0, column=0, padx=10)
+        # CALCULATE BUTTON
+        self.button_perform_calculation = tk.Button(
+            self.button_container_frame, 
+            text="CALCULATE PERFORMANCE", 
+            command=self.calculate_truck_performance, 
+            bg="#0078d4", 
+            fg="white", 
+            font=("Segoe UI", 11, "bold"), 
+            width=22
+        )
+        self.button_perform_calculation.grid(row=0, column=0, padx=10)
 
-        self.button_reset = tk.Button(self.button_frame, text="RESET", command=self.reset_all_fields, bg="#d13438", fg="white", font=("Segoe UI", 12, "bold"), width=15)
-        self.button_reset.grid(row=0, column=1, padx=10)
+        # RESET BUTTON
+        self.button_reset_fields = tk.Button(
+            self.button_container_frame, 
+            text="RESET ALL FIELDS", 
+            command=self.reset_all_input_fields, 
+            bg="#d13438", 
+            fg="white", 
+            font=("Segoe UI", 11, "bold"), 
+            width=22
+        )
+        self.button_reset_fields.grid(row=0, column=1, padx=10)
 
-        # --- RESULTS AREA ---
-        self.label_mpg_result = tk.Label(self.root, text="Miles Per Gallon: --", font=("Segoe UI", 14, "bold"), bg="#f0f0f0", fg="#004e8c")
-        self.label_mpg_result.pack(pady=10)
+        # --- RESULTS DISPLAY SECTION ---
+        self.label_mpg_output = tk.Label(
+            self.root_window, 
+            text="Miles Per Gallon: Pending...", 
+            font=("Segoe UI", 14, "bold"), 
+            bg="#f0f0f0", 
+            fg="#004e8c"
+        )
+        self.label_mpg_output.pack(pady=10)
 
-        self.label_cpm_result = tk.Label(self.root, text="Fuel Cost Per Mile: --", font=("Segoe UI", 14, "bold"), bg="#f0f0f0", fg="#004e8c")
-        self.label_cpm_result.pack(pady=5)
+        self.label_cpm_output = tk.Label(
+            self.root_window, 
+            text="Fuel Cost Per Mile: Pending...", 
+            font=("Segoe UI", 14, "bold"), 
+            bg="#f0f0f0", 
+            fg="#004e8c"
+        )
+        self.label_cpm_output.pack(pady=5)
 
-        # --- CSV SAVE FEATURE ---
-        self.button_save = tk.Button(
-            self.root, 
+        # --- SPREADSHEET SAVE BUTTON ---
+        self.button_save_to_spreadsheet = tk.Button(
+            self.root_window, 
             text="ADD TO SPREADSHEET (CSV)", 
-            command=self.save_to_csv, 
-            bg="#01dd01", 
+            command=self.append_data_to_csv_file, 
+            bg="#107c10", 
             fg="white", 
             font=("Segoe UI", 12, "bold"), 
-            width=32,
+            width=40,
             state="disabled"
         )
-        self.button_save.pack(pady=20)
+        self.button_save_to_spreadsheet.pack(pady=30)
 
-        # Keep track of calculated values for saving
-        self.calculated_mpg = 0.0
-        self.calculated_cpm = 0.0
+        # Variables to store mathematical results for the spreadsheet
+        self.final_calculated_mpg = 0.0
+        self.final_calculated_cpm = 0.0
 
-    def perform_calculations(self):
-        """Handles the math and enables the save button if valid."""
+    def calculate_truck_performance(self):
+        """
+        Retrieves user input, performs the mathematical division for 
+        MPG and CPM, and updates the display labels.
+        """
         try:
-            starting_odometer = float(self.entry_starting_miles.get())
-            ending_odometer = float(self.entry_ending_miles.get())
-            gallons_pumped = float(self.entry_fuel_gallons.get())
-            total_cost_paid = float(self.entry_fuel_cost.get())
+            # Step 1: Extract numeric data from the entry boxes
+            start_miles = float(self.entry_starting_odometer.get())
+            end_miles = float(self.entry_ending_odometer.get())
+            gallons = float(self.entry_fuel_gallons.get())
+            dollars = float(self.entry_total_fuel_cost.get())
 
-            total_miles_driven = ending_odometer - starting_odometer
+            # Step 2: Determine total distance
+            total_trip_distance = end_miles - start_miles
 
-            if total_miles_driven <= 0:
-                messagebox.showerror("Mileage Error", "Ending mileage must be higher than starting mileage.")
+            # Step 3: Validate distance
+            if total_trip_distance <= 0:
+                messagebox.showerror("Mileage Error", "The ending odometer must be greater than the starting odometer.")
                 return
 
-            self.calculated_mpg = total_miles_driven / gallons_pumped if gallons_pumped > 0 else 0.0
-            self.calculated_cpm = total_cost_paid / total_miles_driven if total_miles_driven > 0 else 0.0
+            # Step 4: Perform mathematical operations
+            if gallons > 0:
+                self.final_calculated_mpg = total_trip_distance / gallons
+            else:
+                self.final_calculated_mpg = 0.0
 
-            self.label_mpg_result.config(text=f"Miles Per Gallon: {self.calculated_mpg:.2f}")
-            self.label_cpm_result.config(text=f"Fuel Cost Per Mile: ${self.calculated_cpm:.3f}")
+            if total_trip_distance > 0:
+                self.final_calculated_cpm = dollars / total_trip_distance
+            else:
+                self.final_calculated_cpm = 0.0
+
+            # Step 5: Update the labels on the interface
+            self.label_mpg_output.config(text=f"Miles Per Gallon: {self.final_calculated_mpg:.2f}")
+            self.label_cpm_output.config(text=f"Fuel Cost Per Mile: ${self.final_calculated_cpm:.3f}")
             
-            self.button_save.config(state="normal")
+            # Step 6: Enable the save button
+            self.button_save_to_spreadsheet.config(state="normal")
 
         except ValueError:
-            messagebox.showerror("Input Error", "Please ensure all fields contain only numbers.")
+            messagebox.showerror("Input Error", "Please ensure all fields contain only numeric values.")
 
-    def reset_all_fields(self):
-        """Clears all text and resets the UI."""
-        self.entry_starting_miles.delete(0, tk.END)
-        self.entry_ending_miles.delete(0, tk.END)
-        self.entry_fuel_gallons.delete(0, tk.END)
-        self.entry_fuel_cost.delete(0, tk.END)
-        self.label_mpg_result.config(text="Miles Per Gallon: --")
-        self.label_cpm_result.config(text="Fuel Cost Per Mile: --")
-        self.button_save.config(state="disabled")
-
-    def save_to_csv(self):
+    def reset_all_input_fields(self):
         """
-        Appends the current trip data to a CSV file. 
-        Creates the file and header if it does not exist.
+        Clears every entry box and resets the calculation labels.
+        """
+        self.entry_starting_odometer.delete(0, tk.END)
+        self.entry_ending_odometer.delete(0, tk.END)
+        self.entry_fuel_gallons.delete(0, tk.END)
+        self.entry_total_fuel_cost.delete(0, tk.END)
+        
+        self.label_mpg_output.config(text="Miles Per Gallon: Pending...")
+        self.label_cpm_output.config(text="Fuel Cost Per Mile: Pending...")
+        
+        self.button_save_to_spreadsheet.config(state="disabled")
+
+    def append_data_to_csv_file(self):
+        """
+        Saves the current trip data into a CSV file inside the 'data' folder.
         """
         # Ensure the data directory exists
-        if not os.path.exists(self.data_directory):
-            os.makedirs(self.data_directory)
+        if not os.path.exists(self.data_storage_directory):
+            os.makedirs(self.data_storage_directory)
 
-        # Check if we need to write a header (if file is new)
-        file_exists = os.path.isfile(self.csv_file_path)
+        # Determine if we need to write the header row
+        file_is_new = not os.path.isfile(self.spreadsheet_file_path)
 
-        # Prepare the data row
-        row_data = [
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            self.entry_starting_miles.get(),
-            self.entry_ending_miles.get(),
+        # Gather the current date and time
+        current_date_and_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Create the data list for the CSV row
+        data_row = [
+            current_date_and_time,
+            self.entry_starting_odometer.get(),
+            self.entry_ending_odometer.get(),
             self.entry_fuel_gallons.get(),
-            self.entry_fuel_cost.get(),
-            f"{self.calculated_mpg:.2f}",
-            f"{self.calculated_cpm:.3f}"
+            self.entry_total_fuel_cost.get(),
+            format(self.final_calculated_mpg, ".2f"),
+            format(self.final_calculated_cpm, ".3f")
         ]
 
         try:
-            # Open file in 'append' mode (a) so we don't overwrite previous logs
-            with open(self.csv_file_path, mode='a', newline='') as csv_file:
-                writer = csv.writer(csv_file)
+            # Open the file in append mode
+            with open(self.spreadsheet_file_path, mode='a', newline='') as csv_file_handler:
+                csv_writer_object = csv.writer(csv_file_handler)
                 
-                # Write header only if the file is being created for the first time
-                if not file_exists:
-                    writer.writerow(["Timestamp", "Start Miles", "End Miles", "Gallons", "Cost", "MPG", "Fuel CPM"])
+                # Write header if this is a brand new file
+                if file_is_new:
+                    csv_writer_object.writerow([
+                        "Date and Time", 
+                        "Starting Miles", 
+                        "Ending Miles", 
+                        "Gallons Used", 
+                        "Fuel Cost USD", 
+                        "MPG", 
+                        "Fuel CPM"
+                    ])
                 
-                # Write the trip data
-                writer.writerow(row_data)
+                # Write the actual data
+                csv_writer_object.writerow(data_row)
 
-            messagebox.showinfo("Success", f"Trip added to spreadsheet:\n{self.csv_file_path}")
-            # Disable save button after saving to prevent duplicate entries
-            self.button_save.config(state="disabled")
+            messagebox.showinfo("Save Successful", f"Data has been added to:\n{self.spreadsheet_file_path}")
             
-        except Exception as error_message:
-            messagebox.showerror("CSV Error", f"Could not save to spreadsheet: {error_message}")
+            # Disable the button after saving to avoid duplicate entries
+            self.button_save_to_spreadsheet.config(state="disabled")
+            
+        except Exception as error_exception:
+            messagebox.showerror("File Error", f"An error occurred while saving: {error_exception}")
 
+# --- START THE APPLICATION ---
 if __name__ == "__main__":
-    main_window = tk.Tk()
-    application_instance = FuelTracker(main_window)
-    main_window.mainloop()
+    # Create the root window instance
+    main_tkinter_window = tk.Tk()
+    
+    # Initialize the Fuel Tracker Application
+    tracker_application = FuelTrackerApplication(main_tkinter_window)
+    
+    # Run the graphical user interface loop
+    main_tkinter_window.mainloop()
