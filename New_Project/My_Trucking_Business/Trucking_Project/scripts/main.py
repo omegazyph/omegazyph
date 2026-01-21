@@ -2,11 +2,11 @@
 # Date: 2026-01-11
 # Script Name: main.py
 # Author: omegazyph
-# Updated: 2026-01-19
+# Updated: 2026-01-21
 # Description: This is a standalone Fuel Performance Tracker for trucking. 
 #              It calculates Miles Per Gallon (MPG) and Fuel Cost Per Mile (CPM).
 #              It saves results into a CSV spreadsheet for business records.
-#              Added: Manual Date entry field (Defaults to today's date).
+#              Added: Automatic date sorting so logs stay in chronological order.
 # ---------------------------------------------------------------------------
 
 import tkinter as tk
@@ -23,7 +23,7 @@ class FuelTrackerApplication:
         """
         self.root_window = root_window
         self.root_window.title("omegazyph's Professional Fuel Performance Tracker")
-        self.root_window.geometry("600x900") # Increased height for more fields
+        self.root_window.geometry("600x900") 
         self.root_window.configure(bg="#f0f0f0")
 
         # --- FILE PATH SETUP ---
@@ -48,13 +48,12 @@ class FuelTrackerApplication:
 
         self.input_label_style = {"bg": "#f0f0f0", "font": ("Segoe UI", 11, "bold")}
 
-        # 0. DATE ENTRY (New Addition: Manual override)
+        # 0. DATE ENTRY
         self.label_date_entry = tk.Label(self.input_fields_frame, text="Date (YYYY-MM-DD):", **self.input_label_style)
         self.label_date_entry.grid(row=0, column=0, sticky="e", pady=10, padx=10)
         
         self.entry_date_value = tk.Entry(self.input_fields_frame, font=("Segoe UI", 12), width=20)
         self.entry_date_value.grid(row=0, column=1, pady=10, padx=10)
-        # Pre-fill with today's date as a helpful default
         self.entry_date_value.insert(0, datetime.now().strftime("%Y-%m-%d"))
 
         # 1. LOAD NUMBER ENTRY
@@ -119,31 +118,13 @@ class FuelTrackerApplication:
         self.button_reset_fields.grid(row=0, column=1, padx=10)
 
         # --- RESULTS DISPLAY SECTION ---
-        self.label_total_miles_output = tk.Label(
-            self.root_window, 
-            text="Total Miles: Pending...", 
-            font=("Segoe UI", 14, "bold"), 
-            bg="#f0f0f0", 
-            fg="#004e8c"
-        )
+        self.label_total_miles_output = tk.Label(self.root_window, text="Total Miles: Pending...", font=("Segoe UI", 14, "bold"), bg="#f0f0f0", fg="#004e8c")
         self.label_total_miles_output.pack(pady=5)
 
-        self.label_mpg_output = tk.Label(
-            self.root_window, 
-            text="Miles Per Gallon: Pending...", 
-            font=("Segoe UI", 14, "bold"), 
-            bg="#f0f0f0", 
-            fg="#004e8c"
-        )
+        self.label_mpg_output = tk.Label(self.root_window, text="Miles Per Gallon: Pending...", font=("Segoe UI", 14, "bold"), bg="#f0f0f0", fg="#004e8c")
         self.label_mpg_output.pack(pady=5)
 
-        self.label_cpm_output = tk.Label(
-            self.root_window, 
-            text="Fuel Cost Per Mile: Pending...", 
-            font=("Segoe UI", 14, "bold"), 
-            bg="#f0f0f0", 
-            fg="#004e8c"
-        )
+        self.label_cpm_output = tk.Label(self.root_window, text="Fuel Cost Per Mile: Pending...", font=("Segoe UI", 14, "bold"), bg="#f0f0f0", fg="#004e8c")
         self.label_cpm_output.pack(pady=5)
 
         # --- SPREADSHEET SAVE BUTTON ---
@@ -159,16 +140,12 @@ class FuelTrackerApplication:
         )
         self.button_save_to_spreadsheet.pack(pady=30)
 
-        # Variables for calculated values
         self.final_total_trip_miles = 0.0
         self.final_calculated_mpg = 0.0
         self.final_calculated_cpm = 0.0
 
     def calculate_truck_performance(self):
-        """
-        Retrieves user input, performs the mathematical operations,
-        and updates the display labels.
-        """
+        """Calculates MPG, CPM, and Miles."""
         try:
             start_miles = float(self.entry_starting_odometer.get())
             end_miles = float(self.entry_ending_odometer.get())
@@ -181,17 +158,9 @@ class FuelTrackerApplication:
                 messagebox.showerror("Mileage Error", "The ending odometer must be greater than the starting odometer.")
                 return
 
-            if gallons > 0:
-                self.final_calculated_mpg = self.final_total_trip_miles / gallons
-            else:
-                self.final_calculated_mpg = 0.0
+            self.final_calculated_mpg = self.final_total_trip_miles / gallons if gallons > 0 else 0.0
+            self.final_calculated_cpm = dollars / self.final_total_trip_miles if self.final_total_trip_miles > 0 else 0.0
 
-            if self.final_total_trip_miles > 0:
-                self.final_calculated_cpm = dollars / self.final_total_trip_miles
-            else:
-                self.final_calculated_cpm = 0.0
-
-            # Update results on screen
             self.label_total_miles_output.config(text=f"Total Miles: {self.final_total_trip_miles:.1f}")
             self.label_mpg_output.config(text=f"Miles Per Gallon: {self.final_calculated_mpg:.2f}")
             self.label_cpm_output.config(text=f"Fuel Cost Per Mile: ${self.final_calculated_cpm:.3f}")
@@ -202,40 +171,30 @@ class FuelTrackerApplication:
             messagebox.showerror("Input Error", "Please ensure all mileage and cost fields contain numbers.")
 
     def reset_all_input_fields(self):
-        """
-        Clears every entry box and resets the calculation labels.
-        """
+        """Resets all UI components."""
         self.entry_date_value.delete(0, tk.END)
-        # Re-insert today's date so the user doesn't have to type it every time
         self.entry_date_value.insert(0, datetime.now().strftime("%Y-%m-%d"))
-        
         self.entry_load_number.delete(0, tk.END)
         self.entry_starting_odometer.delete(0, tk.END)
         self.entry_ending_odometer.delete(0, tk.END)
         self.entry_fuel_gallons.delete(0, tk.END)
         self.entry_total_fuel_cost.delete(0, tk.END)
-        
         self.label_total_miles_output.config(text="Total Miles: Pending...")
         self.label_mpg_output.config(text="Miles Per Gallon: Pending...")
         self.label_cpm_output.config(text="Fuel Cost Per Mile: Pending...")
-        
         self.button_save_to_spreadsheet.config(state="disabled")
 
     def append_data_to_csv_file(self):
         """
-        Saves the current trip data into a CSV file inside the 'data' folder.
+        Saves the current trip data and automatically sorts the entire 
+        file by date before saving.
         """
         if not os.path.exists(self.data_storage_directory):
             os.makedirs(self.data_storage_directory)
 
-        file_is_new = not os.path.isfile(self.spreadsheet_file_path)
-        
-        # Get the date from the entry box instead of the system clock
-        user_specified_date = self.entry_date_value.get()
-
-        # Create the data list for the CSV row
-        data_row = [
-            user_specified_date,
+        # 1. Prepare the new row
+        new_row = [
+            self.entry_date_value.get(),
             self.entry_load_number.get(),
             self.entry_starting_odometer.get(),
             self.entry_ending_odometer.get(),
@@ -246,26 +205,33 @@ class FuelTrackerApplication:
             format(self.final_calculated_cpm, ".3f")
         ]
 
-        try:
-            with open(self.spreadsheet_file_path, mode='a', newline='') as csv_file_handler:
-                csv_writer_object = csv.writer(csv_file_handler)
-                
-                if file_is_new:
-                    csv_writer_object.writerow([
-                        "Date", 
-                        "Load ID", 
-                        "Starting Miles", 
-                        "Ending Miles", 
-                        "Total Trip Miles", 
-                        "Gallons Used", 
-                        "Fuel Cost USD", 
-                        "MPG", 
-                        "Fuel CPM"
-                    ])
-                
-                csv_writer_object.writerow(data_row)
+        # 2. Read existing data to include it in the sort
+        existing_data = []
+        header = ["Date", "Load ID", "Starting Miles", "Ending Miles", "Total Trip Miles", "Gallons Used", "Fuel Cost USD", "MPG", "Fuel CPM"]
+        
+        if os.path.isfile(self.spreadsheet_file_path):
+            with open(self.spreadsheet_file_path, mode='r', newline='') as csv_file_handler:
+                csv_reader_object = csv.reader(csv_file_handler)
+                header = next(csv_reader_object) # Skip the existing header
+                for row in csv_reader_object:
+                    if row: # Make sure the row isn't empty
+                        existing_data.append(row)
 
-            messagebox.showinfo("Save Successful", f"Trip data for Load {self.entry_load_number.get()} saved for {user_specified_date}.")
+        # 3. Add the new entry to the list
+        existing_data.append(new_row)
+
+        # 4. Sort the entire list by the first column (Date)
+        # We use a 'lambda' to tell Python to look at the very first item in each row
+        existing_data.sort(key=lambda x: x[0])
+
+        try:
+            # 5. Overwrite the file with the newly sorted data
+            with open(self.spreadsheet_file_path, mode='w', newline='') as csv_file_handler:
+                csv_writer_object = csv.writer(csv_file_handler)
+                csv_writer_object.writerow(header)
+                csv_writer_object.writerows(existing_data)
+
+            messagebox.showinfo("Save Successful", "Data saved and sorted by date.")
             self.button_save_to_spreadsheet.config(state="disabled")
             
         except Exception as error_exception:
