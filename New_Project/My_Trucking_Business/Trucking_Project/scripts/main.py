@@ -2,125 +2,171 @@
 # Date: 2026-01-11
 # Script Name: main.py
 # Author: omegazyph
-# Updated: 2026-01-21
-# Description: Main GUI for the Fuel Tracker. Imports logic from fuel_logic.py.
+# Updated: 2026-01-22
+# Description: Main Graphical User Interface (GUI) for the Fuel Tracker.
+#              Provides fields for Date, Load ID, Mileage, and Costs.
+#              Includes 'Delete Last' button for error correction.
 # ---------------------------------------------------------------------------
 
 import tkinter as tk
 from tkinter import messagebox
 import os
 from datetime import datetime
-from fuel_logic import FuelDataManager # Importing our logic class
+from fuel_logic import FuelDataManager  # Connecting to our logic script
 
 class FuelTrackerApp:
-    def __init__(self, root):
-        self.root = root
+    def __init__(self, root_window):
+        """
+        Setup the main window and initialize the data connection.
+        """
+        self.root = root_window
         self.root.title("omegazyph's Professional Fuel Tracker")
-        self.root.geometry("600x900")
+        self.root.geometry("600x950")  # Tall enough for all buttons
         self.root.configure(bg="#f0f0f0")
 
-        # Set up file paths
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        project_dir = os.path.dirname(script_dir)
-        csv_path = os.path.join(project_dir, "data", "fuel_history.csv")
+        # Dynamically find the path to the CSV file based on script location
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(script_directory)
+        csv_full_path = os.path.join(project_root, "data", "fuel_history.csv")
 
-        # Initialize the logic manager
-        self.data_manager = FuelDataManager(csv_path)
+        # Create an instance of our Logic Manager
+        self.data_manager = FuelDataManager(csv_full_path)
 
-        # Create UI
-        self.setup_ui()
+        # Variables to hold math results globally within the class
+        self.calculation_results = {"miles": 0.0, "mpg": 0.0, "cpm": 0.0}
 
-    def setup_ui(self):
-        """Builds all the entry fields and labels."""
-        tk.Label(self.root, text="TRUCK FUEL PERFORMANCE", font=("Segoe UI", 18, "bold"), bg="#f0f0f0").pack(pady=20)
+        # Build the visual components
+        self.initialize_user_interface()
+
+    def initialize_user_interface(self):
+        """
+        Creates labels, entry boxes, and buttons.
+        """
+        tk.Label(self.root, text="TRUCK FUEL PERFORMANCE", 
+                 font=("Segoe UI", 20, "bold"), bg="#f0f0f0", fg="#2c3e50").pack(pady=20)
         
-        self.fields_frame = tk.Frame(self.root, bg="#f0f0f0")
-        self.fields_frame.pack()
+        # Frame to organize inputs in a grid
+        self.input_container = tk.Frame(self.root, bg="#f0f0f0")
+        self.input_container.pack()
 
-        label_style = {"bg": "#f0f0f0", "font": ("Segoe UI", 11, "bold")}
+        # Creating the input fields using a helper method to keep code clean
+        self.entry_date = self.add_labeled_entry("Date (YYYY-MM-DD):", 0)
+        self.entry_date.insert(0, datetime.now().strftime("%Y-%m-%d")) # Default to today
         
-        # Input fields
-        self.entry_date = self.create_input("Date (YYYY-MM-DD):", 0)
-        self.entry_date.insert(0, datetime.now().strftime("%Y-%m-%d"))
+        self.entry_load = self.add_labeled_entry("Load Number / ID:", 1)
+        self.entry_start = self.add_labeled_entry("Starting Odometer:", 2)
+        self.entry_end = self.add_labeled_entry("Ending Odometer:", 3)
+        self.entry_gallons = self.add_labeled_entry("Total Gallons:", 4)
+        self.entry_cost = self.add_labeled_entry("Total Cost ($):", 5)
+
+        # Row of Action Buttons (Calculate and Reset)
+        button_row = tk.Frame(self.root, bg="#f0f0f0")
+        button_row.pack(pady=20)
         
-        self.entry_load = self.create_input("Load Number / ID:", 1)
-        self.entry_start = self.create_input("Starting Odometer:", 2)
-        self.entry_end = self.create_input("Ending Odometer:", 3)
-        self.entry_gallons = self.create_input("Total Gallons:", 4)
-        self.entry_cost = self.create_input("Total Cost ($):", 5)
-
-        # Calculate and Reset Buttons
-        btn_frame = tk.Frame(self.root, bg="#f0f0f0")
-        btn_frame.pack(pady=20)
+        tk.Button(button_row, text="CALCULATE", command=self.perform_math, 
+                  bg="#0078d4", fg="white", font=("Segoe UI", 10, "bold"), width=15).grid(row=0, column=0, padx=5)
         
-        tk.Button(btn_frame, text="CALCULATE", command=self.calculate, bg="#0078d4", fg="white", width=15).grid(row=0, column=0, padx=5)
-        tk.Button(btn_frame, text="RESET", command=self.reset, bg="#d13438", fg="white", width=15).grid(row=0, column=1, padx=5)
+        tk.Button(button_row, text="RESET FIELDS", command=self.clear_entries, 
+                  bg="#a0a0a0", fg="white", font=("Segoe UI", 10, "bold"), width=15).grid(row=0, column=1, padx=5)
 
-        # Output Labels
-        self.lbl_miles = tk.Label(self.root, text="Total Miles: --", font=("Segoe UI", 12), bg="#f0f0f0")
-        self.lbl_miles.pack()
-        self.lbl_mpg = tk.Label(self.root, text="MPG: --", font=("Segoe UI", 12), bg="#f0f0f0")
-        self.lbl_mpg.pack()
-        self.lbl_cpm = tk.Label(self.root, text="CPM: --", font=("Segoe UI", 12), bg="#f0f0f0")
-        self.lbl_cpm.pack()
+        # Area to display the calculated math results
+        self.label_miles = tk.Label(self.root, text="Total Miles: --", font=("Segoe UI", 13), bg="#f0f0f0")
+        self.label_miles.pack()
+        self.label_mpg = tk.Label(self.root, text="MPG: --", font=("Segoe UI", 13), bg="#f0f0f0")
+        self.label_mpg.pack()
+        self.label_cpm = tk.Label(self.root, text="CPM: --", font=("Segoe UI", 13), bg="#f0f0f0")
+        self.label_cpm.pack()
 
-        # Save Button
-        self.btn_save = tk.Button(self.root, text="ADD TO SPREADSHEET (CSV)", command=self.save, bg="#107c10", fg="white", font=("Segoe UI", 12, "bold"), width=35, state="disabled")
-        self.btn_save.pack(pady=20)
+        # Save Button - Starts disabled until user calculates
+        self.button_save = tk.Button(self.root, text="ADD TO SPREADSHEET (CSV)", 
+                                     command=self.save_data, bg="#107c10", fg="white", 
+                                     font=("Segoe UI", 12, "bold"), width=35, state="disabled")
+        self.button_save.pack(pady=20)
 
-        # Values for saving
-        self.results = {"miles": 0.0, "mpg": 0.0, "cpm": 0.0}
+        # THE FIX: Delete Last Entry Button
+        tk.Button(self.root, text="DELETE LAST SAVED ENTRY", command=self.undo_last_save, 
+                  bg="#d13438", fg="white", font=("Segoe UI", 9), width=25).pack(pady=10)
 
-    def create_input(self, text, row):
-        tk.Label(self.fields_frame, text=text, bg="#f0f0f0", font=("Segoe UI", 11, "bold")).grid(row=row, column=0, sticky="e", pady=5, padx=5)
-        entry = tk.Entry(self.fields_frame, font=("Segoe UI", 12), width=20)
-        entry.grid(row=row, column=1, pady=5, padx=5)
-        return entry
+    def add_labeled_entry(self, label_text, row_index):
+        """
+        Utility function to create a label and an entry box in the grid.
+        """
+        tk.Label(self.input_container, text=label_text, bg="#f0f0f0", 
+                 font=("Segoe UI", 11, "bold")).grid(row=row_index, column=0, sticky="e", pady=8, padx=10)
+        new_entry = tk.Entry(self.input_container, font=("Segoe UI", 12), width=22)
+        new_entry.grid(row=row_index, column=1, pady=8, padx=10)
+        return new_entry
 
-    def calculate(self):
+    def perform_math(self):
+        """
+        Pull values from screen and run the MPG/CPM formulas.
+        """
         try:
-            start = float(self.entry_start.get())
-            end = float(self.entry_end.get())
-            gals = float(self.entry_gallons.get())
-            cost = float(self.entry_cost.get())
+            start_val = float(self.entry_start.get())
+            end_val = float(self.entry_end.get())
+            gal_val = float(self.entry_gallons.get())
+            cost_val = float(self.entry_cost.get())
 
-            self.results["miles"] = end - start
-            if self.results["miles"] <= 0:
-                messagebox.showerror("Error", "Check odometer readings.")
+            # Distance Logic
+            self.calculation_results["miles"] = end_val - start_val
+            if self.calculation_results["miles"] <= 0:
+                messagebox.showwarning("Logic Error", "Ending odometer must be higher than starting.")
                 return
 
-            self.results["mpg"] = self.results["miles"] / gals if gals > 0 else 0
-            self.results["cpm"] = cost / self.results["miles"] if self.results["miles"] > 0 else 0
+            # Economy Logic
+            self.calculation_results["mpg"] = self.calculation_results["miles"] / gal_val if gal_val > 0 else 0
+            self.calculation_results["cpm"] = cost_val / self.calculation_results["miles"] if self.calculation_results["miles"] > 0 else 0
 
-            self.lbl_miles.config(text=f"Total Miles: {self.results['miles']:.1f}")
-            self.lbl_mpg.config(text=f"MPG: {self.results['mpg']:.2f}")
-            self.lbl_cpm.config(text=f"CPM: ${self.results['cpm']:.3f}")
-            self.btn_save.config(state="normal")
+            # Update Labels
+            self.label_miles.config(text=f"Total Miles: {self.calculation_results['miles']:.1f}")
+            self.label_mpg.config(text=f"MPG: {self.calculation_results['mpg']:.2f}")
+            self.label_cpm.config(text=f"CPM: ${self.calculation_results['cpm']:.3f}")
+            
+            # Allow user to save now that math is done
+            self.button_save.config(state="normal")
         except ValueError:
-            messagebox.showerror("Error", "Please enter valid numbers.")
+            messagebox.showerror("Input Error", "Please fill all mileage and cost fields with numbers.")
 
-    def save(self):
-        row = [
+    def save_data(self):
+        """
+        Format the data and send it to the Logic Manager for sorting and saving.
+        """
+        data_list = [
             self.entry_date.get(),
             self.entry_load.get(),
             self.entry_start.get(),
             self.entry_end.get(),
-            f"{self.results['miles']:.1f}",
+            f"{self.calculation_results['miles']:.1f}",
             self.entry_gallons.get(),
             self.entry_cost.get(),
-            f"{self.results['mpg']:.2f}",
-            f"{self.results['cpm']:.3f}"
+            f"{self.calculation_results['mpg']:.2f}",
+            f"{self.calculation_results['cpm']:.3f}"
         ]
-        self.data_manager.save_and_sort_data(row)
-        messagebox.showinfo("Success", "Record saved and sorted.")
-        self.btn_save.config(state="disabled")
+        self.data_manager.save_and_sort_data(data_list)
+        messagebox.showinfo("Success", f"Load {self.entry_load.get()} saved and sorted.")
+        self.button_save.config(state="disabled")
 
-    def reset(self):
+    def undo_last_save(self):
+        """
+        Calls the delete logic if the user made a mistake.
+        """
+        confirm = messagebox.askyesno("Confirm", "Are you sure you want to remove the last entry from the CSV?")
+        if confirm:
+            success, message = self.data_manager.delete_last_saved_entry()
+            if success:
+                messagebox.showinfo("Deleted", message)
+            else:
+                messagebox.showwarning("Attention", message)
+
+    def clear_entries(self):
+        """
+        Wipes the screen clean for a new load.
+        """
         for entry in [self.entry_load, self.entry_start, self.entry_end, self.entry_gallons, self.entry_cost]:
             entry.delete(0, tk.END)
-        self.btn_save.config(state="disabled")
+        self.button_save.config(state="disabled")
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = FuelTrackerApp(root)
-    root.mainloop()
+    main_window = tk.Tk()
+    tracker_app = FuelTrackerApp(main_window)
+    main_window.mainloop()
