@@ -3,8 +3,8 @@
 # Author: omegazyph
 # Updated: 2026-01-25
 # Description: A Zero-Trust local password manager utilizing AES-256 encryption.
-# Features: Dynamic window auto-sizing, Separated Grid UI, Field-specific updates,
-# Website tracking, PIN storage, automated backups, and A-Z sorting.
+# Features: Full non-shorthand code, Universal 'exit' support in all fields, 
+# Dynamic window auto-sizing, Separated Grid UI, and A-Z sorting.
 
 import os
 import json
@@ -36,10 +36,12 @@ class CipherVault:
         script_dir = os.path.dirname(script_path)
         parent_dir = os.path.dirname(script_dir)
         
+        # Folder structure logic
         self.data_dir = os.path.join(parent_dir, "data")
         self.backup_dir = os.path.join(self.data_dir, "backups")
         self.file_path = os.path.join(self.data_dir, "vault_data.bin")
         
+        # Creating folders if they do not exist
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
             
@@ -119,91 +121,95 @@ class CipherVault:
         secure_password = "".join(password_chars)
         return secure_password
 
-    def update_entry(self, service_name):
+    def update_entry(self):
         """
-        Allows the user to select and update a specific field of an existing entry.
+        Allows field updates with 'exit' checks at every prompt.
         """
+        service_name = Prompt.ask("Service to Update (or 'exit')")
+        if service_name.lower() == "exit":
+            return
+
         data = self.load_vault()
         if data is not None:
             if service_name in data:
                 console.print("\n[bold cyan]Editing: " + service_name + "[/bold cyan]")
                 console.print("1. Website  2. Username  3. Password  4. PIN  5. Cancel")
-                field_choice = Prompt.ask("Select field to update", choices=["1", "2", "3", "4", "5"])
+                field_choice = Prompt.ask("Select field", choices=["1", "2", "3", "4", "5"])
                 
-                if field_choice == "1":
-                    data[service_name]["website"] = Prompt.ask("Enter new Website URL")
-                elif field_choice == "2":
-                    data[service_name]["username"] = Prompt.ask("Enter new Username")
-                elif field_choice == "3":
-                    gen_confirm = Prompt.ask("Generate new password?", choices=["y", "n"], default="y")
-                    if gen_confirm == "y":
-                        new_pwd = self.generate_password()
-                        console.print("\n[bold yellow]NEW PASSWORD:[/bold yellow] [bold white]" + new_pwd + "[/bold white]\n")
-                        data[service_name]["password"] = new_pwd
-                    else:
-                        data[service_name]["password"] = Prompt.ask("Enter new Password", password=True)
-                elif field_choice == "4":
-                    data[service_name]["pin"] = Prompt.ask("Enter new PIN")
-                elif field_choice == "5":
+                if field_choice == "5":
                     return
 
-                # Update the timestamp
+                new_val = Prompt.ask("Enter new value (or 'exit')")
+                if new_val.lower() == "exit":
+                    return
+
+                if field_choice == "1":
+                    data[service_name]["website"] = new_val
+                elif field_choice == "2":
+                    data[service_name]["username"] = new_val
+                elif field_choice == "3":
+                    data[service_name]["password"] = new_val
+                elif field_choice == "4":
+                    data[service_name]["pin"] = new_val
+
                 data[service_name]["last_updated"] = datetime.now().strftime("%Y-%m-%d")
                 self.save_vault(data)
-                console.print("[bold green][*][/bold green] " + service_name + " has been updated.")
+                console.print("[bold green][*][/bold green] Update saved.")
             else:
                 console.print("[red]Service not found.[/red]")
 
-    def rename_service(self, old_name):
+    def add_password(self):
         """
-        Safely renames a service key within the vault.
+        Adds a new entry with 'exit' checks at every single prompt.
         """
-        data = self.load_vault()
-        if data is not None:
-            if old_name in data:
-                new_name = Prompt.ask("Enter new name for [bold cyan]" + old_name + "[/bold cyan]")
-                if new_name not in data:
-                    data[new_name] = data.pop(old_name)
-                    self.save_vault(data)
-                    console.print("[bold green][*][/bold green] Service renamed to " + new_name + ".")
-                else:
-                    console.print("[red]Error: Name already exists.[/red]")
+        service = Prompt.ask("Service (or 'exit')")
+        if service.lower() == "exit":
+            return
 
-    def delete_entry(self, service_name):
-        """
-        Removes an entry from the vault after confirmation.
-        """
-        data = self.load_vault()
-        if data is not None:
-            if service_name in data:
-                confirm = Prompt.ask("Delete [bold red]" + service_name + "[/bold red]?", choices=["y", "n"])
-                if confirm == "y":
-                    del data[service_name]
-                    self.save_vault(data)
-                    console.print("[bold yellow][-][/bold yellow] " + service_name + " removed.")
+        site = Prompt.ask("Website (or 'exit')", default="N/A")
+        if site.lower() == "exit":
+            return
 
-    def add_password(self, service, username, password, website, pin):
-        """
-        Adds a new credential entry to the vault.
-        """
+        user = Prompt.ask("Username (or 'exit')")
+        if user.lower() == "exit":
+            return
+
+        pin = Prompt.ask("PIN (or 'exit')", default="N/A")
+        if pin.lower() == "exit":
+            return
+
+        gen_confirm = Prompt.ask("Generate password?", choices=["y", "n", "exit"], default="y")
+        if gen_confirm.lower() == "exit":
+            return
+        
+        if gen_confirm == "y":
+            pwd = self.generate_password()
+            console.print("\n[bold yellow]GENERATED:[/bold yellow] " + pwd + "\n")
+        else:
+            pwd = Prompt.ask("Password (or 'exit')", password=True)
+            if pwd.lower() == "exit":
+                return
+
         data = self.load_vault()
         if data is not None:
-            current_time = datetime.now()
-            date_string = current_time.strftime("%Y-%m-%d")
             data[service] = {
-                "username": username,
-                "password": password,
-                "website": website,
+                "username": user,
+                "password": pwd,
+                "website": site,
                 "pin": pin,
-                "last_updated": date_string
+                "last_updated": datetime.now().strftime("%Y-%m-%d")
             }
             self.save_vault(data)
-            console.print("[bold green][+][/bold green] Credentials for " + service + " secured.")
+            console.print("[bold green][+][/bold green] Entry secured.")
 
-    def search_entries(self, query):
+    def search_entries(self):
         """
-        Searches the vault and displays unmasked results in a dynamic table.
+        Searches the vault with an exit option.
         """
+        query = Prompt.ask("Keyword (or 'exit')")
+        if query.lower() == "exit":
+            return
+
         data = self.load_vault()
         if data is None: 
             return
@@ -219,25 +225,19 @@ class CipherVault:
         for svc in sorted_keys:
             if query.lower() in svc.lower():
                 info = data[svc]
-                table.add_row(
-                    svc, 
-                    info.get("website", "N/A"), 
-                    info["username"], 
-                    info["password"], 
-                    info.get("pin", "N/A")
-                )
+                table.add_row(svc, info.get("website", "N/A"), info["username"], info["password"], info.get("pin", "N/A"))
         console.print(table)
 
     def check_expirations(self):
         """
-        Displays all entries with masked passwords/PINs in a dynamic table.
+        Displays all entries with masked data in the dynamic grid.
         """
         data = self.load_vault()
         if not data:
             console.print("[yellow]Vault is empty.[/yellow]")
             return
 
-        table = Table(title="Vault Overview (Privacy Mode)", border_style="green", show_lines=True, width=console.width)
+        table = Table(title="Vault Overview", border_style="green", show_lines=True, width=console.width)
         table.add_column("Service", style="cyan", no_wrap=True)
         table.add_column("Website", style="green")
         table.add_column("Username", style="white")
@@ -249,35 +249,22 @@ class CipherVault:
         sorted_keys = sorted(data.keys())
         for svc in sorted_keys:
             info = data[svc]
-            last_date_str = info["last_updated"]
-            last_date = datetime.strptime(last_date_str, "%Y-%m-%d")
+            last_date = datetime.strptime(info["last_updated"], "%Y-%m-%d")
             
-            diff = today - last_date
-            if diff.days > self.expiration_days:
+            if (today - last_date).days > 90:
                 status = "[blink red]EXPIRED[/blink red]"
             else:
                 status = "Secure"
                 
-            table.add_row(
-                svc, 
-                info.get("website", "N/A"), 
-                info["username"], 
-                "********", 
-                "****", 
-                status
-            )
+            table.add_row(svc, info.get("website", "N/A"), info["username"], "********", "****", status)
         console.print(table)
 
 def main():
-    """
-    Main entry point for the CipherVault application.
-    """
     console.print("[bold green]INITIALIZING CIPHER VAULT...[/bold green]", justify="center")
     master_key = Prompt.ask("[bold cyan]Enter Master Encryption Key[/bold cyan]", password=True)
     vault = CipherVault(master_key)
     
-    initial_data = vault.load_vault()
-    if initial_data is None: 
+    if vault.load_vault() is None: 
         return
 
     vault.check_expirations()
@@ -285,34 +272,34 @@ def main():
         console.print("\n[bold green]1.[/bold green] View All [bold green]2.[/bold green] Add [bold blue]3. Update[/bold blue] [bold green]4.[/bold green] Search [bold cyan]5. Rename[/bold cyan] [bold red]6. Delete[/bold red] [bold green]7.[/bold green] Exit")
         choice = Prompt.ask("Action", choices=["1", "2", "3", "4", "5", "6", "7"])
         
-        if choice == "1": 
+        if choice == "1":
             vault.check_expirations()
         elif choice == "2":
-            svc = Prompt.ask("Service")
-            site = Prompt.ask("Website", default="N/A")
-            user = Prompt.ask("Username")
-            pin = Prompt.ask("PIN", default="N/A")
-            
-            gen_confirm = Prompt.ask("Generate password?", choices=["y", "n"], default="y")
-            if gen_confirm == "y":
-                pwd = vault.generate_password()
-                console.print("\n[bold yellow]SYSTEM GENERATED PASSWORD:[/bold yellow] [bold white]" + pwd + "[/bold white]\n")
-            else:
-                pwd = Prompt.ask("Password", password=True)
-                
-            vault.add_password(svc, user, pwd, site, pin)
+            vault.add_password()
         elif choice == "3":
-            vault.update_entry(Prompt.ask("Enter Service to Update"))
-        elif choice == "4": 
-            keyword = Prompt.ask("Keyword")
-            vault.search_entries(keyword)
-        elif choice == "5": 
-            rename_target = Prompt.ask("Service to Rename")
-            vault.rename_service(rename_target)
-        elif choice == "6": 
-            delete_target = Prompt.ask("Service to Delete")
-            vault.delete_entry(delete_target)
-        elif choice == "7": 
+            vault.update_entry()
+        elif choice == "4":
+            vault.search_entries()
+        elif choice == "5":
+            old = Prompt.ask("Rename Service (or 'exit')")
+            if old.lower() != "exit":
+                data = vault.load_vault()
+                if data is not None and old in data:
+                    new = Prompt.ask("New Name (or 'exit')")
+                    if new.lower() != "exit":
+                        data[new] = data.pop(old)
+                        vault.save_vault(data)
+                        console.print("[bold green][*][/bold green] Renamed.")
+        elif choice == "6":
+            svc = Prompt.ask("Delete Service (or 'exit')")
+            if svc.lower() != "exit":
+                data = vault.load_vault()
+                if data is not None and svc in data:
+                    if Prompt.ask("Confirm Delete?", choices=["y", "n"]) == "y":
+                        del data[svc]
+                        vault.save_vault(data)
+                        console.print("[bold yellow][-][/bold yellow] Removed.")
+        elif choice == "7":
             console.print("[bold green]Closing secure session. Stay secure, Wayne.[/bold green]")
             break
 
