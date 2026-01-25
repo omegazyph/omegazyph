@@ -32,7 +32,7 @@ def run_backup():
     time.sleep(0.5)
 
     # --- CONFIGURATION ---
-    source_folder = r"C:\Users\omega\OneDrive\Desktop\omegazyph"
+    source_folder = r"C:\Users\omega\Desktop\omegazyph"
     backup_destination = r"Z:\Windows\Documents\Git hub projects\omegazyph_back_up"
 
     # 1. Drive Connection Check
