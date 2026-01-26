@@ -2,8 +2,8 @@
 # Script Name: vault_hacker_gui.pyw
 # Author: omegazyph
 # Updated: 2026-01-25
-# Description: Stealth AES-256 Vault with Auto-Expanding Columns, Clipboard support, and Delete functionality.
-# Features: Full non-shorthand logic, Windowless execution (.pyw), and Secure Clipboard timer.
+# Description: Stealth AES-256 Vault with Browser Integration and Clipboard support.
+# Features: Full non-shorthand logic, Windowless execution, and Auto-Launch URL.
 
 import os
 import json
@@ -11,6 +11,7 @@ import base64
 import secrets
 import string
 import shutil
+import webbrowser
 import tkinter as tk
 from tkinter import messagebox, simpledialog, ttk
 from datetime import datetime
@@ -23,12 +24,12 @@ from cryptography.fernet import Fernet
 class HackerVaultGUI:
     def __init__(self, root):
         """
-        Initializes the wide-view stealth GUI with high-contrast colors.
+        Initializes the wide-view stealth GUI with browser support.
         """
         self.root = root
         self.root.title("SYSTEM_ACCESS: CIPHER_VAULT_PRO")
         
-        # Hide the window during authentication
+        # Withdraw the root window while the authentication dialog is active
         self.root.withdraw()
         
         self.root.geometry("1150x650")
@@ -37,68 +38,67 @@ class HackerVaultGUI:
         self.font_style = ("Courier New", 10, "bold")
         self.root.configure(bg=self.bg_color)
 
-        # File Path Management
-        script_path = os.path.abspath(__file__)
-        script_dir = os.path.dirname(script_path)
-        parent_dir = os.path.dirname(script_dir)
+        # File path configuration
+        script_path_absolute = os.path.abspath(__file__)
+        script_directory = os.path.dirname(script_path_absolute)
+        parent_directory = os.path.dirname(script_directory)
         
-        self.data_dir = os.path.join(parent_dir, "data")
-        self.backup_dir = os.path.join(self.data_dir, "backups")
-        self.file_path = os.path.join(self.data_dir, "vault_data.bin")
+        self.data_directory = os.path.join(parent_directory, "data")
+        self.backup_directory = os.path.join(self.data_directory, "backups")
+        self.file_path = os.path.join(self.data_directory, "vault_data.bin")
 
-        # Ensure directories exist
-        if not os.path.exists(self.data_dir):
-            os.makedirs(self.data_dir)
-        if not os.path.exists(self.backup_dir):
-            os.makedirs(self.backup_dir)
+        # Create necessary directories if they do not exist
+        if not os.path.exists(self.data_directory):
+            os.makedirs(self.data_directory)
+        if not os.path.exists(self.backup_directory):
+            os.makedirs(self.backup_directory)
 
-        # Authenticate User
+        # Master password authentication
         self.master_password = simpledialog.askstring("SECURE_AUTH", "ENTER MASTER KEY:", show='*')
         
         if self.master_password is None or self.master_password == "":
             self.root.destroy()
             return
 
-        self.key = self._derive_key(self.master_password)
+        self.key = self.derive_cryptographic_key(self.master_password)
         self.cipher = Fernet(self.key)
         
-        # Reveal window and build UI
+        # Show the main window after successful key derivation
         self.root.deiconify()
-        self._setup_hacker_ui()
+        self.setup_hacker_user_interface()
 
-    def _derive_key(self, password):
+    def derive_cryptographic_key(self, password):
         """
         Derives a cryptographic key using PBKDF2 with a static salt.
         """
         salt = b'static_salt_for_omegazyph'
-        kdf = PBKDF2HMAC(
+        key_derivation_function = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
             iterations=100000,
         )
-        password_bytes = password.encode()
-        key_bytes = kdf.derive(password_bytes)
-        url_safe_key = base64.urlsafe_b64encode(key_bytes)
-        return url_safe_key
+        password_encoded = password.encode()
+        derived_key = key_derivation_function.derive(password_encoded)
+        return base64.urlsafe_b64encode(derived_key)
 
-    def _setup_hacker_ui(self):
+    def setup_hacker_user_interface(self):
         """
-        Configures the grid, buttons, and status bar.
+        Configures the graphical user interface elements.
         """
-        header = tk.Label(
+        header_label = tk.Label(
             self.root, 
             text=">_ CIPHER_VAULT: PRO_EDITION_ACTIVE", 
             font=("Courier New", 16, "bold"), 
             bg=self.bg_color, 
             fg=self.fg_color
         )
-        header.pack(pady=15)
+        header_label.pack(pady=15)
 
-        # Configure Treeview Style
-        style = ttk.Style()
-        style.theme_use("clam")
-        style.configure(
+        # Configure styling for the data grid (Treeview)
+        interface_style = ttk.Style()
+        interface_style.theme_use("clam")
+        interface_style.configure(
             "Treeview", 
             background=self.bg_color, 
             foreground=self.fg_color, 
@@ -106,52 +106,52 @@ class HackerVaultGUI:
             font=self.font_style, 
             rowheight=30
         )
-        style.map("Treeview", background=[('selected', '#003300')])
-        style.configure("Treeview.Heading", background="#111111", foreground=self.fg_color, font=self.font_style)
+        interface_style.map("Treeview", background=[('selected', '#003300')])
+        interface_style.configure(
+            "Treeview.Heading", 
+            background="#111111", 
+            foreground=self.fg_color, 
+            font=self.font_style
+        )
 
-        tree_frame = tk.Frame(self.root, bg=self.bg_color)
-        tree_frame.pack(pady=10, fill=tk.BOTH, expand=True, padx=25)
+        treeview_frame = tk.Frame(self.root, bg=self.bg_color)
+        treeview_frame.pack(pady=10, fill=tk.BOTH, expand=True, padx=25)
 
-        # Define Columns
-        columns = ("Service", "Website", "Username", "Last Updated")
-        self.tree = ttk.Treeview(tree_frame, columns=columns, show='headings')
+        column_identifiers = ("Service", "Website", "Username", "Last Updated")
+        self.data_grid = ttk.Treeview(treeview_frame, columns=column_identifiers, show='headings')
         
-        for column in columns:
-            self.tree.heading(column, text=f"[ {column.upper()} ]")
+        for column in column_identifiers:
+            self.data_grid.heading(column, text=f"[ {column.upper()} ]")
         
-        self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.data_grid.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        # Vertical Scrollbar
-        scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # Bind double-click event to open website
+        self.data_grid.bind("<Double-1>", lambda event: self.open_associated_website())
 
-        # Control Panel
-        button_frame = tk.Frame(self.root, bg=self.bg_color)
-        button_frame.pack(pady=20)
+        button_container = tk.Frame(self.root, bg=self.bg_color)
+        button_container.pack(pady=20)
         
-        button_settings = {
+        button_config = {
             "bg": "#111111", 
             "fg": self.fg_color, 
             "activebackground": self.fg_color, 
             "activeforeground": self.bg_color, 
             "font": self.font_style, 
-            "width": 14, 
+            "width": 13, 
             "relief": "flat"
         }
 
-        tk.Button(button_frame, text="ADD_NEW", command=self.add_entry, **button_settings).grid(row=0, column=0, padx=5)
-        tk.Button(button_frame, text="VIEW_DETAILS", command=self.view_entry, **button_settings).grid(row=0, column=1, padx=5)
-        tk.Button(button_frame, text="COPY_PASS", command=self.copy_password, **button_settings).grid(row=0, column=2, padx=5)
-        tk.Button(button_frame, text="DELETE_ENTRY", command=self.delete_entry, **button_settings).grid(row=0, column=3, padx=5)
-        tk.Button(button_frame, text="REFRESH", command=self.refresh_list, **button_settings).grid(row=0, column=4, padx=5)
-        tk.Button(button_frame, text="TERMINATE", command=self.root.destroy, **button_settings).grid(row=0, column=5, padx=5)
+        tk.Button(button_container, text="ADD_NEW", command=self.add_vault_entry, **button_config).grid(row=0, column=0, padx=5)
+        tk.Button(button_container, text="VIEW_DETAILS", command=self.view_vault_entry, **button_config).grid(row=0, column=1, padx=5)
+        tk.Button(button_container, text="OPEN_LINK", command=self.open_associated_website, **button_config).grid(row=0, column=2, padx=5)
+        tk.Button(button_container, text="COPY_PASS", command=self.copy_password_to_clipboard, **button_config).grid(row=0, column=3, padx=5)
+        tk.Button(button_container, text="DELETE", command=self.delete_vault_entry, **button_config).grid(row=0, column=4, padx=5)
+        tk.Button(button_container, text="TERMINATE", command=self.root.destroy, **button_config).grid(row=0, column=5, padx=5)
 
-        # Interactive Status Bar
-        self.status_var = tk.StringVar(value=f"SYSTEM_READY | VAULT: {self.file_path}")
-        status_bar = tk.Label(
+        self.status_message_variable = tk.StringVar(value="SYSTEM_READY")
+        status_bar_label = tk.Label(
             self.root, 
-            textvariable=self.status_var, 
+            textvariable=self.status_message_variable, 
             bd=1, 
             relief="sunken", 
             anchor="w",
@@ -159,183 +159,178 @@ class HackerVaultGUI:
             fg=self.fg_color, 
             font=("Courier New", 9)
         )
-        status_bar.pack(side=tk.BOTTOM, fill=tk.X)
+        status_bar_label.pack(side=tk.BOTTOM, fill=tk.X)
 
-        self.refresh_list()
+        self.refresh_data_grid()
 
-    def _auto_resize_columns(self):
+    def open_associated_website(self):
         """
-        Dynamically adjusts column widths based on the longest string in each column.
+        Retrieves the URL from the selected row and opens it in the default browser.
+        """
+        current_selection = self.data_grid.selection()
+        if not current_selection:
+            return
+            
+        selected_item_data = self.data_grid.item(current_selection)
+        website_url = selected_item_data['values'][1]
+        
+        if website_url and website_url != "N/A":
+            if not website_url.startswith("http"):
+                website_url = "https://" + website_url
+            
+            self.status_message_variable.set(f"LAUNCHING_BROWSER: {website_url}")
+            webbrowser.open(website_url)
+        else:
+            messagebox.showwarning("INVALID_LINK", "NO VALID URL DETECTED FOR THIS ENTRY.")
+
+    def auto_resize_grid_columns(self):
+        """
+        Adjusts column widths based on the content.
         """
         import tkinter.font as tkfont
-        current_font = tkfont.Font(font=self.font_style)
+        grid_font = tkfont.Font(font=self.font_style)
+        for column in self.data_grid["columns"]:
+            header_label_text = f"[ {column.upper()} ]"
+            maximum_width = grid_font.measure(header_label_text) + 50
+            for row_id in self.data_grid.get_children():
+                cell_content = str(self.data_grid.set(row_id, column))
+                content_width = grid_font.measure(cell_content) + 50
+                if content_width > maximum_width:
+                    maximum_width = content_width
+            self.data_grid.column(column, width=maximum_width)
 
-        for column in self.tree["columns"]:
-            # Start with header width
-            header_text = f"[ {column.upper()} ]"
-            max_width = current_font.measure(header_text) + 50
-            
-            for row_id in self.tree.get_children():
-                cell_value = str(self.tree.set(row_id, column))
-                cell_width = current_font.measure(cell_value) + 50
-                if cell_width > max_width:
-                    max_width = cell_width
-            
-            self.tree.column(column, width=max_width)
-
-    def load_vault(self):
+    def load_encrypted_vault(self):
         """
-        Decrypts the binary vault file and parses the JSON content.
+        Reads and decrypts the vault data file.
         """
         if not os.path.exists(self.file_path):
             return {}
-        
         try:
             with open(self.file_path, "rb") as vault_file:
-                encrypted_content = vault_file.read()
-                decrypted_bytes = self.cipher.decrypt(encrypted_content)
-                json_string = decrypted_bytes.decode()
-                return json.loads(json_string)
+                encrypted_bytes = vault_file.read()
+                decrypted_bytes = self.cipher.decrypt(encrypted_bytes)
+                decrypted_string = decrypted_bytes.decode()
+                return json.loads(decrypted_string)
         except Exception:
-            messagebox.showerror("ACCESS_DENIED", "AUTHENTICATION_FAILED: INVALID_MASTER_KEY")
+            messagebox.showerror("ACCESS_DENIED", "AUTHENTICATION_FAILED: INVALID MASTER KEY")
             self.root.destroy()
             return None
 
-    def refresh_list(self):
+    def refresh_data_grid(self):
         """
-        Clears the grid and repopulates it with the latest data from the vault.
+        Reloads the information from the vault into the display grid.
         """
-        for item in self.tree.get_children():
-            self.tree.delete(item)
-            
-        vault_data = self.load_vault()
-        
-        if vault_data is not None:
-            for service_name in sorted(vault_data.keys()):
-                entry = vault_data[service_name]
-                self.tree.insert("", tk.END, values=(
-                    service_name, 
-                    entry.get("website", "N/A"), 
-                    entry.get("username", "N/A"),
-                    entry.get("last_updated", "UNKNOWN")
+        for item in self.data_grid.get_children():
+            self.data_grid.delete(item)
+        vault_information = self.load_encrypted_vault()
+        if vault_information is not None:
+            for service_identifier in sorted(vault_information.keys()):
+                entry_data = vault_information[service_identifier]
+                self.data_grid.insert("", tk.END, values=(
+                    service_identifier, 
+                    entry_data.get("website", "N/A"), 
+                    entry_data.get("username", "N/A"),
+                    entry_data.get("last_updated", "UNKNOWN")
                 ))
-            self._auto_resize_columns()
+            self.auto_resize_grid_columns()
 
-    def add_entry(self):
+    def add_vault_entry(self):
         """
-        Collects input via dialogs and saves a new record to the vault.
+        Prompts user for new entry details and updates the vault.
         """
-        service = simpledialog.askstring("SYSTEM_INPUT", "TARGET_SERVICE:")
-        if not service:
+        service_name = simpledialog.askstring("SYSTEM_INPUT", "TARGET_SERVICE:")
+        if not service_name:
             return
+        website_address = simpledialog.askstring("SYSTEM_INPUT", "TARGET_URL:")
+        user_identity = simpledialog.askstring("SYSTEM_INPUT", "IDENT_USER:")
+        secret_password = simpledialog.askstring("SYSTEM_INPUT", "SECRET_KEY (LEAVE BLANK FOR AUTO-GEN):")
         
-        website = simpledialog.askstring("SYSTEM_INPUT", "TARGET_URL:")
-        username = simpledialog.askstring("SYSTEM_INPUT", "IDENT_USER:")
-        password = simpledialog.askstring("SYSTEM_INPUT", "SECRET_KEY (LEAVE BLANK FOR AUTO-GEN):")
-        
-        if not password:
-            char_pool = string.ascii_letters + string.digits + "!@#$%^&*"
-            password = "".join(secrets.choice(char_pool) for index in range(20))
-            messagebox.showinfo("GEN_SUCCESS", f"KEY_GENERATED: {password}")
-
-        vault_data = self.load_vault()
-        if vault_data is not None:
-            vault_data[service] = {
-                "website": website if website else "N/A", 
-                "username": username, 
-                "password": password, 
+        if not secret_password:
+            character_pool = string.ascii_letters + string.digits + "!@#$%^&*"
+            secret_password = "".join(secrets.choice(character_pool) for index in range(20))
+            messagebox.showinfo("GEN_SUCCESS", f"GENERATED_PASSWORD: {secret_password}")
+            
+        vault_information = self.load_encrypted_vault()
+        if vault_information is not None:
+            vault_information[service_name] = {
+                "website": website_address if website_address else "N/A", 
+                "username": user_identity, 
+                "password": secret_password, 
                 "last_updated": datetime.now().strftime("%Y-%m-%d")
             }
-            self.save_vault(vault_data)
-            self.refresh_list()
+            self.save_encrypted_vault(vault_information)
+            self.refresh_data_grid()
 
-    def view_entry(self):
+    def view_vault_entry(self):
         """
-        Displays all decrypted details for the selected entry in a popup.
+        Shows decrypted details for a selected entry.
         """
-        selection = self.tree.selection()
-        if not selection:
+        current_selection = self.data_grid.selection()
+        if not current_selection:
             return
-            
-        item_data = self.tree.item(selection)
-        service_name = item_data['values'][0]
-        
-        vault_data = self.load_vault()
-        if vault_data and service_name in vault_data:
-            info = vault_data[service_name]
-            details = (
-                f"SERVICE:  {service_name}\n"
-                f"ENDPOINT: {info.get('website')}\n"
-                f"IDENTITY: {info.get('username')}\n"
-                f"PASSWORD: {info.get('password')}"
+        selected_item_data = self.data_grid.item(current_selection)
+        service_identifier = selected_item_data['values'][0]
+        vault_information = self.load_encrypted_vault()
+        if vault_information and service_identifier in vault_information:
+            entry_info = vault_information[service_identifier]
+            display_text = (
+                f"SERVICE:  {service_identifier}\n"
+                f"URL:      {entry_info.get('website')}\n"
+                f"IDENTITY: {entry_info.get('username')}\n"
+                f"PASSWORD: {entry_info.get('password')}"
             )
-            messagebox.showinfo("DECRYPTED_RECORD", details)
+            messagebox.showinfo("DECRYPTED_RECORD", display_text)
 
-    def copy_password(self):
+    def copy_password_to_clipboard(self):
         """
-        Copies the password to the clipboard and triggers a 30-second security wipe.
+        Copies the password and clears it after 30 seconds.
         """
-        selection = self.tree.selection()
-        if not selection:
+        current_selection = self.data_grid.selection()
+        if not current_selection:
             return
-            
-        item_data = self.tree.item(selection)
-        service_name = item_data['values'][0]
-        
-        vault_data = self.load_vault()
-        if vault_data and service_name in vault_data:
+        service_identifier = self.data_grid.item(current_selection)['values'][0]
+        vault_information = self.load_encrypted_vault()
+        if vault_information and service_identifier in vault_information:
             self.root.clipboard_clear()
-            self.root.clipboard_append(vault_data[service_name]['password'])
-            self.status_var.set("CLIPBOARD_STATUS: PASSWORD_COPIED (AUTO-CLEAR IN 30S)")
-            self.root.after(30000, self._clear_clipboard)
+            self.root.clipboard_append(vault_information[service_identifier]['password'])
+            self.status_message_variable.set("CLIPBOARD_STATUS: PASSWORD_COPIED (30S TIMER)")
+            self.root.after(30000, lambda: self.root.clipboard_clear())
 
-    def _clear_clipboard(self):
+    def delete_vault_entry(self):
         """
-        Clears the clipboard to prevent accidental password leaks.
+        Removes a service from the vault database.
         """
-        self.root.clipboard_clear()
-        self.status_var.set(f"SYSTEM_READY | VAULT: {self.file_path}")
-
-    def delete_entry(self):
-        """
-        Removes the selected record from the vault.
-        """
-        selection = self.tree.selection()
-        if not selection:
+        current_selection = self.data_grid.selection()
+        if not current_selection:
             return
-            
-        item_data = self.tree.item(selection)
-        service_name = item_data['values'][0]
-        
-        confirm = messagebox.askyesno("CONFIRM_ACTION", f"ARE YOU SURE YOU WANT TO DELETE {service_name}?")
-        if confirm:
-            vault_data = self.load_vault()
-            if vault_data and service_name in vault_data:
-                del vault_data[service_name]
-                self.save_vault(vault_data)
-                self.refresh_list()
-                self.status_var.set(f"RECORD_DELETED: {service_name}")
+        service_identifier = self.data_grid.item(current_selection)['values'][0]
+        user_confirmation = messagebox.askyesno("CONFIRM", f"PERMANENTLY DELETE {service_identifier}?")
+        if user_confirmation:
+            vault_information = self.load_encrypted_vault()
+            if vault_information and service_identifier in vault_information:
+                del vault_information[service_identifier]
+                self.save_encrypted_vault(vault_information)
+                self.refresh_data_grid()
 
-    def save_vault(self, vault_data):
+    def save_encrypted_vault(self, vault_data):
         """
-        Encrypts the JSON data and saves it to a file, then creates a timestamped backup.
+        Encrypts and saves the vault data and creates a backup.
         """
-        json_bytes = json.dumps(vault_data).encode()
-        encrypted_bytes = self.cipher.encrypt(json_bytes)
+        data_json_string = json.dumps(vault_data)
+        data_encoded_bytes = data_json_string.encode()
+        encrypted_data_bytes = self.cipher.encrypt(data_encoded_bytes)
         
-        with open(self.file_path, "wb") as vault_file:
-            vault_file.write(encrypted_bytes)
-        
-        # Backup Logic
-        timestamp_string = datetime.now().strftime("%Y%m%d_%H%M%S")
-        if not os.path.exists(self.backup_dir):
-            os.makedirs(self.backup_dir)
+        with open(self.file_path, "wb") as vault_file_handle:
+            vault_file_handle.write(encrypted_data_bytes)
             
-        backup_filename = f"backup_{timestamp_string}.bin"
-        backup_path = os.path.join(self.backup_dir, backup_filename)
-        shutil.copy2(self.file_path, backup_path)
+        timestamp_formatted = datetime.now().strftime("%Y%m%d_%H%M%S")
+        if not os.path.exists(self.backup_directory):
+            os.makedirs(self.backup_directory)
+        
+        backup_file_path = os.path.join(self.backup_directory, f"backup_{timestamp_formatted}.bin")
+        shutil.copy2(self.file_path, backup_file_path)
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = HackerVaultGUI(root)
-    root.mainloop()
+    root_window = tk.Tk()
+    application_instance = HackerVaultGUI(root_window)
+    root_window.mainloop()
