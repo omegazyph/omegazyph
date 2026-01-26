@@ -1,86 +1,70 @@
-# CipherVault: Multi-Interface AES-256 Password Manager
+# CipherVault: Secure Credential Manager
 
-**Date:** 2026-01-25
-**Author:** omegazyph
-**Updated:** 2026-01-25
-
-## Project Overview
-
-CipherVault is a localized, high-security credential management system built for Windows 11. It utilizes industry-standard AES-256 encryption via the Fernet protocol. This project provides two distinct ways to access your secure data: a high-efficiency **Terminal Interface** and a stealth **Hacker GUI**.
+**Project Folder:** `CipherVault_Project`  
+**Author:** omegazyph  
+**Last Updated:** 2026-01-26  
+**System Requirements:** Windows 11 / Lenovo Legion Laptop / Python 3.x
 
 ---
 
-## File Structure
+## [ DESCRIPTION ]
 
-Your project folder on your Lenovo Legion should be organized as follows:
+CipherVault is a high-security, Advanced Encryption Standard 256 encrypted credential manager designed for local use on Windows 11. It features a custom "hacker-style" graphical user interface optimized for the full-screen display of a Lenovo Legion laptop. The program allows for the secure storage of service names, website addresses, usernames, passwords, personal identification numbers, and dual two-factor authentication backup codes.
+
+---
+
+## [ PROJECT STRUCTURE ]
 
 CipherVault_Project/
 │
 ├── scripts/
-│   ├── vault.py              # Terminal-based Manager (requires 'rich')
-│   └── vault_hacker_gui.pyw  # Stealth GUI Manager (Windowless)
+│   └── vault_hacker_gui.pyw      # Main Graphical User Interface Application (Python)
 │
 ├── data/
-│   ├── vault_data.bin        # Encrypted Database (Shared)
-│   └── backups/              # Automated Binary Backups
+│   ├── vault_data.bin            # Encrypted Binary Data (Advanced Encryption Standard 256)
+│   └── backups/                  # Automated timestamped backup files
 │
-├── Launch_Vault.vbs          # Silent Launcher for the GUI
-└── README.md                 # Project Documentation
+└── README.md                     # Documentation
 
-## Component Details
+## [ KEY FEATURES ]
 
-1. Terminal Manager (vault.py)
+    Advanced Encryption Standard 256 Encryption: Utilizes the Fernet symmetric encryption library and the Password-Based Key Derivation Function 2 for high security.
 
-    Interface: Command-line based with a color-coded grid.
+    Full-Screen Optimization: Columns are weighted to prioritize Service, Website, and Username visibility while keeping security fields compact.
 
-    Best Use: Rapid data entry while working inside VSCode.
+    Numeric Four-Digit Personal Identification Number Generation: Automatically generates random four-digit numeric numbers if the field is left blank during creation or editing.
 
-    Requirement: Must be run via python scripts/vault.py.
+    Secure Password Generation: High-entropy password generation (twenty or more characters including symbols).
 
-2. Hacker GUI Pro (vault_hacker_gui.pyw)
+    Automatic Backups: Every time the vault is saved, a timestamped copy is placed in the data/backups/ directory for system recovery.
 
-    Interface: Tkinter-based "Matrix" aesthetic (Green on Black).
+    Deep Integration: Native "Open Website Address" functionality and "Copy to Clipboard" tools for generated passwords.
 
-    Key Features: * Windowless: Does not open a CMD window when launched via VBScript.
+## [ INSTALLATION AND SETUP ]
 
-        Auto-Resize: Columns grow automatically to fit long URLs or usernames.
+    Install Dependencies: Ensure you have the cryptography library installed via the terminal command:
+    Bash
 
-        Secure Clipboard: Copies passwords and automatically wipes the clipboard after 30 seconds.
+    pip install cryptography
 
-        Visual Management: Dedicated buttons for Add, View, Copy, and Delete.
+    Execution: Run the application using Python:
+    Bash
 
-## Setup & Requirements
+    python scripts/vault_hacker_gui.pyw
 
-Dependencies
+    Note: The .pyw file extension is used to prevent the Windows command prompt from appearing in the background.
 
-Install the required Python libraries using the VSCode terminal:
-Bash
+## [ OPERATIONAL LOGIC ]
 
-pip install cryptography rich
+    Authentication: The Master Key is never stored on the system. If the master key is lost, the data cannot be recovered.
 
-Silent Launching (GUI)
+    Automatic Generation: To trigger the automatic generator for Passwords or Personal Identification Numbers:
 
-To run the GUI without the black command prompt window popping up:
+        Click the ADD_NEW_ENTRY or EDIT_EXISTING_ENTRY button.
 
-    Double-click the Launch_Vault.vbs file located in the root folder.
+        Leave the input field blank (or clear the existing text in Edit mode).
 
-    This script calls pythonw.exe to run the .pyw logic in the background.
+        Click the OK button. The system will populate the field with a fresh secure string.
 
-## Security Protocol
-
-    Master Key: Your data is only as secure as your Master Key. If lost, the vault_data.bin cannot be recovered.
-
-    Zero-Trust: No data is sent to the cloud. All encryption happens locally on your hardware.
-
-    Entropy: For maximum security, use the "Auto-Gen" feature when adding passwords to ensure high-entropy strings.
-
-    Backups: Every time you save, a new backup is created in data/backups/. Periodically clear out old backups to save space.
-
-## Instructions for Use
-
-    Adding: Provide the service name, URL, and username. Leave the password blank to generate a 20-character secure key.
-
-    Copying: Select a row and hit COPY_PASS. You have 30 seconds to paste it before it is wiped from memory.
-
-    Deleting: Select a row and hit DELETE_ENTRY. A confirmation dialog will appear to prevent accidental loss.
+    Masking: The main grid masks sensitive data with asterisks to prevent unauthorized viewing. Use the VIEW_RECORD_DATA button to see the raw information.
     
