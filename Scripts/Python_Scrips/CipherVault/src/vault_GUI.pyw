@@ -2,8 +2,8 @@
 # Script Name: vault_hacker_gui.pyw
 # Author: omegazyph
 # Updated: 2026-01-25
-# Description: Stealth AES-256 Vault with Browser Integration, Clipboard support, and Editing.
-# Features: Full non-shorthand logic, Windowless execution, and Field Editing functionality.
+# Description: Stealth AES-256 Vault with Instant Dialog Focus and Browser Integration.
+# Features: Full non-shorthand logic, Windowless execution, and Forced Dialog Foreground.
 
 import os
 import json
@@ -24,7 +24,7 @@ from cryptography.fernet import Fernet
 class HackerVaultGUI:
     def __init__(self, root):
         """
-        Initializes the wide-view stealth GUI with browser support and editing features.
+        Initializes the wide-view stealth GUI and ensures input dialogs appear in the foreground.
         """
         self.root = root
         self.root.title("SYSTEM_ACCESS: CIPHER_VAULT_PRO")
@@ -53,8 +53,8 @@ class HackerVaultGUI:
         if not os.path.exists(self.backup_directory):
             os.makedirs(self.backup_directory)
 
-        # Master password authentication
-        self.master_password = simpledialog.askstring("SECURE_AUTH", "ENTER MASTER KEY:", show='*')
+        # Force the authentication dialog to the front
+        self.master_password = simpledialog.askstring("SECURE_AUTH", "ENTER MASTER KEY:", show='*', parent=self.root)
         
         if self.master_password is None or self.master_password == "":
             self.root.destroy()
@@ -237,14 +237,17 @@ class HackerVaultGUI:
 
     def add_vault_entry(self):
         """
-        Prompts user for new entry details and updates the vault.
+        Prompts user for new entry details and ensures dialog focus.
         """
-        service_name = simpledialog.askstring("SYSTEM_INPUT", "TARGET_SERVICE:")
+        # Momentarily force main window to be non-topmost to allow dialog to appear on top
+        self.root.attributes("-topmost", False)
+        
+        service_name = simpledialog.askstring("SYSTEM_INPUT", "TARGET_SERVICE:", parent=self.root)
         if not service_name:
             return
-        website_address = simpledialog.askstring("SYSTEM_INPUT", "TARGET_URL:")
-        user_identity = simpledialog.askstring("SYSTEM_INPUT", "IDENT_USER:")
-        secret_password = simpledialog.askstring("SYSTEM_INPUT", "SECRET_KEY (LEAVE BLANK FOR AUTO-GEN):")
+        website_address = simpledialog.askstring("SYSTEM_INPUT", "TARGET_URL:", parent=self.root)
+        user_identity = simpledialog.askstring("SYSTEM_INPUT", "IDENT_USER:", parent=self.root)
+        secret_password = simpledialog.askstring("SYSTEM_INPUT", "SECRET_KEY (LEAVE BLANK FOR AUTO-GEN):", parent=self.root)
         
         if not secret_password:
             character_pool = string.ascii_letters + string.digits + "!@#$%^&*"
@@ -264,7 +267,7 @@ class HackerVaultGUI:
 
     def edit_vault_entry(self):
         """
-        Allows the user to modify an existing entry's fields.
+        Allows the user to modify an existing entry's fields with forced dialog focus.
         """
         current_selection = self.data_grid.selection()
         if not current_selection:
@@ -277,12 +280,11 @@ class HackerVaultGUI:
         if vault_information and service_name in vault_information:
             entry_info = vault_information[service_name]
             
-            # Request updated information, providing the current values as defaults
-            new_website = simpledialog.askstring("EDIT_FIELD", f"UPDATE URL FOR {service_name}:", initialvalue=entry_info.get("website"))
-            new_username = simpledialog.askstring("EDIT_FIELD", f"UPDATE USER FOR {service_name}:", initialvalue=entry_info.get("username"))
-            new_password = simpledialog.askstring("EDIT_FIELD", f"UPDATE PASSWORD FOR {service_name}:", initialvalue=entry_info.get("password"))
+            # Request updated information with explicit parent focus
+            new_website = simpledialog.askstring("EDIT_FIELD", f"UPDATE URL FOR {service_name}:", initialvalue=entry_info.get("website"), parent=self.root)
+            new_username = simpledialog.askstring("EDIT_FIELD", f"UPDATE USER FOR {service_name}:", initialvalue=entry_info.get("username"), parent=self.root)
+            new_password = simpledialog.askstring("EDIT_FIELD", f"UPDATE PASSWORD FOR {service_name}:", initialvalue=entry_info.get("password"), parent=self.root)
             
-            # Only update if the user didn't cancel the dialogs
             if new_website is not None and new_username is not None and new_password is not None:
                 vault_information[service_name] = {
                     "website": new_website,
@@ -337,7 +339,7 @@ class HackerVaultGUI:
         if not current_selection:
             return
         service_identifier = self.data_grid.item(current_selection)['values'][0]
-        user_confirmation = messagebox.askyesno("CONFIRM", f"PERMANENTLY DELETE {service_identifier}?")
+        user_confirmation = messagebox.askyesno("CONFIRM", f"PERMANENTLY DELETE {service_identifier}?", parent=self.root)
         if user_confirmation:
             vault_information = self.load_encrypted_vault()
             if vault_information and service_identifier in vault_information:
