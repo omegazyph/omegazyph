@@ -1,68 +1,86 @@
-# CipherVault
+# CipherVault: Multi-Interface AES-256 Password Manager
 
 **Date:** 2026-01-25
 **Author:** omegazyph
 **Updated:** 2026-01-25
 
-## Description
+## Project Overview
 
-CipherVault is a professional-grade, Zero-Trust local password manager built for Windows 11. It uses AES-256 encryption via the `cryptography` library to ensure that your credentials never leave your Lenovo Legion laptop. The codebase is written in a full, non-shorthand style to maintain 100% compliance with strict linters like Ruff.
-
----
-
-## Features
-
-* **Secure Update Generation:** When updating an existing entry, you now have the option to automatically generate a new 18-character secure password or type one in manually.
-* **Universal Exit Support:** Type `exit` at any prompt (Service, Website, Username, PIN, or Password) to immediately cancel the action.
-* **Granular Field Updates:** Change only what you need—pick between Website, Username, Password, or PIN without re-typing the entire record.
-* **Dynamic Grid UI:** Features a separated grid interface powered by the `Rich` library that automatically adjusts to your VSCode terminal width.
-* **Automated Backups:** Saves a timestamped binary copy of your vault in the `data/backups/` folder every time a change is made.
-* **A-Z Sorting:** Automatically organizes all records alphabetically for quick searching and viewing.
+CipherVault is a localized, high-security credential management system built for Windows 11. It utilizes industry-standard AES-256 encryption via the Fernet protocol. This project provides two distinct ways to access your secure data: a high-efficiency **Terminal Interface** and a stealth **Hacker GUI**.
 
 ---
 
 ## File Structure
 
-The script is designed to run within the following folder hierarchy:
+Your project folder on your Lenovo Legion should be organized as follows:
 
-```text
-CipherVault/
+CipherVault_Project/
 │
 ├── scripts/
-│   └── vault.py       # Main Application
+│   ├── vault.py              # Terminal-based Manager (requires 'rich')
+│   └── vault_hacker_gui.pyw  # Stealth GUI Manager (Windowless)
 │
 ├── data/
-│   ├── vault_data.bin # Encrypted Database
-│   └── backups/       # Timestamped Backups
+│   ├── vault_data.bin        # Encrypted Database (Shared)
+│   └── backups/              # Automated Binary Backups
 │
-└── requirements.txt   # Project Dependencies
+├── Launch_Vault.vbs          # Silent Launcher for the GUI
+└── README.md                 # Project Documentation
 
-Installation & Setup
+## Component Details
 
-    Install Dependencies: Open your terminal in VSCode and run:
-    Bash
+1. Terminal Manager (vault.py)
 
-    pip install -r requirements.txt
+    Interface: Command-line based with a color-coded grid.
 
-    Run Application:
-    Bash
+    Best Use: Rapid data entry while working inside VSCode.
 
-    python scripts/vault.py
+    Requirement: Must be run via python scripts/vault.py.
 
-Usage Instructions
+2. Hacker GUI Pro (vault_hacker_gui.pyw)
 
-    Master Key: Enter your secret key. This key is the only way to decrypt your data; do not lose it.
+    Interface: Tkinter-based "Matrix" aesthetic (Green on Black).
 
-    Main Menu: Use keys 1-7 to navigate.
+    Key Features: * Windowless: Does not open a CMD window when launched via VBScript.
 
-    Adding/Updating: When prompted for a password, you can select y to have the system generate a high-entropy 18-character string for you.
+        Auto-Resize: Columns grow automatically to fit long URLs or usernames.
 
-    Canceling: If you make a mistake, simply type exit to return to the main menu without saving changes.
+        Secure Clipboard: Copies passwords and automatically wipes the clipboard after 30 seconds.
 
-Developer Notes
+        Visual Management: Dedicated buttons for Add, View, Copy, and Delete.
 
-    Style: Strict adherence to non-shorthand Python logic.
+## Setup & Requirements
 
-    Linting: Optimized for Ruff to prevent unused variables and redundant boolean comparisons.
+Dependencies
 
-    Security: Employs PBKDF2 for key derivation with a static salt for local consistency.
+Install the required Python libraries using the VSCode terminal:
+Bash
+
+pip install cryptography rich
+
+Silent Launching (GUI)
+
+To run the GUI without the black command prompt window popping up:
+
+    Double-click the Launch_Vault.vbs file located in the root folder.
+
+    This script calls pythonw.exe to run the .pyw logic in the background.
+
+## Security Protocol
+
+    Master Key: Your data is only as secure as your Master Key. If lost, the vault_data.bin cannot be recovered.
+
+    Zero-Trust: No data is sent to the cloud. All encryption happens locally on your hardware.
+
+    Entropy: For maximum security, use the "Auto-Gen" feature when adding passwords to ensure high-entropy strings.
+
+    Backups: Every time you save, a new backup is created in data/backups/. Periodically clear out old backups to save space.
+
+## Instructions for Use
+
+    Adding: Provide the service name, URL, and username. Leave the password blank to generate a 20-character secure key.
+
+    Copying: Select a row and hit COPY_PASS. You have 30 seconds to paste it before it is wiped from memory.
+
+    Deleting: Select a row and hit DELETE_ENTRY. A confirmation dialog will appear to prevent accidental loss.
+    
