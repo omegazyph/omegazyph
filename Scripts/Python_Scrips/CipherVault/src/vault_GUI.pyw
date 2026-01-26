@@ -2,8 +2,8 @@
 # Script Name: vault_hacker_gui.pyw
 # Author: omegazyph
 # Updated: 2026-01-25
-# Description: Stealth AES-256 Vault with Browser Integration and Clipboard support.
-# Features: Full non-shorthand logic, Windowless execution, and Auto-Launch URL.
+# Description: Stealth AES-256 Vault with Browser Integration, Clipboard support, and Editing.
+# Features: Full non-shorthand logic, Windowless execution, and Field Editing functionality.
 
 import os
 import json
@@ -24,7 +24,7 @@ from cryptography.fernet import Fernet
 class HackerVaultGUI:
     def __init__(self, root):
         """
-        Initializes the wide-view stealth GUI with browser support.
+        Initializes the wide-view stealth GUI with browser support and editing features.
         """
         self.root = root
         self.root.title("SYSTEM_ACCESS: CIPHER_VAULT_PRO")
@@ -137,16 +137,17 @@ class HackerVaultGUI:
             "activebackground": self.fg_color, 
             "activeforeground": self.bg_color, 
             "font": self.font_style, 
-            "width": 13, 
+            "width": 12, 
             "relief": "flat"
         }
 
         tk.Button(button_container, text="ADD_NEW", command=self.add_vault_entry, **button_config).grid(row=0, column=0, padx=5)
-        tk.Button(button_container, text="VIEW_DETAILS", command=self.view_vault_entry, **button_config).grid(row=0, column=1, padx=5)
-        tk.Button(button_container, text="OPEN_LINK", command=self.open_associated_website, **button_config).grid(row=0, column=2, padx=5)
-        tk.Button(button_container, text="COPY_PASS", command=self.copy_password_to_clipboard, **button_config).grid(row=0, column=3, padx=5)
-        tk.Button(button_container, text="DELETE", command=self.delete_vault_entry, **button_config).grid(row=0, column=4, padx=5)
-        tk.Button(button_container, text="TERMINATE", command=self.root.destroy, **button_config).grid(row=0, column=5, padx=5)
+        tk.Button(button_container, text="EDIT_ENTRY", command=self.edit_vault_entry, **button_config).grid(row=0, column=1, padx=5)
+        tk.Button(button_container, text="VIEW_DETAILS", command=self.view_vault_entry, **button_config).grid(row=0, column=2, padx=5)
+        tk.Button(button_container, text="OPEN_LINK", command=self.open_associated_website, **button_config).grid(row=0, column=3, padx=5)
+        tk.Button(button_container, text="COPY_PASS", command=self.copy_password_to_clipboard, **button_config).grid(row=0, column=4, padx=5)
+        tk.Button(button_container, text="DELETE", command=self.delete_vault_entry, **button_config).grid(row=0, column=5, padx=5)
+        tk.Button(button_container, text="TERMINATE", command=self.root.destroy, **button_config).grid(row=0, column=6, padx=5)
 
         self.status_message_variable = tk.StringVar(value="SYSTEM_READY")
         status_bar_label = tk.Label(
@@ -175,7 +176,7 @@ class HackerVaultGUI:
         website_url = selected_item_data['values'][1]
         
         if website_url and website_url != "N/A":
-            if not website_url.startswith("http"):
+            if not website_url.lower().startswith("http"):
                 website_url = "https://" + website_url
             
             self.status_message_variable.set(f"LAUNCHING_BROWSER: {website_url}")
@@ -260,6 +261,38 @@ class HackerVaultGUI:
             }
             self.save_encrypted_vault(vault_information)
             self.refresh_data_grid()
+
+    def edit_vault_entry(self):
+        """
+        Allows the user to modify an existing entry's fields.
+        """
+        current_selection = self.data_grid.selection()
+        if not current_selection:
+            return
+            
+        selected_item_data = self.data_grid.item(current_selection)
+        service_name = selected_item_data['values'][0]
+        
+        vault_information = self.load_encrypted_vault()
+        if vault_information and service_name in vault_information:
+            entry_info = vault_information[service_name]
+            
+            # Request updated information, providing the current values as defaults
+            new_website = simpledialog.askstring("EDIT_FIELD", f"UPDATE URL FOR {service_name}:", initialvalue=entry_info.get("website"))
+            new_username = simpledialog.askstring("EDIT_FIELD", f"UPDATE USER FOR {service_name}:", initialvalue=entry_info.get("username"))
+            new_password = simpledialog.askstring("EDIT_FIELD", f"UPDATE PASSWORD FOR {service_name}:", initialvalue=entry_info.get("password"))
+            
+            # Only update if the user didn't cancel the dialogs
+            if new_website is not None and new_username is not None and new_password is not None:
+                vault_information[service_name] = {
+                    "website": new_website,
+                    "username": new_username,
+                    "password": new_password,
+                    "last_updated": datetime.now().strftime("%Y-%m-%d")
+                }
+                self.save_encrypted_vault(vault_information)
+                self.refresh_data_grid()
+                self.status_message_variable.set(f"RECORD_UPDATED: {service_name}")
 
     def view_vault_entry(self):
         """
