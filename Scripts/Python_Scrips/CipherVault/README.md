@@ -1,62 +1,63 @@
 # CipherVault
 
-CipherVault is a Zero-Trust, local-first password management system. It is designed to provide high-security credential storage using AES-256 encryption while maintaining a clean, readable command-line interface.
+**Date:** 2026-01-25
+**Author:** omegazyph
+**Updated:** 2026-01-25
 
-## Recent Updates
+## Description
 
-- **Immediate Generation Visibility:** The system now displays a newly generated password in bold yellow immediately so the user can copy it before it is encrypted.
-- **Dynamic Window Scaling:** The interface now automatically detects terminal width and scales the data grid to fit the window size perfectly.
-- **Enhanced Data Tracking:** Added dedicated fields for Website URLs and PIN codes for more comprehensive account management.
-- **PEP 8 Compliance:** Refactored conditional logic to use standard Pythonic 'not' operators instead of direct boolean equality comparisons.
-
-## Core Features
-
-- **AES-256 Encryption:** Symmetric encryption via the Fernet protocol with keys derived through PBKDF2.
-- **Separated Grid UI:** A structured table layout with row separators to ensure maximum readability.
-- **Privacy Mode:** Passwords and PIN codes are masked in the "View All" mode to prevent shoulder-surfing.
-- **Automated Binary Backups:** Every modification triggers a timestamped backup in the data/backups directory.
-
-## Installation and Requirements
-
-1. Ensure you have the required Python libraries installed:
-
-   ```bash
-   pip install cryptography rich
-
-    Navigate to your project folder and execute the script:
-    Bash
-
-    python scripts/vault.py
-
-Project Structure
-
-scripts/vault.py: The main application logic.
-
-data/vault_data.bin: The encrypted database (not to be uploaded to GitHub).
-
-data/backups/: Storage for timestamped recovery files.
-
-Author Information
-
-Author: omegazyph
-
-Date Created: 2026-01-25
-
-Last Updated: 2026-01-25
+CipherVault is a secure, Zero-Trust local password manager designed for Windows 11 Home. It utilizes AES-256 encryption via the `cryptography` library to ensure all sensitive data is protected. This project is built with an explicit, non-shorthand coding style to maintain strict compatibility with the Ruff linter.
 
 ---
 
-### Final Sync for your GitHub
+## Features
 
-To keep your repository in sync with these final documentation changes, use these **non-shorthand** Git commands in your VSCode terminal:
+* **Universal Exit Support:** You can type `exit` at any input prompt (Service, Website, Username, PIN, or Password) to cancel the operation and return to the menu.
+* **Field-Specific Updates:** Update individual pieces of information (like just a PIN or just a URL) without having to re-enter the entire entry.
+* **Dynamic UI:** Uses the `Rich` library to provide a clean, separated grid interface that automatically scales to your terminal's width.
+* **A-Z Sorting:** Automatically organizes all vault entries alphabetically for easy navigation.
+* **Automated Backups:** Every save operation creates a timestamped backup in the `data/backups` directory.
 
-1. **Stage all changes:**
-   `git add --all`
+---
 
-2. **Commit with a descriptive message:**
-   `git commit --message "docs: update README to include auto-sizing UI and password visibility features"`
+## File Structure
 
-3. **Push to GitHub:**
-   `git push origin main`
+The program expects the following folder hierarchy:
 
-**Is there anything else you would like to add to the documentation, or are we ready to call this project complete?**
+```text
+CipherVault/
+│
+├── scripts/
+│   └── vault.py       # Main Python Script
+│
+└── data/
+    ├── vault_data.bin # Encrypted Database
+    └── backups/       # Timestamped Backup Files
+
+Installation
+
+To run this script on your Lenovo Legion, install the following requirements:
+Bash
+
+pip install cryptography rich
+
+Usage
+
+    Open the CipherVault folder in VSCode.
+
+    Run the script: python scripts/vault.py.
+
+    Enter your Master Encryption Key to unlock the vault.
+
+    Follow the on-screen menu (1-7) to manage your credentials.
+
+    Type exit at any time during an input prompt to cancel.
+
+Developer Notes
+
+    Style: No shorthand code is used to ensure maximum readability and linter compliance.
+
+    Linter: Fully compatible with Ruff.
+
+    Security: Static salt is used for PBKDF2 key derivation.
+    
