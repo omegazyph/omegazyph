@@ -3,8 +3,8 @@
 # Author: omegazyph
 # Updated: 2026-01-25
 # Description: A Zero-Trust local password manager utilizing AES-256 encryption.
-# Features: Full non-shorthand code, Universal 'exit' support in all fields, 
-# Dynamic window auto-sizing, Separated Grid UI, and A-Z sorting.
+# Features: Full non-shorthand code, Universal 'exit' support, 
+# Dynamic window auto-sizing, and Password Generation support during Updates.
 
 import os
 import json
@@ -24,7 +24,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.prompt import Prompt
 
-# Initialize Rich console - tracks window size dynamically
+# Initialize Rich console
 console = Console()
 
 class CipherVault:
@@ -41,7 +41,7 @@ class CipherVault:
         self.backup_dir = os.path.join(self.data_dir, "backups")
         self.file_path = os.path.join(self.data_dir, "vault_data.bin")
         
-        # Creating folders if they do not exist
+        # Creating folders if they do not exist using 'not' checks
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
             
@@ -94,12 +94,12 @@ class CipherVault:
                 vault_dict = json.loads(vault_json)
                 return vault_dict
         except Exception:
-            console.print("[bold red]ERROR:[/bold red] Authentication failed or file corrupted.")
+            console.print("[bold red]ERROR:[/bold red] Authentication failed.")
             return None
 
     def save_vault(self, data):
         """
-        Encrypts and saves the data dictionary to the binary file.
+        Encrypts and saves the data dictionary.
         """
         json_string = json.dumps(data)
         json_bytes = json_string.encode()
@@ -110,7 +110,7 @@ class CipherVault:
 
     def generate_password(self):
         """
-        Generates an 18-character secure random password using an explicit loop.
+        Generates an 18-character secure random password.
         """
         length = 18
         alphabet = string.ascii_letters + string.digits + string.punctuation
@@ -123,7 +123,7 @@ class CipherVault:
 
     def update_entry(self):
         """
-        Allows field updates with 'exit' checks at every prompt.
+        Allows field updates with 'exit' checks and password generation support.
         """
         service_name = Prompt.ask("Service to Update (or 'exit')")
         if service_name.lower() == "exit":
@@ -139,10 +139,26 @@ class CipherVault:
                 if field_choice == "5":
                     return
 
-                new_val = Prompt.ask("Enter new value (or 'exit')")
-                if new_val.lower() == "exit":
-                    return
+                # Special logic for Password field (Option 3)
+                if field_choice == "3":
+                    gen_confirm = Prompt.ask("Generate a new password?", choices=["y", "n", "exit"], default="y")
+                    if gen_confirm.lower() == "exit":
+                        return
+                    
+                    if gen_confirm == "y":
+                        new_val = self.generate_password()
+                        console.print("\n[bold yellow]NEW GENERATED PASSWORD:[/bold yellow] " + new_val + "\n")
+                    else:
+                        new_val = Prompt.ask("Enter new Password (or 'exit')", password=True)
+                        if new_val.lower() == "exit":
+                            return
+                else:
+                    # Standard logic for other fields
+                    new_val = Prompt.ask("Enter new value (or 'exit')")
+                    if new_val.lower() == "exit":
+                        return
 
+                # Update the specific field
                 if field_choice == "1":
                     data[service_name]["website"] = new_val
                 elif field_choice == "2":
@@ -160,7 +176,7 @@ class CipherVault:
 
     def add_password(self):
         """
-        Adds a new entry with 'exit' checks at every single prompt.
+        Adds a new entry with full exit support.
         """
         service = Prompt.ask("Service (or 'exit')")
         if service.lower() == "exit":
@@ -230,7 +246,7 @@ class CipherVault:
 
     def check_expirations(self):
         """
-        Displays all entries with masked data in the dynamic grid.
+        Displays all entries with masked data.
         """
         data = self.load_vault()
         if not data:
@@ -300,7 +316,6 @@ def main():
                         vault.save_vault(data)
                         console.print("[bold yellow][-][/bold yellow] Removed.")
         elif choice == "7":
-            console.print("[bold green]Closing secure session. Stay secure, Wayne.[/bold green]")
             break
 
 if __name__ == "__main__":

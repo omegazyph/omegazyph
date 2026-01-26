@@ -6,58 +6,63 @@
 
 ## Description
 
-CipherVault is a secure, Zero-Trust local password manager designed for Windows 11 Home. It utilizes AES-256 encryption via the `cryptography` library to ensure all sensitive data is protected. This project is built with an explicit, non-shorthand coding style to maintain strict compatibility with the Ruff linter.
+CipherVault is a professional-grade, Zero-Trust local password manager built for Windows 11. It uses AES-256 encryption via the `cryptography` library to ensure that your credentials never leave your Lenovo Legion laptop. The codebase is written in a full, non-shorthand style to maintain 100% compliance with strict linters like Ruff.
 
 ---
 
 ## Features
 
-* **Universal Exit Support:** You can type `exit` at any input prompt (Service, Website, Username, PIN, or Password) to cancel the operation and return to the menu.
-* **Field-Specific Updates:** Update individual pieces of information (like just a PIN or just a URL) without having to re-enter the entire entry.
-* **Dynamic UI:** Uses the `Rich` library to provide a clean, separated grid interface that automatically scales to your terminal's width.
-* **A-Z Sorting:** Automatically organizes all vault entries alphabetically for easy navigation.
-* **Automated Backups:** Every save operation creates a timestamped backup in the `data/backups` directory.
+* **Secure Update Generation:** When updating an existing entry, you now have the option to automatically generate a new 18-character secure password or type one in manually.
+* **Universal Exit Support:** Type `exit` at any prompt (Service, Website, Username, PIN, or Password) to immediately cancel the action.
+* **Granular Field Updates:** Change only what you need—pick between Website, Username, Password, or PIN without re-typing the entire record.
+* **Dynamic Grid UI:** Features a separated grid interface powered by the `Rich` library that automatically adjusts to your VSCode terminal width.
+* **Automated Backups:** Saves a timestamped binary copy of your vault in the `data/backups/` folder every time a change is made.
+* **A-Z Sorting:** Automatically organizes all records alphabetically for quick searching and viewing.
 
 ---
 
 ## File Structure
 
-The program expects the following folder hierarchy:
+The script is designed to run within the following folder hierarchy:
 
 ```text
 CipherVault/
 │
 ├── scripts/
-│   └── vault.py       # Main Python Script
+│   └── vault.py       # Main Application
 │
-└── data/
-    ├── vault_data.bin # Encrypted Database
-    └── backups/       # Timestamped Backup Files
+├── data/
+│   ├── vault_data.bin # Encrypted Database
+│   └── backups/       # Timestamped Backups
+│
+└── requirements.txt   # Project Dependencies
 
-Installation
+Installation & Setup
 
-To run this script on your Lenovo Legion, install the following requirements:
-Bash
+    Install Dependencies: Open your terminal in VSCode and run:
+    Bash
 
-pip install cryptography rich
+    pip install -r requirements.txt
 
-Usage
+    Run Application:
+    Bash
 
-    Open the CipherVault folder in VSCode.
+    python scripts/vault.py
 
-    Run the script: python scripts/vault.py.
+Usage Instructions
 
-    Enter your Master Encryption Key to unlock the vault.
+    Master Key: Enter your secret key. This key is the only way to decrypt your data; do not lose it.
 
-    Follow the on-screen menu (1-7) to manage your credentials.
+    Main Menu: Use keys 1-7 to navigate.
 
-    Type exit at any time during an input prompt to cancel.
+    Adding/Updating: When prompted for a password, you can select y to have the system generate a high-entropy 18-character string for you.
+
+    Canceling: If you make a mistake, simply type exit to return to the main menu without saving changes.
 
 Developer Notes
 
-    Style: No shorthand code is used to ensure maximum readability and linter compliance.
+    Style: Strict adherence to non-shorthand Python logic.
 
-    Linter: Fully compatible with Ruff.
+    Linting: Optimized for Ruff to prevent unused variables and redundant boolean comparisons.
 
-    Security: Static salt is used for PBKDF2 key derivation.
-    
+    Security: Employs PBKDF2 for key derivation with a static salt for local consistency.
