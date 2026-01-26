@@ -26,6 +26,8 @@ CipherVault_Project/
 │
 └── README.md                     # Documentation
 
+---
+
 ## [ KEY FEATURES ]
 
     Advanced Encryption Standard 256 Encryption: Utilizes the Fernet symmetric encryption library and the Password-Based Key Derivation Function 2 for high security.
@@ -39,6 +41,8 @@ CipherVault_Project/
     Automatic Backups: Every time the vault is saved, a timestamped copy is placed in the data/backups/ directory for system recovery.
 
     Deep Integration: Native "Open Website Address" functionality and "Copy to Clipboard" tools for generated passwords.
+
+---
 
 ## [ INSTALLATION AND SETUP ]
 
@@ -54,6 +58,8 @@ CipherVault_Project/
 
     Note: The .pyw file extension is used to prevent the Windows command prompt from appearing in the background.
 
+---
+
 ## [ OPERATIONAL LOGIC ]
 
     Authentication: The Master Key is never stored on the system. If the master key is lost, the data cannot be recovered.
@@ -67,4 +73,3 @@ CipherVault_Project/
         Click the OK button. The system will populate the field with a fresh secure string.
 
     Masking: The main grid masks sensitive data with asterisks to prevent unauthorized viewing. Use the VIEW_RECORD_DATA button to see the raw information.
-    
