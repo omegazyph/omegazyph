@@ -1,0 +1,21 @@
+# Original URL
+url = "http://www.pythonchallenge.com/pc/def/map.html"
+'''
+# Create a mapping table
+# Replace '?' with '!' and '&' with ';', remove '='
+trans_table = str.maketrans("M","Q","G")
+
+# Apply the translation
+modified_url = url.translate(trans_table)
+
+print(modified_url)
+
+print(trans_table)
+
+'''
+
+#txt = "Hello Sam!"
+mytable = str.maketrans("E", "G")
+print(url.translate(mytable))
+
+
