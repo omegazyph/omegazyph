@@ -1,11 +1,12 @@
-###############################################################################
-# Date: 2026-01-07
-# Script Name: legion_to_external_backup.py
-# Author: omegazyph
-# Updated: 2026-01-07
-# Description: Syncs 'omegazyph' Desktop folder to LaCie (Z:).
-#              Features hacker-style UI and incremental sync logic.
-###############################################################################
+"""
+Date: 2026-01-07
+Script Name: legion_to_external_backup.py
+Author: omegazyph
+Updated: 2026-02-10
+Description: Synchronizes multiple folders (Desktop and a new folder) to 
+              the LaCie (Z:) drive. Features a loop-based sync engine 
+              and hacker-style UI.
+"""
 
 import os
 import shutil
@@ -13,84 +14,94 @@ import time
 import sys
 
 def print_hacker(text, color="\033[1;32m"):
-    """Prints text with a techy typing effect in Matrix Green."""
+    """Prints text with a techy typing effect."""
     reset = "\033[0m"
     sys.stdout.write(color)
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
-        time.sleep(0.008) # Fast typing for a pro feel
+        time.sleep(0.008)
     print(reset)
 
-def run_backup():
-    # Clear screen for that clean workstation look
-    os.system('cls' if os.name == 'nt' else 'clear')
-    
-    print_hacker("======================================================")
-    print_hacker("   OMEGAZYPH SECURE SYNC PROTOCOL: LACIE_Z_DRIVE      ")
-    print_hacker("======================================================")
-    time.sleep(0.5)
-
-    # --- CONFIGURATION ---
-    source_folder = r"C:\Users\omega\Desktop\omegazyph"
-    backup_destination = r"Z:\Windows\Documents\Git hub projects\omegazyph_back_up"
-
-    # 1. Drive Connection Check
-    print_hacker("[!] PROBING HARDWARE: LACIE Z: ...")
-    if not os.path.exists("Z:\\"):
-        print_hacker("[-] ERROR: LaCie Drive (Z:) not found. Plug it in.", "\033[1;31m")
-        return
-    print_hacker("[SUCCESS] DRIVE Z: ONLINE.")
-
-    # 2. Source Check
-    if not os.path.exists(source_folder):
-        print_hacker(f"[-] ERROR: Source folder '{source_folder}' missing.", "\033[1;31m")
-        return
-
-    # 3. Create destination if missing
-    if not os.path.exists(backup_destination):
-        print_hacker("[!] DESTINATION MISSING. CREATING DIRECTORY...")
-        os.makedirs(backup_destination)
-
-    print_hacker("\n[*] INITIATING SYNC: DESKTOP -> LACIE")
-    print_hacker("------------------------------------------------------")
-
+def sync_folders(source, destination):
+    """
+    Handles the actual incremental sync logic for a single pair of folders.
+    Returns a tuple of (updated_count, skipped_count).
+    """
     updated = 0
     skipped = 0
 
-    # 4. Sync Logic
-    for root, dirs, files in os.walk(source_folder):
-        # Skip .git folder to keep backup slim
-        if '.git' in dirs:
-            dirs.remove('.git')
+    if not os.path.exists(source):
+        print_hacker(f"[-] ERROR: Source '{source}' missing. Skipping...", "\033[1;31m")
+        return 0, 0
 
-        rel_path = os.path.relpath(root, source_folder)
-        dest_dir = os.path.join(backup_destination, rel_path)
+    if not os.path.exists(destination):
+        os.makedirs(destination)
+
+    for root, directories, files in os.walk(source):
+        if '.git' in directories:
+            directories.remove('.git')
+
+        relative_path = os.path.relpath(root, source)
+        dest_dir = os.path.join(destination, relative_path)
 
         if not os.path.exists(dest_dir):
             os.makedirs(dest_dir)
 
-        for name in files:
-            s_file = os.path.join(root, name)
-            d_file = os.path.join(dest_dir, name)
+        for filename in files:
+            source_file = os.path.join(root, filename)
+            destination_file = os.path.join(dest_dir, filename)
 
-            # Incremental copy: only if changed or new
-            if not os.path.exists(d_file) or os.path.getmtime(s_file) > os.path.getmtime(d_file):
-                shutil.copy2(s_file, d_file)
-                updated += 1
-                # Use a fast print for the files to look like a data stream
-                print(f"\033[1;32m    [+] {name}\033[0m")
+            if not os.path.exists(destination_file) or os.path.getmtime(source_file) > os.path.getmtime(destination_file):
+                try:
+                    shutil.copy2(source_file, destination_file)
+                    updated += 1
+                    print(f"\033[1;32m    [+] {filename}\033[0m")
+                except Exception as error:
+                    print(f"\033[1;31m    [!] Error copying {filename}: {error}\033[0m")
             else:
                 skipped += 1
+    return updated, skipped
 
-    # 5. Final Report
+def run_backup_protocol():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    print_hacker("======================================================")
+    print_hacker("   OMEGAZYPH MULTI-SYNC PROTOCOL: LACIE_Z_DRIVE       ")
+    print_hacker("======================================================")
+
+    # Check for drive connection
+    if not os.path.exists("Z:\\"):
+        print_hacker("[-] ERROR: LaCie Drive (Z:) not found.", "\033[1;31m")
+        return
+
+    # --- CONFIGURATION: ADD MORE FOLDERS HERE ---
+    # Dictionary format: r"Source Path": r"Destination Path"
+    backup_tasks = {
+        r"C:\Users\omega\Desktop\omegazyph": r"Z:\Windows\Documents\Git hub projects\omegazyph_back_up",
+        r"C:\Users\omega\Desktop\Freelance-Portfolio-Project": r"Z:\Windows\Documents\Git hub projects\Freelance-Portfolio-Project_Back_up"
+    }
+
+    total_updated = 0
+    total_skipped = 0
+
+    for source, destination in backup_tasks.items():
+        print_hacker(f"\n[*] STARTING SYNC: {os.path.basename(source)} -> Z:")
+        u, s = sync_folders(source, destination)
+        total_updated += u
+        total_skipped += s
+
+    # Final Report
     print_hacker("\n" + "="*40)
-    print_hacker("         BACKUP SUCCESSFUL")
+    print_hacker("          ALL BACKUPS SUCCESSFUL")
     print_hacker("="*40)
-    print_hacker(f"  Files Updated: {updated}")
-    print_hacker(f"  Files Already Up-to-date: {skipped}")
+    print_hacker(f"  Total Files Updated: {total_updated}")
+    print_hacker(f"  Total Files Skipped: {total_skipped}")
     print_hacker("="*40)
-    print_hacker("\n>>> SESSION SECURE. READY FOR NEW DATA.")
 
 if __name__ == "__main__":
-    run_backup()
+    try:
+        run_backup_protocol()
+    except KeyboardInterrupt:
+        print("\n\033[1;31m[!] Protocol Terminated.\033[0m")
+        sys.exit()
