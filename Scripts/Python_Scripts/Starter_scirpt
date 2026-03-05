@@ -1,0 +1,56 @@
+###############################################################################
+# Date: 2026-01-07
+# Script Name: legion_prime.py
+# Author: omegazyph
+# Updated: 2026-01-07
+# Description: The "God-Mode" suite. Combines System Optimization, 
+#              Location-Aware Weather, Tech News, and Network Probing.
+###############################################################################
+
+import os
+import sys
+import time
+#import requests
+#import psutil
+#import subprocess
+
+class function:
+
+    def print_color(text, color="\033[1;32m"):
+        """Matrix-style typing effect."""
+        reset = "\033[0m"
+        sys.stdout.write(color)
+        for char in text:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(0.008)
+        print(reset)
+
+
+
+
+def main():
+    os.system('cls')
+    # Using triple quotes r""" ensures Python treats the entire block as text.
+    logo = r"""
+  ______  __  __  ______  ______  ______  ______  __  __   
+ /\  __ \/\ \/\ \/\  ___\/\  ___\/\  __ \/\  ___\/\ \_\ \  
+ \ \ \_\ \ \ \_\ \ \  __\\ \ \__ \ \ \_\ \ \  __\\ \____ \ 
+  \ \_____\ \_____\ \_____\ \_____\ \_____\ \_____\/\_____\
+   \/_____/\/_____/\/_____/\/_____/\/_____/\/_____/\/_____/
+    """
+    function.print_color(logo)
+    function.print_color("           -- LEGION PRIME v1.0 | OMEGAZYPH --")
+    
+    #############################################################
+    # run funtions here
+
+    #############################################################
+
+    function.print_color("\n" + "="*54)
+    function.print_color(" [SUCCESS] SYSTEM OPTIMIZED. UPLINK SECURE.")
+    function.print_color("="*54)
+    input("\nPress ENTER to return to workstation...")
+
+if __name__ == "__main__":
+    main()

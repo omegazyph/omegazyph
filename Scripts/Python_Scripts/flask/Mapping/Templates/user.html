@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<!-- Conditional statement to check if the 'user' variable exists -->
+
+{% if user %}
+    <!-- If 'user' variable exists, display a greeting -->
+    <h1>Hello {{ user }}</h1>
+{% else %}
+    <!-- If 'user' variable does not exist, display a message to log in -->
+    <h1>Please log in</h1>
+{% endif %}

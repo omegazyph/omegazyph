@@ -1,0 +1,33 @@
+.grid-contaniner-1{
+    display: grid;
+}
+
+.grid-contaniner-2{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.grid-contaniner-3{
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+}
+
+.grid-contaniner-4{
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+}
+
+.grid-contaniner-5{
+    display: grid;
+    column-gap: 50px;
+}
+
+.grid-contaniner-6{
+    display: grid;
+    row-gap: 50px;
+}
+
+.grid-contaniner-7{
+    display: grid;
+    gap: 50px;
+}

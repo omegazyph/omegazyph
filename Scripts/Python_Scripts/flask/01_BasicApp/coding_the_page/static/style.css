@@ -1,0 +1,6 @@
+/* Selects the h1 element and applies the following styles */
+
+h1 {
+    /* Sets the text color of the h1 element to deep sky blue */
+    color: deepskyblue;
+}
