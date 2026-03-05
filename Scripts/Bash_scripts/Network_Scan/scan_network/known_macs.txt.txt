@@ -1,2 +1,0 @@
-00:11:22:33:44:55 laptop
-AA:BB:CC:DD:EE:FF home TV

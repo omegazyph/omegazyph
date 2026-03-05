@@ -1,2 +1,0 @@
-in the target filed 
-powershell.exe -ExecutionPolicy Bypass -File "C:\Users\omega\OneDrive\Desktop\update\SuperUpdate.ps1"

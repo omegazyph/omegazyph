@@ -1,5 +1,0 @@
-# CipherVault Dependencies
-# Install via: pip install -r requirements.txt
-
-cryptography>=42.0.0
-rich>=13.0.0
