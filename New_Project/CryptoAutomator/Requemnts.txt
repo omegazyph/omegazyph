@@ -1,2 +1,0 @@
-pip install ccxt pandas scikit-learn
-pip install ccxt pandas python-dotenv
