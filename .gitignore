@@ -3,8 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 .venv/
-env/
-venv/
 
 # --- VS Code Junk ---
 .vscode/
@@ -27,3 +25,10 @@ private/
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+
+# Ignore the secret keys file
+.env
+
+# Ignore the virtual environment folder
+env/
+venv/
