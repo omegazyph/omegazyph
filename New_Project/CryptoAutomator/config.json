@@ -1,0 +1,22 @@
+{
+    "trading_pairs": [
+        {
+            "symbol": "BTC/USDT",
+            "name": "Bitcoin",
+            "max_spend": 20.0,
+            "buy_threshold": 68000.0,
+            "enabled": true
+        },
+        {
+            "symbol": "ETH/USDT",
+            "name": "Ethereum",
+            "max_spend": 10.0,
+            "buy_threshold": 2400.0,
+            "enabled": false
+        }
+    ],
+    "global_settings": {
+        "check_interval_seconds": 30,
+        "use_alerts": true
+    }
+}
