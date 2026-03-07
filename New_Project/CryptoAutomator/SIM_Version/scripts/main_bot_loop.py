@@ -33,7 +33,7 @@ class Colors:
     PRICE = Fore.YELLOW
     SIGNAL = Fore.MAGENTA + Style.BRIGHT
     SELL = Fore.RED + Style.BRIGHT
-    SYSTEM = Fore.BLUE + Style.DIM
+    SYSTEM = Fore.BLUE + Style.BRIGHT
     ERROR = Fore.RED + Style.BRIGHT
     RESET = Style.RESET_ALL
 
