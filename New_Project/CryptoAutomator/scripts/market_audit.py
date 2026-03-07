@@ -28,7 +28,7 @@ def load_config():
 
 def get_bollinger_bands(symbol, timeframe='1h', window=20):
     """Calculates Bollinger Bands using Kraken data."""
-    exchange = ccxt.kraken() 
+    exchange = ccxt.cryptocom() 
     try:
         # Fetch 50 candles to ensure a stable 20-period moving average
         ohlcv = exchange.fetch_ohlcv(symbol, timeframe=timeframe, limit=50)

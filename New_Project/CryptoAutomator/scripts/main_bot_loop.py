@@ -136,7 +136,7 @@ def run_bot():
     """Main execution loop for the trading bot."""
     global virtual_balance
     # Using Kraken for better US compatibility as discussed
-    exchange = ccxt.kraken({"enableRateLimit": True})
+    exchange = ccxt.cryptocom({"enableRateLimit": True})
     trade_state = recover_state_from_csv()
     
     while True:
