@@ -1,107 +1,226 @@
-"""
-Date: 2026-03-06
-Script Name: main_bot_loop.py
-Author: omegazyph
-Updated: 2026-03-06
-
-Description: 
-Wayne's 24/7 Bot with CSV Logging. Records every buy 
-transaction to a local file for permanent record keeping.
-"""
+# 2026-03-06 | main_bot_loop.py | Author: omegazyph | Updated: 2026-03-06
+# Description: Wayne's 15% Drop Re-Buy Bot with persistent Dashboard.
+# Fixed for Systemd/SSH color support and US-compatible exchange data.
 
 import ccxt
 import time
 import os
 import json
-import csv # Added for Excel-compatible logging
+import csv
 from pathlib import Path
 from dotenv import load_dotenv
 from colorama import init, Fore, Style
 
-init(autoreset=True)
+# Initialize Colors: strip=False is CRITICAL for systemd/SSH color support
+init(autoreset=True, strip=False)
 load_dotenv()
+
+# --- CONSTANTS ---
+STARTING_BALANCE = 20.00
+REBUY_DROP_PERCENT = 15.0
+PROFIT_TARGET_PERCENT = 15.0
+MAX_ACTIVITY_LOGS = 5
 
 class Colors:
     HEADER = Fore.CYAN + Style.BRIGHT
     MONEY = Fore.GREEN + Style.BRIGHT
     PRICE = Fore.YELLOW
     SIGNAL = Fore.MAGENTA + Style.BRIGHT
-    ERROR = Fore.RED + Style.BRIGHT
+    SELL = Fore.RED + Style.BRIGHT
     SYSTEM = Fore.BLUE + Style.DIM
+    ERROR = Fore.RED + Style.BRIGHT
     RESET = Style.RESET_ALL
 
-def load_config():
-    script_path = Path(__file__).resolve()
-    project_root = script_path.parent.parent
-    config_path = project_root / 'config.json'
-    with open(config_path, 'r') as f:
-        return json.load(f)
+# Global list to hold recent activities for the persistent display
+recent_activities = []
+virtual_balance = STARTING_BALANCE  # Initialize with starting default
 
-def log_transaction(symbol, side, amount, price):
-    """Writes trade details to a CSV file in the project root."""
+def clear_screen():
+    """Clears the terminal screen for a clean dashboard look."""
+    # When running as a service, we don't always want to clear, 
+    # but for SSH 'bot' shortcut, it helps.
+    if os.name == "nt":
+        os.system("cls")
+    else:
+        # Only clear if we are in an interactive terminal
+        if os.environ.get('TERM'):
+            os.system("clear")
+
+def get_paths():
+    """Returns the project root and file paths."""
     script_path = Path(__file__).resolve()
-    log_path = script_path.parent.parent / 'trading_log.csv'
+    # Assuming script is in /scripts/ folder, go up one level to root
+    project_root = script_path.parent.parent
+    config_path = project_root / "config.json"
+    log_path = project_root / "trading_log.csv"
+    return project_root, config_path, log_path
+
+def load_config():
+    """Loads configuration from the JSON file."""
+    project_root, config_path, log_path = get_paths()
+    with open(config_path, mode="r", encoding="utf-8") as file:
+        return json.load(file)
+
+def log_trade(symbol, side, amount, price, wallet, note):
+    """Records trade to CSV and adds to the dashboard activity log."""
+    global recent_activities
+    project_root, config_path, log_path = get_paths()
+    current_time_short = time.strftime("%H:%M:%S")
+    current_time_full = time.strftime("%Y-%m-%d %H:%M:%S")
     
     file_exists = os.path.isfile(log_path)
     
-    with open(log_path, mode='a', newline='') as file:
+    with open(log_path, mode="a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        # Add header if the file is brand new
         if not file_exists:
-            writer.writerow(['Timestamp', 'Symbol', 'Side', 'Amount', 'Price', 'Total_USD'])
-        
-        timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        total_usd = amount * price
-        writer.writerow([timestamp, symbol, side, amount, f"{price:.2f}", f"{total_usd:.2f}"])
+            writer.writerow(["Timestamp", "Symbol", "Side", "Amount", "Price", "Wallet", "Note"])
+        writer.writerow([current_time_full, symbol, side, f"{amount:.8f}", f"{price:.8f}", f"{wallet:.2f}", note])
     
-    print(f"{Colors.MONEY}📁 Transaction logged to trading_log.csv{Colors.RESET}")
+    side_color = Colors.MONEY if "BUY" in side else Colors.SELL
+    activity_message = f"[{current_time_short}] {side_color}{side:<10}{Colors.RESET} {symbol} at ${price:,.4f} - {note}"
+    
+    recent_activities.insert(0, activity_message)
+    if len(recent_activities) > MAX_ACTIVITY_LOGS:
+        recent_activities.pop()
+
+def recover_state_from_csv():
+    """Rebuilds the trade state and activity log from the CSV file on startup."""
+    global virtual_balance, recent_activities
+    project_root, config_path, log_path = get_paths()
+    trades = {}
+    virtual_balance = STARTING_BALANCE
+
+    if not os.path.isfile(log_path):
+        return trades
+
+    try:
+        with open(log_path, mode="r", encoding="utf-8") as file:
+            csv_data = list(csv.DictReader(file))
+            if not csv_data:
+                return trades
+
+            for row in csv_data:
+                symbol = row["Symbol"]
+                side = row["Side"]
+                price = float(row["Price"])
+                amount = float(row["Amount"])
+                virtual_balance = float(row["Wallet"])
+
+                if side == "SIM_BUY":
+                    if symbol not in trades:
+                        trades[symbol] = {"status": "HOLDING", "coins": 0.0, "total_cost": 0.0, "last_price": 0.0, "count": 0}
+                    trades[symbol]["coins"] += amount
+                    trades[symbol]["total_cost"] += (amount * price)
+                    trades[symbol]["last_price"] = price
+                    trades[symbol]["count"] += 1
+                elif side == "SIM_SELL":
+                    trades[symbol] = {"status": "WAITING", "coins": 0.0, "total_cost": 0.0, "last_price": 0.0, "count": 0}
+            
+            # Restore visual log
+            last_entries = csv_data[-MAX_ACTIVITY_LOGS:]
+            recent_activities = []
+            for row in reversed(last_entries):
+                side_color = Colors.MONEY if "BUY" in row["Side"] else Colors.SELL
+                time_only = row["Timestamp"].split(" ")[1]
+                log_entry = f"[{time_only}] {side_color}{row['Side']:<10}{Colors.RESET} {row['Symbol']} at ${float(row['Price']):,.4f}"
+                recent_activities.append(log_entry)
+                
+    except Exception as error:
+        print(f"{Colors.ERROR}Recovery Warning: {error}")
+    
+    return trades
 
 def run_bot():
-    exchange = ccxt.cryptocom({
-        'apiKey': os.getenv('CRYPTO_COM_KEY'),
-        'secret': os.getenv('CRYPTO_COM_SECRET'),
-        'enableRateLimit': True,
-    })
-
-    print(f"{Colors.HEADER}🚀 Legion Bot: Transaction Logging Active")
+    """Main execution loop for the trading bot."""
+    global virtual_balance
+    # Using Kraken for better US compatibility as discussed
+    exchange = ccxt.kraken({"enableRateLimit": True})
+    trade_state = recover_state_from_csv()
     
     while True:
         try:
-            config = load_config()
-            pairs = config['trading_pairs']
-            interval = config['global_settings']['check_interval_seconds']
+            config_data = load_config()
+            trading_pairs = config_data["trading_pairs"]
+            settings = config_data.get("global_settings", {"check_interval_seconds": 30})
+            check_interval = settings["check_interval_seconds"]
             
-            balance = exchange.fetch_balance()
-            total_cash = balance['total'].get('USDT', 0.0) + balance['total'].get('USD', 0.0)
+            clear_screen()
             
-            print(f"\n{Colors.HEADER}--- Scan Start | Balance: ${total_cash:.2f} ---")
+            total_profit_loss = virtual_balance - STARTING_BALANCE
+            profit_color = Colors.MONEY if total_profit_loss >= 0 else Colors.SELL
+            current_timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            
+            print(f"{Colors.HEADER}======================================================================")
+            print(f" {Colors.HEADER}WAYNE'S CRYPTO AUTOMATOR | {current_timestamp}")
+            print(f" {Colors.HEADER}WALLET: {Colors.RESET}${virtual_balance:.2f} | {Colors.HEADER}TOTAL PROFIT: {profit_color}${total_profit_loss:.2f}")
+            print(f"{Colors.HEADER}======================================================================")
+            print(f"{'SYMBOL':<10} {'STATUS':<15} {'PRICE':<12} {'AVG/TARGET':<12} {'P/L %':<10} {'BUYS'}")
+            print("-" * 70)
 
-            for pair in pairs:
-                if not pair['enabled']: 
+            for pair in trading_pairs:
+                if not pair.get("enabled", True):
                     continue
-
-                symbol = pair['symbol']
+                    
+                symbol = pair["symbol"]
+                if symbol not in trade_state:
+                    trade_state[symbol] = {"status": "WAITING", "coins": 0.0, "total_cost": 0.0, "last_price": 0.0, "count": 0}
+                
+                state = trade_state[symbol]
                 ticker = exchange.fetch_ticker(symbol)
-                price = ticker['last']
-                threshold = pair['buy_threshold']
+                current_price = ticker["last"]
 
-                if price <= threshold and total_cash >= 1.0:
-                    print(f"{Colors.SIGNAL}💰 SIGNAL MATCHED: Executing Simulated Buy for {symbol}...")
+                # Logic: Waiting to Enter
+                if state["status"] == "WAITING":
+                    buy_target = pair["buy_threshold"]
+                    status_label = f"{Colors.SYSTEM}SEARCHING"
+                    print(f"{symbol:<10} {status_label:<24} ${current_price:<11,.2f} ${buy_target:<11,.2f} {'---':<10} {state['count']}/3")
                     
-                    # SIMULATED BUY FOR TESTING
-                    # In a real trade, 'amount' would come from your order result
-                    test_amount = 0.0001 
+                    if current_price <= buy_target and virtual_balance >= 2.0:
+                        buy_amount_usd = 2.0
+                        virtual_balance -= buy_amount_usd
+                        coins_purchased = buy_amount_usd / current_price
+                        state.update({"status": "HOLDING", "coins": coins_purchased, "total_cost": buy_amount_usd, "last_price": current_price, "count": 1})
+                        log_trade(symbol, "SIM_BUY", coins_purchased, current_price, virtual_balance, "Initial Entry")
+
+                # Logic: Holding Position
+                elif state["status"] == "HOLDING":
+                    average_cost = state["total_cost"] / state["coins"]
+                    current_profit_percent = ((current_price - average_cost) / average_cost) * 100
+                    drop_since_last_buy = ((state["last_price"] - current_price) / state["last_price"]) * 100
                     
-                    # Log it!
-                    log_transaction(symbol, "BUY", test_amount, price)
-                else:
-                    print(f"  {pair['name']}: ${price:,.2f} (Target: < ${threshold:,.2f})")
+                    percent_color = Colors.MONEY if current_profit_percent >= 0 else Colors.SELL
+                    status_label = f"{Colors.MONEY}HOLDING"
+                    print(f"{symbol:<10} {status_label:<24} ${current_price:<11,.2f} ${average_cost:<11,.2f} {percent_color}{current_profit_percent:>+6.2f}%{Colors.RESET}   {state['count']}/3")
 
-            time.sleep(interval)
+                    # 15% Drop Re-buy
+                    if drop_since_last_buy >= REBUY_DROP_PERCENT and state["count"] < 3 and virtual_balance >= 2.0:
+                        rebuy_amount_usd = 2.0
+                        virtual_balance -= rebuy_amount_usd
+                        new_coins = rebuy_amount_usd / current_price
+                        state["coins"] += new_coins
+                        state["total_cost"] += rebuy_amount_usd
+                        state["last_price"] = current_price
+                        state["count"] += 1
+                        log_trade(symbol, "SIM_BUY", new_coins, current_price, virtual_balance, f"Re-buy #{state['count']}")
 
-        except Exception as e:
-            print(f"{Colors.ERROR}❌ Error: {e}{Colors.RESET}")
-            time.sleep(60)
+                    # 15% Profit Target Sell
+                    elif current_profit_percent >= PROFIT_TARGET_PERCENT:
+                        total_sell_value = state["coins"] * current_price
+                        virtual_balance += total_sell_value
+                        log_trade(symbol, "SIM_SELL", state["coins"], current_price, virtual_balance, "Target Hit")
+                        trade_state[symbol] = {"status": "WAITING", "coins": 0.0, "total_cost": 0.0, "last_price": 0.0, "count": 0}
+
+            if recent_activities:
+                print(f"\n{Colors.HEADER}RECENT ACTIVITY:")
+                for activity in recent_activities:
+                    print(f" {activity}")
+
+            print(f"\n{Colors.SYSTEM}Refreshing in {check_interval} seconds...")
+            time.sleep(check_interval)
+            
+        except Exception as error:
+            print(f"{Colors.ERROR}❌ Error: {error}")
+            time.sleep(10)
 
 if __name__ == "__main__":
     run_bot()
