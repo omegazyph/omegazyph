@@ -1,6 +1,8 @@
 # 2026-03-06 | main_bot_loop.py | Author: omegazyph | Updated: 2026-03-06
 # Description: Wayne's 15% Drop Re-Buy Bot with persistent Dashboard.
 # Fixed for Systemd/SSH color support and US-compatible exchange data.
+#
+# make sure you update the server if you have one
 
 import ccxt
 import time
