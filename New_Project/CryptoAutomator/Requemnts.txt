@@ -1,2 +1,7 @@
-pip install ccxt pandas scikit-learn
-pip install ccxt pandas python-dotenv
+# Date: 2026-03-07
+# Author: omegazyph
+# Dependencies for CryptoAutomator
+
+ccxt
+colorama
+python-dotenv
