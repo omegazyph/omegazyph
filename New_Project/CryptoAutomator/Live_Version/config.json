@@ -1,0 +1,45 @@
+{
+    "global_settings": {
+        "check_interval_seconds": 30,
+        "max_buy_attempts": 3,
+        "base_currency": "USDT"
+    },
+    "trading_pairs": [
+        {
+            "symbol": "BTC/USDT",
+            "enabled": true,
+            "buy_threshold": 66400.00,
+            "description": "Lower Bollinger Band entry for BTC"
+        },
+        {
+            "symbol": "ETH/USDT",
+            "enabled": true,
+            "buy_threshold": 1940.00,
+            "description": "Lower Bollinger Band entry for ETH"
+        },
+        {
+            "symbol":"ETC/USDT",
+            "enabled": true,
+            "buy_threshold":8.1006,
+            "description":"Lower Bollinger Band entry for ETC"
+        },
+        {
+            "symbol": "SOL/USDT",
+            "enabled": true,
+            "buy_threshold": 82.50,
+            "description": "Dip entry for Solana"
+        },
+        {
+            "symbol": "DOGE/USDT",
+            "enabled": true,
+            "buy_threshold": 0.0880,
+            "description": "Meme-momentum entry for Doge"
+        },
+        {
+            "symbol": "CRO/USDT",
+            "enabled": true,
+            "buy_threshold": 0.0725,
+            "description": "Lower Bollinger Band entry for CRO"
+        }
+    ]
+}
