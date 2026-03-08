@@ -9,38 +9,52 @@
         {
             "symbol": "BTC/USD",
             "enabled": true,
-            "buy_threshold": 66400.00,
-            "description": "Lower Bollinger Band entry for BTC"
+            "description": "Bitcoin"
         },
         {
             "symbol": "ETH/USD",
             "enabled": true,
-            "buy_threshold": 1940.00,
-            "description": "Lower Bollinger Band entry for ETH"
+            "description": "Ethereum"
         },
         {
-            "symbol":"ETC/USD",
+            "symbol": "ETC/USD",
             "enabled": true,
-            "buy_threshold": 8.0553,
-            "description":"Lower Bollinger Band entry for ETC"
+            "description": "Ethereum Classic"
         },
         {
             "symbol": "SOL/USD",
             "enabled": true,
-            "buy_threshold": 82.3889,
-            "description": "Dip entry for Solana"
+            "description": "Solana"
         },
         {
             "symbol": "DOGE/USD",
             "enabled": true,
-            "buy_threshold": 0.0880,
-            "description": "Meme-momentum entry for Doge"
+            "description": "Dogecoin"
         },
         {
             "symbol": "CRO/USD",
             "enabled": true,
-            "buy_threshold": 0.0725,
-            "description": "Lower Bollinger Band entry for CRO"
+            "description": "Cronos"
+        },
+        {
+            "symbol": "XRP/USD",
+            "enabled": true,
+            "description": "Ripple"
+        },
+        {
+            "symbol": "LINK/USD",
+            "enabled": true,
+            "description": "Chainlink"
+        },
+        {
+            "symbol": "ADA/USD",
+            "enabled": true,
+            "description": "Cardano"
+        },
+        {
+            "symbol": "AVAX/USD",
+            "enabled": true,
+            "description": "Avalanche"
         }
     ]
 }
