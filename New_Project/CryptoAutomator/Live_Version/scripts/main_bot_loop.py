@@ -1,12 +1,12 @@
 """
-Date: 2026-03-07
+Date: 2026-01-05
 Script Name: main_bot_loop.py
 Author: omegazyph
-Updated: 2026-03-07
+Updated: 2026-03-08
 Description: 
     Wayne's LIVE Trading Bot for Crypto.com Exchange.
-    This script executes REAL market orders using the USD Bundle.
-    Strictly uses full-word variables and non-shorthand logic.
+    Restored Unrealized P/L calculation and Recent Trades display.
+    Maintains auto-refreshing portfolio and config logic.
 """
 
 import ccxt
@@ -19,313 +19,215 @@ from pathlib import Path
 from dotenv import load_dotenv
 from colorama import init, Fore, Style
 
-# Initialize Colorama for the VSCode terminal
+# Initialize Colorama for the terminal display on the Lenovo Legion laptop
 init(autoreset=True, strip=False)
 
-# --- WINDOWS STAY-AWAKE ---
-# Prevents the Lenovo Legion from sleeping during live trading
-ES_CONTINUOUS = 0x80000000
-ES_SYSTEM_REQUIRED = 0x00000001
+# --- WINDOWS POWER MANAGEMENT ---
+EXECUTION_STATE_CONTINUOUS = 0x80000000
+EXECUTION_STATE_SYSTEM_REQUIRED = 0x00000001
 
-def prevent_sleep():
-    """ Prevents the Windows system from entering sleep mode """
+def prevent_system_sleep():
     if os.name == 'nt':
-        ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED)
+        ctypes.windll.kernel32.SetThreadExecutionState(EXECUTION_STATE_CONTINUOUS | EXECUTION_STATE_SYSTEM_REQUIRED)
 
-def allow_sleep():
-    """ Restores default Windows power settings """
+def allow_system_sleep():
     if os.name == 'nt':
-        ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
+        ctypes.windll.kernel32.SetThreadExecutionState(EXECUTION_STATE_CONTINUOUS)
 
-# --- PATHS & CONFIG ---
-script_path = Path(__file__).resolve()
-project_root = script_path.parent.parent
-env_path = project_root / ".env"
-load_dotenv(dotenv_path=env_path)
+# --- DIRECTORY AND FILE PATHS ---
+current_script_path = Path(__file__).resolve()
+project_root_directory = current_script_path.parent.parent
+environment_file_path = project_root_directory / ".env"
+load_dotenv(dotenv_path=environment_file_path)
 
-# Trading logic constants
-REBUY_DROP_PERCENT = 15.0
-PROFIT_TARGET_PERCENT = 15.0
-MAX_ACTIVITY_LOGS = 5
-TRADE_AMOUNT_USD = 2.0
+# Trading Strategy Constant
+PROFIT_TARGET_PERCENTAGE = 15.0
 
-class Colors:
-    """ ANSI Color codes for the terminal dashboard """
-    HEADER = Fore.CYAN + Style.BRIGHT
-    MONEY = Fore.GREEN + Style.BRIGHT
-    PRICE = Fore.YELLOW
-    SELL = Fore.RED + Style.BRIGHT
-    SYSTEM = Fore.BLUE + Style.BRIGHT
-    RESET = Style.RESET_ALL
+class InterfaceColors:
+    HEADER_CYAN = Fore.CYAN + Style.BRIGHT
+    SUCCESS_GREEN = Fore.GREEN + Style.BRIGHT
+    WARNING_YELLOW = Fore.YELLOW
+    DANGER_RED = Fore.RED + Style.BRIGHT
+    INFO_BLUE = Fore.BLUE + Style.BRIGHT
+    RESET_STYLE = Style.RESET_ALL
 
-# List to store the most recent trade events
-recent_activities = []
-
-def clear_screen():
-    """ Clears the terminal screen for a fresh dashboard update """
+def clear_terminal_screen():
     if os.name == 'nt':
         os.system("cls")
     else:
         os.system("clear")
 
-def get_paths():
-    """ Defines the file paths for configuration and logging """
-    config_path = project_root / "config.json"
-    log_path = project_root / "live_trade_log.csv"
-    return project_root, config_path, log_path
+def get_required_file_paths():
+    configuration_file_path = project_root_directory / "config.json"
+    trading_activity_log_path = project_root_directory / "live_trade_log.csv"
+    return configuration_file_path, trading_activity_log_path
 
-def load_config():
-    """ Loads the trading pair settings from the JSON file """
-    paths = get_paths()
-    config_path = paths[1]
-    with open(config_path, mode="r", encoding="utf-8") as file:
-        config_data = json.load(file)
-        return config_data
+def load_trading_configuration():
+    configuration_path, _ = get_required_file_paths()
+    with open(configuration_path, mode="r", encoding="utf-8") as file:
+        return json.load(file)
 
-def log_trade(symbol, side, amount, price, wallet, note):
-    """ Records actual live trade execution data to a CSV file """
-    global recent_activities
-    paths = get_paths()
-    log_path = paths[2]
-    current_time_short = time.strftime("%H:%M:%S")
-    current_time_full = time.strftime("%Y-%m-%d %H:%M:%S")
-    
+def record_successful_trade(symbol, side, amount, price, remaining_balance, note):
+    _, log_path = get_required_file_paths()
+    time_full = time.strftime("%Y-%m-%d %H:%M:%S")
     file_exists = os.path.isfile(log_path)
-    with open(log_path, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        if file_exists is False:
+    with open(log_path, mode="a", newline="", encoding="utf-8") as csv_file:
+        writer = csv.writer(csv_file)
+        if not file_exists:
             writer.writerow(["Timestamp", "Symbol", "Side", "Amount", "Price", "Wallet", "Note"])
-        
-        writer.writerow([current_time_full, symbol, side, f"{amount:.8f}", f"{price:.8f}", f"{wallet:.2f}", note])
-    
-    # Determine the color based on the trade side
-    if "SELL" in side:
-        side_color = Colors.SELL
-    else:
-        side_color = Colors.MONEY
-        
-    activity_entry = f"[{current_time_short}] {side_color}{side:<10}{Colors.RESET} {symbol} at ${price:,.4f}"
-    recent_activities.insert(0, activity_entry)
-    
-    # Keep the activity list from growing too large
-    activity_count = len(recent_activities)
-    if activity_count > MAX_ACTIVITY_LOGS:
-        recent_activities.pop()
+        writer.writerow([time_full, symbol, side, f"{amount:.8f}", f"{price:.8f}", f"{remaining_balance:.2f}", note])
 
-def recover_state_from_csv():
-    """ Reads the log file to restore active holdings upon restart """
-    paths = get_paths()
-    log_path = paths[2]
-    trades = {}
-
-    if os.path.isfile(log_path) is False:
-        return trades
-
+def get_recent_activity_from_csv():
+    _, log_path = get_required_file_paths()
+    recent_lines = []
+    if not os.path.isfile(log_path):
+        return recent_lines
     try:
         with open(log_path, mode="r", encoding="utf-8") as file:
-            csv_reader = csv.DictReader(file)
-            for row in csv_reader:
+            reader = list(csv.reader(file))
+            data_rows = reader[1:]
+            for row in data_rows[-5:]:
+                timestamp = row[0].split(" ")[1]
+                side = row[2]
+                symbol = row[1]
+                note = row[6]
+                color = InterfaceColors.SUCCESS_GREEN if "BUY" in side else InterfaceColors.DANGER_RED
+                recent_lines.insert(0, f"[{timestamp}] {color}{side:<10}{InterfaceColors.RESET_STYLE} {symbol} {note}")
+    except Exception:
+        pass
+    return recent_lines
+
+def restore_portfolio_from_log():
+    _, log_path = get_required_file_paths()
+    active_holdings = {}
+    if not os.path.isfile(log_path):
+        return active_holdings
+    try:
+        with open(log_path, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
                 symbol = row["Symbol"]
                 side = row["Side"]
                 price = float(row["Price"])
                 amount = float(row["Amount"])
-
                 if side == "LIVE_BUY":
-                    if symbol not in trades:
-                        trades[symbol] = {
-                            "status": "HOLDING", 
-                            "coins": 0.0, 
-                            "total_cost": 0.0, 
-                            "last_price": 0.0, 
-                            "count": 0
-                        }
-                    # Non-shorthand math operations
-                    trades[symbol]["coins"] = trades[symbol]["coins"] + amount
-                    trades[symbol]["total_cost"] = trades[symbol]["total_cost"] + (amount * price)
-                    trades[symbol]["last_price"] = price
-                    trades[symbol]["count"] = trades[symbol]["count"] + 1
+                    if symbol not in active_holdings:
+                        active_holdings[symbol] = {"status": "HOLDING", "coins": 0.0, "total_cost": 0.0}
+                    active_holdings[symbol]["coins"] += amount
+                    active_holdings[symbol]["total_cost"] += (amount * price)
                 elif side == "LIVE_SELL":
-                    trades[symbol] = {
-                        "status": "WAITING", 
-                        "coins": 0.0, 
-                        "total_cost": 0.0, 
-                        "last_price": 0.0, 
-                        "count": 0
-                    }
-    except Exception as error:
-        print(f"Recovery Error: {error}")
-        
-    return trades
+                    active_holdings[symbol] = {"status": "WAITING", "coins": 0.0, "total_cost": 0.0}
+    except Exception:
+        pass
+    return active_holdings
 
-def run_bot():
-    """ Main execution loop for real money trading on the laptop """
-    prevent_sleep()
-    
-    # Initialize the exchange with your API keys
-    exchange = ccxt.cryptocom({
+def run_trading_engine():
+    prevent_system_sleep()
+    exchange_client = ccxt.cryptocom({
         "apiKey": os.getenv("CRYPTO_COM_KEY"),
         "secret": os.getenv("CRYPTO_COM_SECRET"),
         "enableRateLimit": True
     })
     
-    # Restore the current trade state from the log file
-    trade_state = recover_state_from_csv()
-    
     while True:
         try:
-            config_data = load_config()
-            trading_pairs = config_data["trading_pairs"]
+            # REFRESH FROM FILES
+            current_portfolio = restore_portfolio_from_log()
+            settings = load_trading_configuration()
+            trading_pairs_list = settings["trading_pairs"]
+            global_settings = settings.get("global_settings", {})
+            trade_dollar_amount = global_settings.get("trade_dollar_amount", 2.0)
+            check_interval_seconds = global_settings.get("check_interval_seconds", 30)
             
-            # Extract settings safely
-            global_settings = config_data.get("global_settings", {})
-            check_interval = global_settings.get("check_interval_seconds", 30)
+            balance_response = exchange_client.fetch_balance()
+            free_balances_dictionary = balance_response.get('free', {})
+            available_usd_cash = float(free_balances_dictionary.get("USD", 0.0))
             
-            # Fetch the actual real-time balance from the exchange
-            balance_info = exchange.fetch_balance()
-            total_balance_data = balance_info.get('total', {})
-            real_usd_balance = total_balance_data.get("USD", 0.0)
-            
-            total_unrealized_profit = 0.0
-            table_rows = []
+            total_unrealized_profit_loss = 0.0
+            dashboard_data_rows = []
+            insufficient_funds_warning_active = False
 
-            for pair in trading_pairs:
-                enabled_status = pair.get("enabled", True)
-                if enabled_status is False:
+            for pair_information in trading_pairs_list:
+                if not pair_information.get("enabled", True):
                     continue
                 
-                # Convert USDT symbols to USD for the exchange bundle
-                raw_symbol = pair["symbol"]
-                symbol = raw_symbol.replace("USDT", "USD")
+                base_asset_name = pair_information["symbol"].split('/')[0]
+                active_trading_symbol = f"{base_asset_name}/USD"
                 
-                if symbol not in trade_state:
-                    trade_state[symbol] = {
-                        "status": "WAITING", 
-                        "coins": 0.0, 
-                        "total_cost": 0.0, 
-                        "last_price": 0.0, 
-                        "count": 0
-                    }
+                if active_trading_symbol not in current_portfolio:
+                    current_portfolio[active_trading_symbol] = {"status": "WAITING", "coins": 0.0, "total_cost": 0.0}
                 
-                state = trade_state[symbol]
-                ticker_data = exchange.fetch_ticker(symbol)
-                current_price = ticker_data["last"]
+                current_state = current_portfolio[active_trading_symbol]
+                market_ticker_data = exchange_client.fetch_ticker(active_trading_symbol)
+                current_market_price = market_ticker_data["last"]
 
-                # --- LIVE BUY LOGIC (SEARCHING) ---
-                if state["status"] == "WAITING":
-                    buy_target = pair["buy_threshold"]
-                    search_row = f"{symbol:<10} {Colors.SYSTEM}{'SEARCHING':<15} ${current_price:<11,.4f} ${buy_target:<11,.4f} {'---':<10} {state['count']}/3"
-                    table_rows.append(search_row)
+                if current_state["status"] == "WAITING":
+                    buy_threshold_price = pair_information["buy_threshold"]
+                    dashboard_data_rows.append(f"{active_trading_symbol:<10} {InterfaceColors.INFO_BLUE}{'SEARCHING':<15}{InterfaceColors.RESET_STYLE} ${current_market_price:<11,.4f} ${buy_threshold_price:<11,.4f}")
                     
-                    if current_price <= buy_target:
-                        if real_usd_balance >= TRADE_AMOUNT_USD:
-                            # EXECUTE REAL MARKET BUY ORDER
-                            order_data = exchange.create_market_buy_order(symbol, TRADE_AMOUNT_USD)
-                            filled_price = order_data['price']
-                            coins_received = order_data['amount']
-                            
-                            state["status"] = "HOLDING"
-                            state["coins"] = coins_received
-                            state["total_cost"] = TRADE_AMOUNT_USD
-                            state["last_price"] = filled_price
-                            state["count"] = 1
-                            
-                            remaining_wallet = real_usd_balance - TRADE_AMOUNT_USD
-                            log_trade(symbol, "LIVE_BUY", coins_received, filled_price, remaining_wallet, "Real Entry")
+                    if current_market_price <= buy_threshold_price:
+                        if available_usd_cash >= trade_dollar_amount:
+                            try:
+                                coin_quantity = trade_dollar_amount / current_market_price
+                                buy_order = exchange_client.create_market_buy_order(active_trading_symbol, coin_quantity)
+                                record_successful_trade(active_trading_symbol, "LIVE_BUY", buy_order['amount'], buy_order['price'], available_usd_cash - trade_dollar_amount, "Target Price Hit")
+                            except Exception:
+                                pass
+                        else:
+                            insufficient_funds_warning_active = True
 
-                # --- LIVE SELL/REBUY LOGIC (HOLDING) ---
-                elif state["status"] == "HOLDING":
-                    average_cost = state["total_cost"] / state["coins"]
-                    current_position_value = state["coins"] * current_price
-                    dollar_difference = current_position_value - state["total_cost"]
+                elif current_state["status"] == "HOLDING":
+                    average_entry_price = current_state["total_cost"] / current_state["coins"]
+                    current_market_value = current_state["coins"] * current_market_price
+                    profit_loss_dollars = current_market_value - current_state["total_cost"]
                     
-                    # Track total account profit for the header
-                    total_unrealized_profit = total_unrealized_profit + dollar_difference
+                    # RESTORED: Add to the Unrealized P/L total
+                    total_unrealized_profit_loss += profit_loss_dollars
                     
-                    profit_percentage = (dollar_difference / state["total_cost"]) * 100
-                    
-                    if profit_percentage >= 0:
-                        percent_color = Colors.MONEY
-                    else:
-                        percent_color = Colors.SELL
-                    
-                    holding_row = f"{symbol:<10} {Colors.MONEY}{'HOLDING':<15} ${current_price:<11,.4f} ${average_cost:<11,.4f} {percent_color}{profit_percentage:>+6.2f}%{Colors.RESET}   {state['count']}/3"
-                    table_rows.append(holding_row)
+                    profit_loss_percentage = (profit_loss_dollars / current_state["total_cost"]) * 100
+                    percentage_color = InterfaceColors.SUCCESS_GREEN if profit_loss_percentage >= 0 else InterfaceColors.DANGER_RED
+                    dashboard_data_rows.append(f"{active_trading_symbol:<10} {InterfaceColors.SUCCESS_GREEN}{'HOLDING':<15}{InterfaceColors.RESET_STYLE} ${current_market_price:<11,.4f} ${average_entry_price:<11,.4f} {percentage_color}{profit_loss_percentage:>+6.2f}%")
 
-                    # Logic for 15% drop re-buy
-                    last_entry_price = state["last_price"]
-                    price_drop_pct = ((last_entry_price - current_price) / last_entry_price) * 100
-                    
-                    if price_drop_pct >= REBUY_DROP_PERCENT:
-                        if state["count"] < 3:
-                            if real_usd_balance >= TRADE_AMOUNT_USD:
-                                # EXECUTE REAL RE-BUY
-                                re_order = exchange.create_market_buy_order(symbol, TRADE_AMOUNT_USD)
-                                state["coins"] = state["coins"] + re_order['amount']
-                                state["total_cost"] = state["total_cost"] + TRADE_AMOUNT_USD
-                                state["last_price"] = re_order['price']
-                                state["count"] = state["count"] + 1
-                                
-                                current_wallet = real_usd_balance - TRADE_AMOUNT_USD
-                                log_trade(symbol, "LIVE_BUY", re_order['amount'], re_order['price'], current_wallet, f"Re-buy #{state['count']}")
+                    if profit_loss_percentage >= PROFIT_TARGET_PERCENTAGE:
+                        try:
+                            actual_wallet_balance = exchange_client.fetch_balance().get('free', {}).get(base_asset_name, 0.0)
+                            sell_quantity = min(current_state["coins"], actual_wallet_balance)
+                            sell_order = exchange_client.create_market_sell_order(active_trading_symbol, sell_quantity)
+                            record_successful_trade(active_trading_symbol, "LIVE_SELL", sell_quantity, sell_order['price'], available_usd_cash + current_market_value, "Profit Target Reached")
+                        except Exception:
+                            pass
 
-                    # Logic for 15% profit sell
-                    elif profit_percentage >= PROFIT_TARGET_PERCENT:
-                        # EXECUTE REAL MARKET SELL ORDER
-                        sell_order = exchange.create_market_sell_order(symbol, state["coins"])
-                        sell_price = sell_order['price']
-                        
-                        final_wallet_est = real_usd_balance + current_position_value
-                        log_trade(symbol, "LIVE_SELL", state["coins"], sell_price, final_wallet_est, "Profit Taken")
-                        
-                        # Reset the symbol state back to searching
-                        trade_state[symbol] = {
-                            "status": "WAITING", 
-                            "coins": 0.0, 
-                            "total_cost": 0.0, 
-                            "last_price": 0.0, 
-                            "count": 0
-                        }
-
-            # --- RENDER DASHBOARD ---
-            clear_screen()
+            clear_terminal_screen()
+            unrealized_pnl_color = InterfaceColors.SUCCESS_GREEN if total_unrealized_profit_loss >= 0 else InterfaceColors.DANGER_RED
             
-            # Set color for the total profit in the header
-            if total_unrealized_profit >= 0:
-                header_p_color = Colors.MONEY
-            else:
-                header_p_color = Colors.SELL
-            
-            current_timestamp = time.strftime('%H:%M:%S')
-            
-            print(f"{Colors.HEADER}======================================================================")
-            print(f" {Colors.HEADER}WAYNE'S LIVE COMMAND | {current_timestamp}")
-            print(f" {Colors.HEADER}CASH: {Colors.RESET}${real_usd_balance:.2f} | "
-                  f"{Colors.HEADER}UNREALIZED P/L: {header_p_color}${total_unrealized_profit:+.2f}{Colors.RESET}")
-            
-            print(f"{Colors.HEADER}======================================================================")
-            print(f"{'SYMBOL':<10} {'STATUS':<15} {'PRICE':<12} {'TARGET/AVG':<12} {'P/L %':<10} {'BUYS'}")
-            print("-" * 75)
-            
-            # Print each data row for the table
-            for data_row in table_rows:
+            # RESTORED: Header with Unrealized P/L
+            print(f"{InterfaceColors.HEADER_CYAN}===========================================================================")
+            print(f" {InterfaceColors.HEADER_CYAN}WAYNE'S LIVE COMMAND | {time.strftime('%H:%M:%S')}")
+            print(f" {InterfaceColors.HEADER_CYAN}CASH: {InterfaceColors.RESET_STYLE}${available_usd_cash:.2f} | "
+                  f"{InterfaceColors.HEADER_CYAN}UNREALIZED P/L: {unrealized_pnl_color}${total_unrealized_profit_loss:+.2f}{InterfaceColors.RESET_STYLE}")
+            print(f"{InterfaceColors.HEADER_CYAN}===========================================================================")
+            print(f"{'SYMBOL':<10} {'STATUS':<15} {'PRICE':<12} {'TARGET/AVG':<12} {'P/L %'}")
+            print("-" * 65)
+            for data_row in dashboard_data_rows:
                 print(data_row)
-                
-            # Display the log of recent events at the bottom
-            if recent_activities:
-                print(f"\n{Colors.HEADER}RECENT ACTIVITY:")
-                for activity_text in recent_activities:
-                    print(f" {activity_text}")
             
-            # Refresh interval
-            time.sleep(check_interval)
-            
+            if insufficient_funds_warning_active:
+                print(f"\n{InterfaceColors.WARNING_YELLOW}* ALERT: Market is at buy target, but USD balance is insufficient.")
+
+            # RESTORED: Recent trades footer
+            recent_activity = get_recent_activity_from_csv()
+            if recent_activity:
+                print(f"\n{InterfaceColors.HEADER_CYAN}RECENT TRADES (FROM LOG FILE):")
+                for activity_line in recent_activity:
+                    print(f" {activity_line}")
+
+            time.sleep(check_interval_seconds)
+
         except KeyboardInterrupt:
-            # Re-enable laptop sleep settings on exit
-            allow_sleep()
+            allow_system_sleep()
             break
-        except Exception as runtime_error:
-            print(f"{Colors.SELL}Live Trading Error: {runtime_error}")
+        except Exception:
             time.sleep(10)
 
 if __name__ == "__main__":
-    run_bot()
+    run_trading_engine()
