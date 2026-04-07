@@ -2,11 +2,12 @@
 Date: 2026-01-05
 Script Name: main_bot_loop.py
 Author: omegazyph
-Updated: 2026-03-09
+Updated: 2026-03-23
 Description: 
     Wayne's LIVE Trading Bot for Crypto.com.
     Strategy: Buy at Lower Bollinger Band, Sell at Upper Bollinger Band.
-    Cleaned up formatting and unused variables for linter compliance.
+    Fixed: CSV logging bypasses system buffering to prevent data loss.
+    Safety Net: Added check to prevent selling below average entry price.
 """
 
 import ccxt
@@ -26,18 +27,19 @@ init(autoreset=True, strip=False)
 # --- WINDOWS POWER MANAGEMENT ---
 EXECUTION_STATE_CONTINUOUS = 0x80000000
 EXECUTION_STATE_SYSTEM_REQUIRED = 0x00000001
-
 def prevent_system_sleep():
-    if os.name == 'nt':
-        ctypes.windll.kernel32.SetThreadExecutionState(
-            EXECUTION_STATE_CONTINUOUS | EXECUTION_STATE_SYSTEM_REQUIRED
-        )
+    # ctypes.windll.kernel32.SetThreadExecutionState(EXECUTION_STATE_SYSTEM_REQUIRED | EXECUTION_STATE_CONTINUOUS)
+    pass
 
 def allow_system_sleep():
     if os.name == 'nt':
-        ctypes.windll.kernel32.SetThreadExecutionState(EXECUTION_STATE_CONTINUOUS)
+        try:
+            ctypes.windll.kernel32.SetThreadExecutionState(EXECUTION_STATE_CONTINUOUS)
+        except Exception:
+            pass
 
 # --- DIRECTORY AND FILE PATHS ---
+# Using .resolve() to ensure absolute paths regardless of where the script is launched
 current_script_path = Path(__file__).resolve()
 project_root_directory = current_script_path.parent.parent
 environment_file_path = project_root_directory / ".env"
@@ -68,14 +70,21 @@ def load_trading_configuration():
         return json.load(file)
 
 def record_successful_trade(symbol, side, amount, price, remaining_balance, note):
-    """Logs every trade to the CSV file for tracking."""
+    """
+    Logs every trade to the CSV file. 
+    Uses flush and fsync to ensure data is written immediately to disk.
+    """
     _, log_path = get_required_file_paths()
     time_full = time.strftime("%Y-%m-%d %H:%M:%S")
     file_exists = os.path.isfile(log_path)
+    
+    # Opening with buffering=0 is only allowed in binary mode, 
+    # so we use manual flush and fsync instead for text mode.
     with open(log_path, mode="a", newline="", encoding="utf-8") as csv_file:
         writer = csv.writer(csv_file)
         if not file_exists:
             writer.writerow(["Timestamp", "Symbol", "Side", "Amount", "Price", "Wallet", "Note"])
+        
         writer.writerow([
             time_full, 
             symbol, 
@@ -85,6 +94,10 @@ def record_successful_trade(symbol, side, amount, price, remaining_balance, note
             f"{remaining_balance:.2f}", 
             note
         ])
+        
+        # --- CRITICAL FIX: FORCE DATA TO DISK ---
+        csv_file.flush()            # Push from Python buffer to OS buffer
+        os.fsync(csv_file.fileno()) # Push from OS buffer to physical Disk
 
 def get_recent_activity_from_csv():
     """Reads the last 5 trades from your log to show on the dashboard."""
@@ -95,8 +108,10 @@ def get_recent_activity_from_csv():
     try:
         with open(log_path, mode="r", encoding="utf-8") as file:
             reader = list(csv.reader(file))
+            if len(reader) <= 1:
+                return recent_lines
             data_rows = reader[1:]
-            for row in data_rows[-5:]:
+            for row in data_rows[-10:]:
                 timestamp = row[0].split(" ")[1]
                 side = row[2]
                 symbol = row[1]
@@ -104,7 +119,6 @@ def get_recent_activity_from_csv():
                 color = InterfaceColors.SUCCESS_GREEN if "BUY" in side else InterfaceColors.DANGER_RED
                 recent_lines.insert(0, f"[{timestamp}] {color}{side:<10}{InterfaceColors.RESET_STYLE} {symbol} {note}")
     except Exception:
-        # Proper spacing for exception handling
         pass
     return recent_lines
 
@@ -191,7 +205,6 @@ def run_trading_engine():
                 state = current_portfolio[active_symbol]
 
                 if state["status"] == "WAITING":
-                    # Display the current market price vs. the Lower Band buy target
                     dashboard_data_rows.append(
                         f"{active_symbol:<10} "
                         f"{InterfaceColors.INFO_BLUE}{'SEARCHING':<15}{InterfaceColors.RESET_STYLE} "
@@ -204,11 +217,15 @@ def run_trading_engine():
                             try:
                                 qty = trade_dollar_amount / current_price
                                 order = exchange_client.create_market_buy_order(active_symbol, qty)
+                                # Fetch actual price from order response if available
+                                exec_price = order.get('price') if order.get('price') else current_price
+                                exec_qty = order.get('amount') if order.get('amount') else qty
+                                
                                 record_successful_trade(
                                     active_symbol, 
                                     "LIVE_BUY", 
-                                    order['amount'], 
-                                    order['price'], 
+                                    exec_qty, 
+                                    exec_price, 
                                     available_usd_cash - trade_dollar_amount, 
                                     "Lower Band Hit"
                                 )
@@ -218,7 +235,6 @@ def run_trading_engine():
                             insufficient_funds_warning_active = True
 
                 elif state["status"] == "HOLDING":
-                    # Use average_entry to satisfy the linter and show it on screen
                     average_entry = state["total_cost"] / state["coins"]
                     current_value = state["coins"] * current_price
                     pnl_dollars = current_value - state["total_cost"]
@@ -234,16 +250,20 @@ def run_trading_engine():
                         f"{color}{pnl_pct:>+6.2f}%"
                     )
 
-                    if current_price >= upper_band:
+                    # --- SAFETY NET: ONLY SELL IF PRICE IS ABOVE ENTRY COST ---
+                    if current_price >= upper_band and current_price > average_entry:
                         try:
                             wallet_bal = exchange_client.fetch_balance().get('free', {}).get(base_asset, 0.0)
                             sell_qty = min(state["coins"], wallet_bal)
                             order = exchange_client.create_market_sell_order(active_symbol, sell_qty)
+                            
+                            exec_price = order.get('price') if order.get('price') else current_price
+                            
                             record_successful_trade(
                                 active_symbol, 
                                 "LIVE_SELL", 
                                 sell_qty, 
-                                order['price'], 
+                                exec_price, 
                                 available_usd_cash + current_value, 
                                 "Upper Band Hit"
                             )
