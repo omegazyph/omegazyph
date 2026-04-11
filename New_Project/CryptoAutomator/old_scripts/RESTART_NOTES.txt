@@ -1,0 +1,47 @@
+======================================================================
+PROJECT: CryptoAutomator - RESTART & MANAGEMENT NOTES
+Author: omegazyph
+Updated: 2026-03-07
+======================================================================
+
+1. IF YOU CHANGE THE PYTHON CODE (main_bot_loop.py)
+--------------------------------------------------
+To apply changes to the bot's logic:
+   sudo systemctl restart cryptobot
+
+2. IF YOU CHANGE THE CONFIGURATION (config.json)
+------------------------------------------------
+To apply new thresholds or trading pairs:
+   sudo systemctl restart cryptobot
+
+3. IF YOU CHANGE THE SERVICE FILE (/etc/systemd/system/cryptobot.service)
+-----------------------------------------------------------------------
+If you change the folder paths, user, or environment variables:
+   sudo systemctl daemon-reload
+   sudo systemctl restart cryptobot
+
+4. DASHBOARD & MONITORING
+-------------------------
+View Live Dashboard (Custom Alias):
+   bot
+
+Check Service Status (Active/Inactive):
+   sudo systemctl status cryptobot
+
+5. TROUBLESHOOTING & LOGS
+-------------------------
+If the bot stops, check the last 50 lines of the system log:
+   journalctl -u cryptobot.service -n 50 --no-pager
+
+6. RESETTING THE SIMULATION
+---------------------------
+To reset your wallet to $20.00 and clear all positions, delete or 
+rename the CSV file while the bot is stopped:
+   sudo systemctl stop cryptobot
+   rm trading_log.csv
+   sudo systemctl start cryptobot
+
+======================================================================
+NOTES: The bot is currently set to use Kraken for US-safe price data
+and maintains persistence via the trading_log.csv file.
+======================================================================

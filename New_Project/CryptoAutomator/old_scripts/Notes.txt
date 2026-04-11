@@ -1,0 +1,6 @@
+Spotting Trends: 
+    If the "Buy" quantities are much larger than the "Sell" quantities, the price is likely to go up.
+
+Setting Limits: 
+    When you’re ready to place a Market Limit order, you don’t want to guess the price. You look at 
+    the "Top 5 Bids" and place your order just slightly above them to ensure you get filled quickly.

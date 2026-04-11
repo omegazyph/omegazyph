@@ -1,9 +1,10 @@
 {
     "global_settings": {
-        "check_interval_seconds": 30,
+        "_note_timing": "15 seconds is the sweet spot for home server stability was at 30",
+        "check_interval_seconds": 15,
         "max_buy_attempts": 3,
         "base_currency": "USD",
-        "trade_dollar_amount": 2.0
+        "trade_dollar_amount": 10.0
     },
     "trading_pairs": [
         {

@@ -1,0 +1,7 @@
+# Date: 2026-03-07
+# Author: omegazyph
+# Dependencies for CryptoAutomator
+
+ccxt
+colorama
+python-dotenv

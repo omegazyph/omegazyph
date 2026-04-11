@@ -132,33 +132,55 @@ def restore_portfolio_from_log():
         with open(log_path, mode="r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
             for row in reader:
-                symbol = row["Symbol"]
-                side = row["Side"]
+                symbol = row["Symbol"].strip()
+                side = row["Side"].strip()
                 price = float(row["Price"])
                 amount = float(row["Amount"])
+
                 if side == "LIVE_BUY":
                     if symbol not in active_holdings:
                         active_holdings[symbol] = {"status": "HOLDING", "coins": 0.0, "total_cost": 0.0}
+                    
+                    # Always force status to HOLDING when buy is found
+                    active_holdings[symbol]["status"] = "HOLDING"
                     active_holdings[symbol]["coins"] += amount
                     active_holdings[symbol]["total_cost"] += (amount * price)
+
                 elif side == "LIVE_SELL":
+                    # Mark as WAITING and reset the bag
                     active_holdings[symbol] = {"status": "WAITING", "coins": 0.0, "total_cost": 0.0}
     except Exception:
         pass
     return active_holdings
 
 def calculate_bollinger_bands(exchange, symbol, timeframe='1h', window=20):
-    """Fetches OHLCV data and calculates the Upper and Lower bands."""
+    """
+    Fetches OHLCV data and calculates the Upper and Lower bands.
+    Adjust the 'timeframe' parameter to change trading frequency.
+    Common options: '1m', '5m', '15m', '1h', '4h', '1d'
+    """
     try:
+        # Fetch candles from the exchange
         ohlcv = exchange.fetch_ohlcv(symbol, timeframe)
+
+        # Create the DataFrame
         df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+        
+        # Calculate moving average and standard deviation
         df['sma'] = df['close'].rolling(window=window).mean()
         df['std'] = df['close'].rolling(window=window).std()
+
+        # Calculate Upper and Lower Bands
         df['upper'] = df['sma'] + (df['std'] * 2)
         df['lower'] = df['sma'] - (df['std'] * 2)
+
+        # Pull the latest row
         latest = df.iloc[-1]
+
         return latest['lower'], latest['upper'], latest['close']
+    
     except Exception:
+        # Simple error catch to keep the loop running
         return None, None, None
 
 def run_trading_engine():
@@ -180,7 +202,13 @@ def run_trading_engine():
             check_interval_seconds = global_settings.get("check_interval_seconds", 30)
             
             balance_response = exchange_client.fetch_balance()
-            available_usd_cash = float(balance_response.get('free', {}).get("USD", 0.0))
+
+            # Get the standard USD and thr Instant Deposit Credit
+            settled_usd = balance_response.get('total', {}).get("USD", 0.0)
+            instant_credit = balance_response.get('total', {}).get("USD-CREDIT", 0.0)
+
+            # Add them together to see the buying power
+            available_usd_cash = float(settled_usd + instant_credit)
             
             total_unrealized_profit_loss = 0.0
             dashboard_data_rows = []
@@ -251,7 +279,7 @@ def run_trading_engine():
                     )
 
                     # --- SAFETY NET: ONLY SELL IF PRICE IS ABOVE ENTRY COST ---
-                    if current_price >= upper_band and current_price > average_entry:
+                    if current_price >= upper_band and current_price >= (average_entry * 1.0005):
                         try:
                             wallet_bal = exchange_client.fetch_balance().get('free', {}).get(base_asset, 0.0)
                             sell_qty = min(state["coins"], wallet_bal)
@@ -265,7 +293,7 @@ def run_trading_engine():
                                 sell_qty, 
                                 exec_price, 
                                 available_usd_cash + current_value, 
-                                "Upper Band Hit"
+                                "Upper Band Hit (0.05% Profit)"
                             )
                         except Exception:
                             pass
