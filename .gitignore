@@ -209,6 +209,7 @@ $RECYCLE.BIN/
 logs/
 *.csv
 *.log
+config.json
 
 # this will find anything i put into the folder untill i want to shaur it 
 private/
