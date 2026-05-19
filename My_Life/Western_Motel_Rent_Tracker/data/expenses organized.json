@@ -1,0 +1,248 @@
+{
+    "date_created": "2026-05-19",
+    "business_owner": "Wayne",
+    "author": "omegazyph",
+    "description": "Master ledger for tracking all lodging and trucking operational expenses",
+    "monthly_recurring_expenses": [
+        {
+            "expense_name": "Western Motel Rent",
+            "amount_dollars": 525.0,
+            "due_day_of_month": "1st",
+            "notes": "The rent amount due each month."
+        },
+        {
+            "expense_name": "Cell Phone Bill",
+            "amount_dollars": 122.78,
+            "due_day_of_month": "Variable",
+            "notes": "Cell phone bill; amount can change later on."
+        },
+        {
+            "expense_name": "Home Internet",
+            "amount_dollars": 115.69,
+            "due_day_of_month": "Variable",
+            "notes": "The monthly internet bill at home used to run my crypto bot. The amount might change later."
+        },
+        {
+            "expense_name": "Health Insurance",
+            "amount_dollars": 184.0,
+            "due_day_of_month": "15th",
+            "notes": "Health insurance that gets taken out on the 15th of every month."
+        },
+        {
+            "expense_name": "Capital One Credit Card",
+            "amount_dollars": 158.0,
+            "due_day_of_month": "Variable",
+            "notes": "My Capital One credit card that has a minimum payment of 158.00 right now."
+        }
+    ],
+    "truck_operational_ledger": [
+        {
+            "transaction_id": 1,
+            "date": "2026-05-19",
+            "category": "Maintenance",
+            "vendor": "Freightliner Shop",
+            "description": "Diagnostic and repair work while down in Fairmont",
+            "amount_dollars": 0.0,
+            "payment_status": "Pending",
+            "notes": "Placeholder entry: Update with the final total invoice amount once the shop finishes the truck."
+        }
+    ],
+    "rent_payment_history_ledger": [
+        {
+            "due_date": "01/01/25",
+            "amount_paid_dollars": 525.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": 0.0,
+            "date_paid": "10/27/25",
+            "notes": ""
+        },
+        {
+            "due_date": "02/01/25",
+            "amount_paid_dollars": 525.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": 0.0,
+            "date_paid": "02/20/26",
+            "notes": ""
+        },
+        {
+            "due_date": "03/01/25",
+            "amount_paid_dollars": 525.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": 0.0,
+            "date_paid": "03/11/26",
+            "notes": ""
+        },
+        {
+            "due_date": "04/01/25",
+            "amount_paid_dollars": 475.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -50.0,
+            "date_paid": "03/11/26",
+            "notes": "talked with colleen"
+        },
+        {
+            "due_date": "05/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "06/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "07/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "08/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "09/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "10/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "11/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "12/01/25",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "01/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "02/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "03/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "04/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "05/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "06/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "07/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "08/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "09/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "10/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "11/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        },
+        {
+            "due_date": "12/01/26",
+            "amount_paid_dollars": 0.0,
+            "amount_owed_dollars": 525.0,
+            "remaining_balance_dollars": -525.0,
+            "date_paid": "",
+            "notes": ""
+        }
+    ],
+    "financial_summary_metadata": {
+        "total_rent_paid_all_time_dollars": 2050.0,
+        "total_rent_balance_remaining_dollars": -10550.0
+    }
+}
