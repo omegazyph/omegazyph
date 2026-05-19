@@ -1,0 +1,110 @@
+==================================================
+VANGUARD AUTOMATION SYSTEM - PORTFOLIO ASSESSMENT
+Source Data File : 2026-05-17_OfxDownload.csv
+Report Generated : 2026-05-17
+==================================================
+
+Total Portfolio Value: $40,055.05
+==================================================
+
+[HIGH-LEVEL ASSET CLASS ALLOCATION]
+ * US Equities (Stocks)                : $  28,093.08 (70.14%)
+ * International Equities              : $   4,869.61 (12.16%)
+ * Fixed Income (Bonds)                : $   3,567.81 (8.91%)
+ * Blended Allocation (Target Date)    : $   2,951.25 (7.37%)
+ * Cash & Money Market                 : $     544.71 (1.36%)
+ * Cryptocurrency / Alternative        : $      28.59 (0.07%)
+
+--------------------------------------------------
+
+[CUMULATIVE RECEIVED DIVIDEND SUMMARY]
+Total Historical Dividend Income Collected: $1,814.34
+--------------------------------------------------
+ * VBTLX      Cumulative Income Produced: $    300.96
+ * VEMAX      Cumulative Income Produced: $    294.45
+ * VFIAX      Cumulative Income Produced: $    207.85
+ * VSMAX      Cumulative Income Produced: $    194.75
+ * VTIVX      Cumulative Income Produced: $    168.73
+ * VMFXX      Cumulative Income Produced: $    142.17
+ * MMM        Cumulative Income Produced: $     84.23
+ * ABBV       Cumulative Income Produced: $     42.62
+ * WFC        Cumulative Income Produced: $     38.36
+ * SPY        Cumulative Income Produced: $     34.17
+ * VOO        Cumulative Income Produced: $     33.30
+ * ABT        Cumulative Income Produced: $     31.52
+ * MCO        Cumulative Income Produced: $     29.91
+ * CVX        Cumulative Income Produced: $     23.31
+ * NOBL       Cumulative Income Produced: $     21.36
+ * USB        Cumulative Income Produced: $     19.78
+ * KO         Cumulative Income Produced: $     17.86
+ * VZ         Cumulative Income Produced: $     13.83
+ * BMY        Cumulative Income Produced: $     13.75
+ * JNJ        Cumulative Income Produced: $     12.42
+ * AXP        Cumulative Income Produced: $     10.96
+ * PG         Cumulative Income Produced: $     10.68
+ * MA         Cumulative Income Produced: $     10.42
+ * BK         Cumulative Income Produced: $      9.05
+ * MRK        Cumulative Income Produced: $      7.76
+ * V          Cumulative Income Produced: $      7.44
+ * BAC        Cumulative Income Produced: $      7.40
+ * AON        Cumulative Income Produced: $      6.82
+ * KHC        Cumulative Income Produced: $      5.69
+ * KR         Cumulative Income Produced: $      4.04
+ * AAPL       Cumulative Income Produced: $      3.12
+ * SIRI       Cumulative Income Produced: $      2.47
+ * QQQ        Cumulative Income Produced: $      1.46
+ * VYMI       Cumulative Income Produced: $      1.42
+ * VONG       Cumulative Income Produced: $      0.28
+
+--------------------------------------------------
+
+[ALLOCATION ANALYSIS BY ACCOUNT ID]
+ * Account ID: 44693728        : $     118.44 (0.30%)
+ * Account ID: 51108030        : $       0.23 (0.00%)
+ * Account ID: 53673173        : $     140.40 (0.35%)
+ * Account ID: 88344260        : $  39,795.98 (99.35%)
+
+--------------------------------------------------
+
+[DETAILED INDIVIDUAL HOLDINGS BREAKDOWN]
+ * VFIAX      Allocation Value: $   8,919.30 (22.27%)
+ * VSMAX      Allocation Value: $   6,910.65 (17.25%)
+ * VEMAX      Allocation Value: $   4,770.55 (11.91%)
+ * VBTLX      Allocation Value: $   3,567.81 (8.91%)
+ * VTIVX      Allocation Value: $   2,951.25 (7.37%)
+ * SPY        Allocation Value: $   1,531.56 (3.82%)
+ * MMM        Allocation Value: $   1,519.66 (3.79%)
+ * VOO        Allocation Value: $   1,417.99 (3.54%)
+ * MCO        Allocation Value: $   1,320.15 (3.30%)
+ * QQQ        Allocation Value: $     709.64 (1.77%)
+ * WFC        Allocation Value: $     565.11 (1.41%)
+ * VMFXX      Allocation Value: $     544.71 (1.36%)
+ * ABBV       Allocation Value: $     507.88 (1.27%)
+ * MA         Allocation Value: $     501.61 (1.25%)
+ * ABT        Allocation Value: $     455.04 (1.14%)
+ * NOBL       Allocation Value: $     452.47 (1.13%)
+ * V          Allocation Value: $     332.27 (0.83%)
+ * AXP        Allocation Value: $     323.20 (0.81%)
+ * AON        Allocation Value: $     320.71 (0.80%)
+ * AAPL       Allocation Value: $     303.23 (0.76%)
+ * KO         Allocation Value: $     279.88 (0.70%)
+ * JNJ        Allocation Value: $     246.43 (0.62%)
+ * CVX        Allocation Value: $     207.34 (0.52%)
+ * USB        Allocation Value: $     181.14 (0.45%)
+ * SOLV       Allocation Value: $     148.52 (0.37%)
+ * BK         Allocation Value: $     144.20 (0.36%)
+ * PG         Allocation Value: $     143.69 (0.36%)
+ * VONG       Allocation Value: $     128.14 (0.32%)
+ * BMY        Allocation Value: $     123.29 (0.31%)
+ * MRK        Allocation Value: $     117.73 (0.29%)
+ * BAC        Allocation Value: $     107.11 (0.27%)
+ * VYMI       Allocation Value: $      99.06 (0.25%)
+ * KR         Allocation Value: $      68.99 (0.17%)
+ * VZ         Allocation Value: $      53.65 (0.13%)
+ * ETHB       Allocation Value: $      28.59 (0.07%)
+ * SIRI       Allocation Value: $      26.76 (0.07%)
+ * KHC        Allocation Value: $      25.74 (0.06%)
+
+==================================================
+Analysis Task Completed and Report File Exported.
+==================================================
