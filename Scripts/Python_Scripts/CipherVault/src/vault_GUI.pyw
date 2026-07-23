@@ -2,8 +2,8 @@
 # Script Name: vault_hacker_gui.pyw
 # Author: omegazyph
 # Updated: 2026-01-26
-# Description: Advanced Encryption Standard 256 Vault with four-digit numeric automatic generation.
-# Features: Strict full-word naming conventions, expanded logic, and full-screen responsive layout.
+# Description: AES-256 Vault with PIN_NUMBER labeling and legacy key support.
+# Features: Corrects data storage mismatch by checking for multiple key variations.
 
 import os
 import json
@@ -23,13 +23,9 @@ from cryptography.fernet import Fernet
 
 class HackerVaultGUI:
     def __init__(self, root_window_instance):
-        """
-        Initializes the vault with full-screen support and four-digit numeric generation.
-        """
+        """Initializes the vault and ensures all dialogs stay in the foreground."""
         self.root_window_instance = root_window_instance
-        self.root_window_instance.title("SYSTEM_ACCESS: FULL_WORD_STRICT_VAULT")
-        
-        # Maximize the window for Windows 11 on the Lenovo Legion laptop
+        self.root_window_instance.title("Omegazyph Password Manager")
         self.root_window_instance.state('zoomed')
         
         self.background_color_hexadecimal = "#000000"
@@ -46,357 +42,355 @@ class HackerVaultGUI:
         self.backup_directory_path = os.path.join(self.data_directory_path, "backups")
         self.file_path_vault_binary = os.path.join(self.data_directory_path, "vault_data.bin")
 
-        # Create necessary directories if they do not exist
-        if not os.path.exists(self.data_directory_path):
+        if os.path.exists(self.data_directory_path) is False:
             os.makedirs(self.data_directory_path)
-            
-        if not os.path.exists(self.backup_directory_path):
+
+        if os.path.exists(self.backup_directory_path) is False:
             os.makedirs(self.backup_directory_path)
 
         # Master Key Authentication
         self.master_password_input_string = simpledialog.askstring(
             "SECURE_AUTHENTICATION", 
-            "ENTER MASTER CRYPTOGRAPHIC KEY:", 
+            "Password", 
             show='*', 
             parent=self.root_window_instance
         )
         
-        # Exit if no password is provided
-        if not self.master_password_input_string:
+        if self.master_password_input_string is None:
             self.root_window_instance.destroy()
             return
 
         self.cryptographic_key_bytes = self.derive_cryptographic_key(self.master_password_input_string)
         self.cipher_engine_instance = Fernet(self.cryptographic_key_bytes)
         
-        # Validate the master key if a vault file already exists
-        if os.path.exists(self.file_path_vault_binary):
-            vault_data_check = self.load_encrypted_vault_data()
-            if vault_data_check is None:
-                messagebox.showerror("ACCESS_DENIED", "INVALID MASTER KEY", parent=self.root_window_instance)
+        if os.path.exists(self.file_path_vault_binary) is True:
+            decrypted_data_test = self.load_encrypted_vault_data()
+            if decrypted_data_test is None:
+                messagebox.showerror("ACCESS_DENIED", "INVALID Password", parent=self.root_window_instance)
                 self.root_window_instance.destroy()
                 return
 
         self.setup_hacker_user_interface()
 
     def derive_cryptographic_key(self, password_input_string):
-        """Derives a Fernet-compatible key using Password-Based Key Derivation Function 2."""
+        """Derives a Fernet key using PBKDF2 with a static salt."""
         static_salt_bytes = b'static_salt_for_omegazyph'
-        
         key_derivation_function_instance = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=static_salt_bytes,
             iterations=100000,
         )
-        
-        password_bytes = password_input_string.encode()
-        derived_key_bytes = key_derivation_function_instance.derive(password_bytes)
-        
+        derived_key_bytes = key_derivation_function_instance.derive(password_input_string.encode())
         return base64.urlsafe_b64encode(derived_key_bytes)
 
     def generate_secure_string(self, length_integer=20, mode_string="password"):
-        """Generates either a complex password or a four-digit numeric personal identification number."""
+        """Generates complex passwords or 4-digit identification numbers."""
         if mode_string == "personal_identification_number":
             character_pool_string = string.digits
             length_integer = 4
         else:
             character_pool_string = string.ascii_letters + string.digits + "!@#$%^&*"
             
-        generated_characters_list = []
-        for index_iterator in range(length_integer):
+        generated_list = []
+        for index in range(length_integer):
             random_character = secrets.choice(character_pool_string)
-            generated_characters_list.append(random_character)
+            generated_list.append(random_character)
             
-        return "".join(generated_characters_list)
+        final_string = "".join(generated_list)
+        return final_string
 
     def setup_hacker_user_interface(self):
-        """Builds the main graphical user interface with optimized columns."""
-        header_label_title_instance = tkinter_module.Label(
+        """Builds the main dashboard with PIN_NUMBER headers."""
+        header_label = tkinter_module.Label(
             self.root_window_instance, 
-            text=">_ CIPHER_VAULT: FULL_WORD_PROTOCOL_ACTIVE", 
+            text=">_Password_Manager_Ready", 
             font=("Courier New", 14, "bold"), 
             bg=self.background_color_hexadecimal, 
             fg=self.foreground_color_hexadecimal
         )
-        header_label_title_instance.pack(pady=10)
+        header_label.pack(pady=10)
 
-        tree_frame_instance = tkinter_module.Frame(self.root_window_instance, bg=self.background_color_hexadecimal)
-        tree_frame_instance.pack(pady=10, fill=tkinter_module.BOTH, expand=True, padx=20)
+        tree_frame = tkinter_module.Frame(self.root_window_instance, bg=self.background_color_hexadecimal)
+        tree_frame.pack(pady=10, fill=tkinter_module.BOTH, expand=True, padx=20)
 
-        interface_style_instance = ttk.Style()
-        interface_style_instance.theme_use("clam")
-        interface_style_instance.configure(
+        style_instance = ttk.Style()
+        style_instance.theme_use("clam")
+        style_instance.configure(
             "Treeview", 
-            background=self.background_color_hexadecimal, 
-            foreground=self.foreground_color_hexadecimal, 
-            fieldbackground=self.background_color_hexadecimal, 
-            font=self.font_style_standard, 
-            rowheight=25
+            background="#000000", 
+            foreground="#00FF41", 
+            fieldbackground="#000000", 
+            font=self.font_style_standard
         )
-        interface_style_instance.map("Treeview", background=[('selected', '#003300')])
+        style_instance.map("Treeview", background=[('selected', '#004400')])
 
-        self.column_identifiers_tuple = (
-            "Service", 
-            "Website_Address", 
-            "Username", 
-            "Password", 
-            "Identification_Number", 
-            "Two_Factor_Primary", 
-            "Two_Factor_Secondary", 
-            "Last_Updated"
-        )
-        self.data_grid_view_instance = ttk.Treeview(tree_frame_instance, columns=self.column_identifiers_tuple, show='headings')
-        
-        scrollbar_instance = ttk.Scrollbar(tree_frame_instance, orient="vertical", command=self.data_grid_view_instance.yview)
-        self.data_grid_view_instance.configure(yscrollcommand=scrollbar_instance.set)
-        
-        column_settings_dictionary = {
-            "Service": {"width": 200, "stretch": True},
-            "Website_Address": {"width": 350, "stretch": True},
-            "Username": {"width": 200, "stretch": True},
-            "Password": {"width": 100, "stretch": False},
-            "Identification_Number": {"width": 120, "stretch": False},
-            "Two_Factor_Primary": {"width": 120, "stretch": False},
-            "Two_Factor_Secondary": {"width": 120, "stretch": False},
-            "Last_Updated": {"width": 120, "stretch": False}
+        self.column_identifiers = ("Service", "Website", "Username", "Password", "PIN_Number", "Date_Updated")
+        self.data_grid_view_instance = ttk.Treeview(tree_frame, columns=self.column_identifiers, show='headings')
+
+        column_widths_dictionary = {
+            "Service": 150, 
+            "Website": 280, 
+            "Username": 180, 
+            "Password": 100, 
+            "PIN_Number": 100, 
+            "Date_Updated": 150
         }
-
-        for identifier_string in self.column_identifiers_tuple:
-            self.data_grid_view_instance.heading(identifier_string, text=f"[ {identifier_string.upper()} ]")
-            configuration = column_settings_dictionary.get(identifier_string)
-            self.data_grid_view_instance.column(
-                identifier_string, 
-                width=configuration["width"], 
-                anchor=tkinter_module.CENTER, 
-                stretch=configuration["stretch"]
-            )
-            
-        self.data_grid_view_instance.pack(side=tkinter_module.LEFT, fill=tkinter_module.BOTH, expand=True)
-        scrollbar_instance.pack(side=tkinter_module.RIGHT, fill=tkinter_module.Y)
-
-        button_container_frame_instance = tkinter_module.Frame(self.root_window_instance, bg=self.background_color_hexadecimal)
-        button_container_frame_instance.pack(pady=20)
         
-        button_configuration = {
+        for identifier in self.column_identifiers:
+            self.data_grid_view_instance.heading(identifier, text=f"[ {identifier.upper()} ]")
+            self.data_grid_view_instance.column(identifier, width=column_widths_dictionary[identifier], anchor="center")
+
+        self.data_grid_view_instance.pack(side="left", fill="both", expand=True)
+
+        button_frame = tkinter_module.Frame(self.root_window_instance, bg=self.background_color_hexadecimal)
+        button_frame.pack(pady=20)
+        
+        button_style_dictionary = {
             "bg": "#111111", 
-            "fg": self.foreground_color_hexadecimal, 
+            "fg": "#00FF41", 
             "font": self.font_style_standard, 
-            "width": 25, 
+            "width": 18, 
             "relief": "flat"
         }
 
-        tkinter_module.Button(button_container_frame_instance, text="ADD_NEW_ENTRY", command=self.add_vault_entry, **button_configuration).grid(row=0, column=0, padx=8)
-        tkinter_module.Button(button_container_frame_instance, text="EDIT_EXISTING_ENTRY", command=self.edit_vault_entry, **button_configuration).grid(row=0, column=1, padx=8)
-        tkinter_module.Button(button_container_frame_instance, text="VIEW_RECORD_DATA", command=self.view_vault_entry_details, **button_configuration).grid(row=0, column=2, padx=8)
-        tkinter_module.Button(button_container_frame_instance, text="GENERATE_NEW_PASSWORD", command=self.copy_generated_credential_to_clipboard, **button_configuration).grid(row=0, column=3, padx=8)
-        tkinter_module.Button(button_container_frame_instance, text="OPEN_WEBSITE_ADDRESS", command=self.open_associated_website, **button_configuration).grid(row=1, column=0, padx=8, pady=10)
-        tkinter_module.Button(button_container_frame_instance, text="DELETE_ENTRY", command=self.delete_vault_entry, **button_configuration).grid(row=1, column=1, padx=8, pady=10)
-        tkinter_module.Button(button_container_frame_instance, text="EXIT_APPLICATION", command=self.root_window_instance.destroy, **button_configuration).grid(row=1, column=2, padx=8, pady=10)
+        # Control Panel
+        add_button = tkinter_module.Button(button_frame, text="ADD_NEW_ENTRY", command=self.add_vault_entry, **button_style_dictionary)
+        add_button.grid(row=0, column=0, padx=5, pady=5)
+        
+        edit_button = tkinter_module.Button(button_frame, text="EDIT_ENTRY", command=self.edit_vault_entry, **button_style_dictionary)
+        edit_button.grid(row=0, column=1, padx=5, pady=5)
+        
+        view_button = tkinter_module.Button(button_frame, text="VIEW_DATA", command=self.view_vault_entry_details, **button_style_dictionary)
+        view_button.grid(row=0, column=2, padx=5, pady=5)
+        
+        open_button = tkinter_module.Button(button_frame, text="OPEN_WEBSITE", command=self.open_associated_website, **button_style_dictionary)
+        open_button.grid(row=0, column=3, padx=5, pady=5)
+        
+        delete_button = tkinter_module.Button(button_frame, text="DELETE_ENTRY", command=self.delete_vault_entry, **button_style_dictionary)
+        delete_button.grid(row=0, column=4, padx=5, pady=5)
+
+        # Action Panel
+        copy_pass_button = tkinter_module.Button(button_frame, text="COPY_PASSWORD", command=self.copy_password, **button_style_dictionary)
+        copy_pass_button.grid(row=1, column=1, padx=5, pady=5)
+        
+        copy_pin_button = tkinter_module.Button(button_frame, text="COPY_PIN_NUMBER", command=self.copy_identification_number, **button_style_dictionary)
+        copy_pin_button.grid(row=1, column=2, padx=5, pady=5)
+        
+        exit_button = tkinter_module.Button(button_frame, text="EXIT_SYSTEM", command=self.root_window_instance.destroy, **button_style_dictionary)
+        exit_button.grid(row=1, column=3, padx=5, pady=5)
 
         self.refresh_data_grid_display()
 
     def load_encrypted_vault_data(self):
-        """Loads and decrypts data from the binary vault file."""
-        if not os.path.exists(self.file_path_vault_binary):
+        """Decrypts and returns the vault data dictionary."""
+        if os.path.exists(self.file_path_vault_binary) is False:
             return {}
-            
         try:
-            with open(self.file_path_vault_binary, "rb") as file_reader_instance:
-                encrypted_content = file_reader_instance.read()
-                
-            decrypted_content_bytes = self.cipher_engine_instance.decrypt(encrypted_content)
-            decrypted_content_string = decrypted_content_bytes.decode()
-            
-            return json.loads(decrypted_content_string)
+            with open(self.file_path_vault_binary, "rb") as binary_file_reader:
+                encrypted_content = binary_file_reader.read()
+                decrypted_bytes = self.cipher_engine_instance.decrypt(encrypted_content)
+                decrypted_string = decrypted_bytes.decode()
+                return json.loads(decrypted_string)
         except Exception:
             return None
 
-    def save_encrypted_vault_data(self, vault_data_dictionary):
-        """Encrypts and saves data to the binary vault file and creates a backup."""
-        json_data_string = json.dumps(vault_data_dictionary)
-        json_data_bytes_payload = json_data_string.encode()
+    def save_encrypted_vault_data(self, vault_dictionary):
+        """Saves encrypted data and creates a physical backup."""
+        json_string = json.dumps(vault_dictionary)
+        json_bytes = json_string.encode()
+        encrypted_blob = self.cipher_engine_instance.encrypt(json_bytes)
         
-        encrypted_data_output_blob = self.cipher_engine_instance.encrypt(json_data_bytes_payload)
-        
-        with open(self.file_path_vault_binary, "wb") as file_writer_instance:
-            file_writer_instance.write(encrypted_data_output_blob)
+        with open(self.file_path_vault_binary, "wb") as binary_file_writer:
+            binary_file_writer.write(encrypted_blob)
             
-        current_time_object = datetime.now()
-        timestamp_string_identifier = current_time_object.strftime("%Y%m%d_%H%M%S")
-        
-        backup_file_name = f"backup_{timestamp_string_identifier}.bin"
+        timestamp_string = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_file_name = f"backup_{timestamp_string}.bin"
         backup_destination_path = os.path.join(self.backup_directory_path, backup_file_name)
-        
         shutil.copy2(self.file_path_vault_binary, backup_destination_path)
 
     def refresh_data_grid_display(self):
-        """Clears and repopulates the visual data grid."""
-        for existing_item_instance in self.data_grid_view_instance.get_children():
-            self.data_grid_view_instance.delete(existing_item_instance)
+        """Updates the visual grid with support for old ID_NUMBER keys."""
+        for existing_item in self.data_grid_view_instance.get_children():
+            self.data_grid_view_instance.delete(existing_item)
+            
+        vault_data_dictionary = self.load_encrypted_vault_data()
         
-        vault_information_dictionary = self.load_encrypted_vault_data()
-        
-        if vault_information_dictionary:
-            sorted_keys = sorted(vault_information_dictionary.keys())
-            for service_name_string in sorted_keys:
-                entry = vault_information_dictionary[service_name_string]
+        if vault_data_dictionary is not None:
+            sorted_service_keys = sorted(vault_data_dictionary.keys())
+            for service_name in sorted_service_keys:
+                entry_data = vault_data_dictionary[service_name]
                 
-                website = entry.get("website_address_string") or "NOT_AVAILABLE"
-                username = entry.get("username_string") or "NOT_AVAILABLE"
-                last_updated = entry.get("last_updated_date_string") or "UNKNOWN"
+                website_value = entry_data.get("website_address_string") or entry_data.get("website") or "N/A"
+                username_value = entry_data.get("username_string") or entry_data.get("username") or "N/A"
+                date_value = entry_data.get("last_updated_date_string") or entry_data.get("last_updated") or "UNKNOWN"
+                
+                display_values = (service_name, website_value, username_value, "********", "****", date_value)
+                self.data_grid_view_instance.insert("", "end", values=display_values)
 
-                values_tuple = (service_name_string, website, username, "********", "****", "****", "****", last_updated)
-                self.data_grid_view_instance.insert("", tkinter_module.END, values=values_tuple)
+    def copy_password(self):
+        """Copies password to clipboard."""
+        selected_item = self.data_grid_view_instance.selection()
+        if not selected_item:
+            return
+            
+        service_name = self.data_grid_view_instance.item(selected_item)['values'][0]
+        vault_data = self.load_encrypted_vault_data()
+        password_value = vault_data[service_name].get("password_string") or vault_data[service_name].get("password")
+        
+        self.root_window_instance.clipboard_clear()
+        self.root_window_instance.clipboard_append(password_value)
+        messagebox.showinfo("SUCCESS", f"PASSWORD FOR {service_name} COPIED.", parent=self.root_window_instance)
+
+    def copy_identification_number(self):
+        """Copies PIN_NUMBER to clipboard with legacy fallback."""
+        selected_item = self.data_grid_view_instance.selection()
+        if not selected_item:
+            return
+            
+        service_name = self.data_grid_view_instance.item(selected_item)['values'][0]
+        vault_data = self.load_encrypted_vault_data()
+        entry = vault_data[service_name]
+        
+        # Checking for PIN first, then falling back to ID if it exists
+        pin_value = entry.get("pin_code_string") or entry.get("id_number_string") or entry.get("pin")
+        
+        self.root_window_instance.clipboard_clear()
+        self.root_window_instance.clipboard_append(pin_value)
+        messagebox.showinfo("SUCCESS", f"PIN_NUMBER FOR {service_name} COPIED.", parent=self.root_window_instance)
 
     def add_vault_entry(self):
-        """Prompts for new entry details and saves them."""
-        service_name_input_string = simpledialog.askstring("INPUT", "SERVICE NAME:", parent=self.root_window_instance)
-        if not service_name_input_string:
+        """Captures and stores new entries."""
+        service_name = simpledialog.askstring("INPUT", "SERVICE NAME:", parent=self.root_window_instance)
+        if not service_name:
             return
-        
-        website_address_input_string = simpledialog.askstring("INPUT", "WEBSITE ADDRESS:", parent=self.root_window_instance)
-        username_input_string = simpledialog.askstring("INPUT", "USERNAME:", parent=self.root_window_instance)
-        
-        password_input_string = simpledialog.askstring("INPUT", "PASSWORD (CANCEL FOR AUTOMATIC):", parent=self.root_window_instance)
-        if not password_input_string:
-            password_input_string = self.generate_secure_string(20, "password")
             
-        pin_code_input_string = simpledialog.askstring("INPUT", "PERSONAL IDENTIFICATION NUMBER (CANCEL FOR AUTOMATIC):", parent=self.root_window_instance)
-        if not pin_code_input_string:
-            pin_code_input_string = self.generate_secure_string(4, "personal_identification_number")
+        website_address = simpledialog.askstring("INPUT", "WEBSITE ADDRESS:", parent=self.root_window_instance)
+        user_name = simpledialog.askstring("INPUT", "USERNAME:", parent=self.root_window_instance)
         
-        two_factor_primary = simpledialog.askstring("INPUT", "TWO FACTOR PRIMARY:", parent=self.root_window_instance)
-        two_factor_secondary = simpledialog.askstring("INPUT", "TWO FACTOR SECONDARY:", parent=self.root_window_instance)
+        password_input = simpledialog.askstring("INPUT", "PASSWORD (CANCEL FOR AUTO):", parent=self.root_window_instance)
+        if not password_input:
+            password_input = self.generate_secure_string(20, "password")
             
-        vault_dictionary_object = self.load_encrypted_vault_data()
+        pin_input = simpledialog.askstring("INPUT", "PIN_NUMBER (CANCEL FOR AUTO):", parent=self.root_window_instance)
+        if not pin_input:
+            pin_input = self.generate_secure_string(4, "personal_identification_number")
+
+        fa_primary_input = simpledialog.askstring("INPUT", "2FA PRIMARY CODE (IF ANY):", parent=self.root_window_instance)
+        fa_secondary_input = simpledialog.askstring("INPUT", "2FA SECONDARY CODE (IF ANY):", parent=self.root_window_instance)
         
+        vault_data = self.load_encrypted_vault_data()
         current_date_string = datetime.now().strftime("%Y-%m-%d")
         
-        vault_dictionary_object[service_name_input_string] = {
-            "website_address_string": website_address_input_string or "NOT_AVAILABLE", 
-            "username_string": username_input_string or "NOT_AVAILABLE", 
-            "password_string": password_input_string,
-            "pin_code_string": pin_code_input_string,
-            "two_factor_primary": two_factor_primary or "NOT_AVAILABLE",
-            "two_factor_secondary": two_factor_secondary or "NOT_AVAILABLE",
+        vault_data[service_name] = {
+            "website_address_string": website_address or "N/A", 
+            "username_string": user_name or "N/A",
+            "password_string": password_input, 
+            "pin_code_string": pin_input,
+            "two_factor_primary": fa_primary_input or "N/A", 
+            "two_factor_secondary": fa_secondary_input or "N/A",
             "last_updated_date_string": current_date_string
         }
         
-        self.save_encrypted_vault_data(vault_dictionary_object)
+        self.save_encrypted_vault_data(vault_data)
         self.refresh_data_grid_display()
 
     def edit_vault_entry(self):
-        """Allows modification of an existing entry."""
-        current_selection_instance = self.data_grid_view_instance.selection()
-        if not current_selection_instance:
+        """Edits entries while maintaining legacy key safety."""
+        selected_item = self.data_grid_view_instance.selection()
+        if not selected_item:
             return
             
-        selected_item = self.data_grid_view_instance.item(current_selection_instance)
-        service_identifier_string = selected_item['values'][0]
-        
-        vault_dictionary_object = self.load_encrypted_vault_data()
-        entry = vault_dictionary_object[service_identifier_string]
-        
-        initial_website = entry.get("website_address_string")
-        initial_username = entry.get("username_string")
-        initial_password = entry.get("password_string")
-        initial_pin_code = entry.get("pin_code_string")
-        initial_two_factor_primary = entry.get("two_factor_primary")
-        initial_two_factor_secondary = entry.get("two_factor_secondary")
+        service_name = self.data_grid_view_instance.item(selected_item)['values'][0]
+        vault_data = self.load_encrypted_vault_data()
+        existing_entry = vault_data[service_name]
 
-        updated_website = simpledialog.askstring("EDIT", "WEBSITE ADDRESS:", initialvalue=initial_website, parent=self.root_window_instance)
-        updated_username = simpledialog.askstring("EDIT", "USERNAME:", initialvalue=initial_username, parent=self.root_window_instance)
-        
-        updated_password = simpledialog.askstring("EDIT", "PASSWORD (CLEAR FOR AUTOMATIC):", initialvalue=initial_password, parent=self.root_window_instance)
-        if not updated_password:
-            updated_password = self.generate_secure_string(20, "password")
-        
-        updated_pin_code = simpledialog.askstring("EDIT", "PERSONAL IDENTIFICATION NUMBER (CLEAR FOR AUTOMATIC):", initialvalue=initial_pin_code, parent=self.root_window_instance)
-        if not updated_pin_code:
-            updated_pin_code = self.generate_secure_string(4, "personal_identification_number")
+        current_web = existing_entry.get("website_address_string") or existing_entry.get("website")
+        current_user = existing_entry.get("username_string") or existing_entry.get("username")
+        current_pass = existing_entry.get("password_string") or existing_entry.get("password")
+        # Legacy search for PIN
+        current_pin = existing_entry.get("pin_code_string") or existing_entry.get("id_number_string") or "N/A"
+        current_2fa_1 = existing_entry.get("two_factor_primary") or "N/A"
+        current_2fa_2 = existing_entry.get("two_factor_secondary") or "N/A"
 
-        updated_two_factor_primary = simpledialog.askstring("EDIT", "TWO FACTOR PRIMARY:", initialvalue=initial_two_factor_primary, parent=self.root_window_instance)
-        updated_two_factor_secondary = simpledialog.askstring("EDIT", "TWO FACTOR SECONDARY:", initialvalue=initial_two_factor_secondary, parent=self.root_window_instance)
-        
-        if updated_website is not None:
+        new_web = simpledialog.askstring("EDIT", "WEBSITE ADDRESS:", initialvalue=current_web, parent=self.root_window_instance)
+        new_user = simpledialog.askstring("EDIT", "USERNAME:", initialvalue=current_user, parent=self.root_window_instance)
+        new_pass = simpledialog.askstring("EDIT", "PASSWORD:", initialvalue=current_pass, parent=self.root_window_instance)
+        new_pin = simpledialog.askstring("EDIT", "PIN_NUMBER:", initialvalue=current_pin, parent=self.root_window_instance)
+        new_2fa_1 = simpledialog.askstring("EDIT", "2FA PRIMARY:", initialvalue=current_2fa_1, parent=self.root_window_instance)
+        new_2fa_2 = simpledialog.askstring("EDIT", "2FA SECONDARY:", initialvalue=current_2fa_2, parent=self.root_window_instance)
+
+        if new_web is not None:
             current_date_string = datetime.now().strftime("%Y-%m-%d")
-            
-            vault_dictionary_object[service_identifier_string] = {
-                "website_address_string": updated_website, 
-                "username_string": updated_username, 
-                "password_string": updated_password, 
-                "pin_code_string": updated_pin_code,
-                "two_factor_primary": updated_two_factor_primary, 
-                "two_factor_secondary": updated_two_factor_secondary,
+            vault_data[service_name] = {
+                "website_address_string": new_web, 
+                "username_string": new_user,
+                "password_string": new_pass, 
+                "pin_code_string": new_pin,
+                "two_factor_primary": new_2fa_1 or "N/A",
+                "two_factor_secondary": new_2fa_2 or "N/A",
                 "last_updated_date_string": current_date_string
             }
-            self.save_encrypted_vault_data(vault_dictionary_object)
+            self.save_encrypted_vault_data(vault_data)
             self.refresh_data_grid_display()
 
     def view_vault_entry_details(self):
-        """Displays all details for the selected record in a pop-up window."""
-        current_selection_instance = self.data_grid_view_instance.selection()
-        if not current_selection_instance:
+        """Displays full details with PIN_NUMBER label and legacy check."""
+        selected_item = self.data_grid_view_instance.selection()
+        if not selected_item:
             return
             
-        selected_item = self.data_grid_view_instance.item(current_selection_instance)
-        service_identifier_string = selected_item['values'][0]
+        service_name = self.data_grid_view_instance.item(selected_item)['values'][0]
+        vault_data = self.load_encrypted_vault_data()
+        entry_data = vault_data[service_name]
         
-        vault_dictionary_object = self.load_encrypted_vault_data()
-        entry = vault_dictionary_object[service_identifier_string]
+        web_value = entry_data.get('website_address_string') or entry_data.get('website')
+        user_value = entry_data.get('username_string') or entry_data.get('username')
+        pass_value = entry_data.get('password_string') or entry_data.get('password')
+        # Legacy search for display
+        pin_value = entry_data.get('pin_code_string') or entry_data.get('id_number_string') or 'N/A'
+        fa_1_value = entry_data.get('two_factor_primary') or 'N/A'
+        fa_2_value = entry_data.get('two_factor_secondary') or 'N/A'
+        date_value = entry_data.get('last_updated_date_string') or 'UNKNOWN'
         
-        message_lines_list = []
-        message_lines_list.append(f"SERVICE:                     {service_identifier_string}")
-        message_lines_list.append(f"USERNAME:                    {entry.get('username_string')}")
-        message_lines_list.append(f"PASSWORD:                    {entry.get('password_string')}")
-        message_lines_list.append(f"IDENTIFICATION_NUMBER:       {entry.get('pin_code_string')}")
-        message_lines_list.append(f"TWO_FACTOR_PRIMARY:          {entry.get('two_factor_primary')}")
-        message_lines_list.append(f"TWO_FACTOR_SECONDARY:        {entry.get('two_factor_secondary')}")
-        message_lines_list.append(f"DATE_LAST_UPDATED:           {entry.get('last_updated_date_string')}")
-        
-        display_string = "\n".join(message_lines_list)
-        messagebox.showinfo("RECORD_DETAILS", display_string, parent=self.root_window_instance)
-
-    def delete_vault_entry(self):
-        """Deletes the selected entry from the vault after confirmation."""
-        current_selection_instance = self.data_grid_view_instance.selection()
-        if not current_selection_instance:
-            return
-            
-        selected_item = self.data_grid_view_instance.item(current_selection_instance)
-        service_identifier_string = selected_item['values'][0]
-        
-        confirmation_message = f"ARE YOU CERTAIN YOU WANT TO DELETE {service_identifier_string}?"
-        if messagebox.askyesno("CONFIRMATION", confirmation_message, parent=self.root_window_instance):
-            vault_dictionary_object = self.load_encrypted_vault_data()
-            if service_identifier_string in vault_dictionary_object:
-                del vault_dictionary_object[service_identifier_string]
-                self.save_encrypted_vault_data(vault_dictionary_object)
-                self.refresh_data_grid_display()
+        details_text = (
+            f"SERVICE:       {service_name}\n"
+            f"WEBSITE:       {web_value}\n"
+            f"USERNAME:      {user_value}\n"
+            f"PASSWORD:      {pass_value}\n"
+            f"PIN_NUMBER:    {pin_value}\n"
+            f"2FA_PRIMARY:   {fa_1_value}\n"
+            f"2FA_SECONDARY: {fa_2_value}\n"
+            f"DATE_UPDATED:  {date_value}"
+        )
+        messagebox.showinfo("RECORD_DETAILS", details_text, parent=self.root_window_instance)
 
     def open_associated_website(self):
-        """Opens the stored website address in the default web browser."""
-        current_selection_instance = self.data_grid_view_instance.selection()
-        if not current_selection_instance:
+        """Opens URL in browser."""
+        selected_item = self.data_grid_view_instance.selection()
+        if not selected_item:
             return
-            
-        selected_item = self.data_grid_view_instance.item(current_selection_instance)
-        target_website_address = selected_item['values'][1]
-        
-        if target_website_address and target_website_address != "NOT_AVAILABLE":
-            if not target_website_address.lower().startswith("http"):
-                target_website_address = "https://" + target_website_address
-            webbrowser.open(target_website_address)
+        url_address = self.data_grid_view_instance.item(selected_item)['values'][1]
+        if url_address and url_address != "N/A":
+            if url_address.startswith("http") is False:
+                url_address = "https://" + url_address
+            webbrowser.open(url_address)
 
-    def copy_generated_credential_to_clipboard(self):
-        """Generates a high-security password and copies it to the system clipboard."""
-        new_password = self.generate_secure_string(24, "password")
-        self.root_window_instance.clipboard_clear()
-        self.root_window_instance.clipboard_append(new_password)
-        messagebox.showinfo("GENERATOR", "NEW PASSWORD COPIED TO CLIPBOARD.", parent=self.root_window_instance)
+    def delete_vault_entry(self):
+        """Removes entry after confirmation."""
+        selected_item = self.data_grid_view_instance.selection()
+        if not selected_item:
+            return
+        service_name = self.data_grid_view_instance.item(selected_item)['values'][0]
+        confirm_deletion = messagebox.askyesno("CONFIRM", f"DELETE {service_name}?", parent=self.root_window_instance)
+        if confirm_deletion is True:
+            vault_data = self.load_encrypted_vault_data()
+            if service_name in vault_data:
+                del vault_data[service_name]
+                self.save_encrypted_vault_data(vault_data)
+                self.refresh_data_grid_display()
 
 if __name__ == "__main__":
-    main_root_window_instance = tkinter_module.Tk()
-    vault_application_class_instance = HackerVaultGUI(main_root_window_instance)
-    main_root_window_instance.mainloop()
+    root_window_object = tkinter_module.Tk()
+    app_instance = HackerVaultGUI(root_window_object)
+    root_window_object.mainloop()

@@ -1,75 +1,63 @@
-# CipherVault: Secure Credential Manager
+# CipherVault: Zero-Trust Password Manager
 
-**Project Folder:** `CipherVault_Project`  
 **Author:** omegazyph  
-**Last Updated:** 2026-01-26  
-**System Requirements:** Windows 11 / Lenovo Legion Laptop / Python 3.x
+**Date:** 2026-01-25  
+**Version:** 1.0.0  
+
+## Description
+
+CipherVault is a lightweight, local-first password manager built with Python. It uses **AES-256 encryption** (Fernet) to secure your credentials. Designed with a **Zero-Trust** philosophy, your Master Password is never stored on disk; it is only used to derive the encryption key in memory during your session.
+
+## Key Features
+
+* **AES-256 Encryption:** Industry-standard security for your sensitive data.
+* **Automated Backups:** Every 'Add' or 'Delete' operation triggers a timestamped backup in the `data/backups/` directory.
+* **Service Renaming:** Easily fix typos or update service names without losing your credentials.
+* **Secure Password Generator:** Generate high-entropy, 18-character passwords instantly.
+* **A-Z Sorting:** Automatically organizes your vault entries alphabetically for easy viewing.
+* **Hacker Aesthetic:** Powered by the `rich` library for a clean, stylized terminal interface.
 
 ---
 
-## [ DESCRIPTION ]
+## File Structure
 
-CipherVault is a high-security, Advanced Encryption Standard 256 encrypted credential manager designed for local use on Windows 11. It features a custom "hacker-style" graphical user interface optimized for the full-screen display of a Lenovo Legion laptop. The program allows for the secure storage of service names, website addresses, usernames, passwords, personal identification numbers, and dual two-factor authentication backup codes.
-
----
-
-## [ PROJECT STRUCTURE ]
-
-CipherVault_Project/
-│
-├── scripts/
-│   └── vault_hacker_gui.pyw      # Main Graphical User Interface Application (Python)
-│
+```text
+CipherVault/
 ├── data/
-│   ├── vault_data.bin            # Encrypted Binary Data (Advanced Encryption Standard 256)
-│   └── backups/                  # Automated timestamped backup files
-│
-└── README.md                     # Documentation
+│   └── backups/         # Automated timestamped backups
+├── src/
+│   └── vault.py         # Main application logic
+└── README.md            # Project documentation
 
----
+Installation & Requirements
 
-## [ KEY FEATURES ]
+    Prerequisites: Ensure you have Python 3.x installed on your machine (Tested on Windows 11).
 
-    Advanced Encryption Standard 256 Encryption: Utilizes the Fernet symmetric encryption library and the Password-Based Key Derivation Function 2 for high security.
-
-    Full-Screen Optimization: Columns are weighted to prioritize Service, Website, and Username visibility while keeping security fields compact.
-
-    Numeric Four-Digit Personal Identification Number Generation: Automatically generates random four-digit numeric numbers if the field is left blank during creation or editing.
-
-    Secure Password Generation: High-entropy password generation (twenty or more characters including symbols).
-
-    Automatic Backups: Every time the vault is saved, a timestamped copy is placed in the data/backups/ directory for system recovery.
-
-    Deep Integration: Native "Open Website Address" functionality and "Copy to Clipboard" tools for generated passwords.
-
----
-
-## [ INSTALLATION AND SETUP ]
-
-    Install Dependencies: Ensure you have the cryptography library installed via the terminal command:
+    Install Dependencies: This project requires the cryptography and rich libraries. Install them via pip:
     Bash
 
-    pip install cryptography
+    pip install cryptography rich
 
-    Execution: Run the application using Python:
+    Running the Vault: Navigate to the src folder and run the script:
     Bash
 
-    python scripts/vault_hacker_gui.pyw
+    python vault.py
 
-    Note: The .pyw file extension is used to prevent the Windows command prompt from appearing in the background.
+Security Warning
+
+Do not lose your Master Password. Because this is a Zero-Trust application, there is no "Forgot Password" feature. If the Master Password is lost, the data in vault_data.bin cannot be recovered.
+License
+
+This project is open-source. Feel free to use, modify, and share!
+
 
 ---
 
-## [ OPERATIONAL LOGIC ]
+### Why this helps your GitHub:
+* **Clarity:** It explains the "Why" and "How" immediately.
+* **Ease of Use:** It gives the exact `pip install` commands so people don't have to guess.
+* **Professionalism:** Including a "Security Warning" shows you understand the weight of the tool you built.
 
-    Authentication: The Master Key is never stored on the system. If the master key is lost, the data cannot be recovered.
 
-    Automatic Generation: To trigger the automatic generator for Passwords or Personal Identification Numbers:
 
-        Click the ADD_NEW_ENTRY or EDIT_EXISTING_ENTRY button.
-
-        Leave the input field blank (or clear the existing text in Edit mode).
-
-        Click the OK button. The system will populate the field with a fresh secure string.
-
-    Masking: The main grid masks sensitive data with asterisks to prevent unauthorized viewing. Use the VIEW_RECORD_DATA button to see the raw information.
+**Since we have the code and the documentation ready, would you like me to show you the Bash command to initialize your Git repository and make your first commit?**
