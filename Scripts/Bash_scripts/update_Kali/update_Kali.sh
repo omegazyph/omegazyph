@@ -13,7 +13,7 @@
 set -e
 
 echo "==================================================="
-echo "$(date): Starting Kali Linux System Maintenance."
+echo "      Starting Kali Linux System Maintenance."
 echo "==================================================="
 # --- Update Section ---
 # This section ensures your system's package lists and installed software are up-to-date.
