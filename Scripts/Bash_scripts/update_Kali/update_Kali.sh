@@ -1,7 +1,7 @@
 #!/bin/bash
 ###########################################################################
 # Date:         2024-01-21
-# Script Name:  update.Kali.sh
+# Script Name:  update_Kali.sh
 # Author:       Wayne Stock
 # updated:      2026-09-09
 # Description:  This script automates system maintenance tasks on Debian/Ubuntu-based systems.
