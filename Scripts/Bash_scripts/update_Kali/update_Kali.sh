@@ -56,3 +56,17 @@ bash --version
 echo "==================================================="
 echo "      Kali Linux System Maintenance Finished."
 echo "==================================================="
+
+# Check if a reboot is required by system updates
+if [ -f /var/run/reboot-required ]; then
+    echo -e "Kernel or core libraries were updated. A system reboot is required."
+    read -p "WOuld you like to reboot the system now? (y/N): " REBOOT_CHOICE
+    if [["$REBOOT_CHOICE" =~ ^[Yy]$ ]]; then
+        echo -e "Initiating system reboot...."
+        /usr/sbin/reboot
+    else
+        echo -e "Reboot deferred. Please remember to reboot later."
+    fi
+else
+    echo -e "No system reboot required."
+fi
