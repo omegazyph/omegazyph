@@ -52,3 +52,7 @@ sudo apt-get autoclean -y
 # Verify the currently installed Bash version.
 echo -e "\nVerify Bash Version..."
 bash --version
+
+echo "==================================================="
+echo "      Kali Linux System Maintenance Finished."
+echo "==================================================="
