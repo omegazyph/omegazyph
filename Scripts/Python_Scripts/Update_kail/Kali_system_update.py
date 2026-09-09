@@ -12,6 +12,7 @@ VERSION:        1.1
 """
 
 import subprocess
+
 #import sys
 
 def run_command(description, command):
@@ -21,7 +22,7 @@ def run_command(description, command):
     print(f"\n[*] {description}...")
     try:
         # shell=True allows for piped commands; capture_output gathers text for processing
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        result = subprocess.run(command, check=False, shell=True, capture_output=True, text=True)
         
         if result.returncode == 0:
             print(f"[SUCCESS] {description} completed.")
