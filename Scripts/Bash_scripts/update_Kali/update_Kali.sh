@@ -18,8 +18,24 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# --- Network & DNS Integrity Check ---
+# fix DNS resolution issues caused by Network Manager overwriting /etc/resolv.congf
+echo "Verifying DNS resolution..."
+if ! ping -c 1 Kali.org > /dev/null 2>&1; then
+    echo "DNS resolution failed. Applying static DNS configuration..."
+
+    # Remove immutable attribute if already set, write DNS server, and relock
+    chattr -i /etc/resolv.conf 2>/dev/null || true
+    ehco -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf
+    chattr +i /etc/resolv.conf
+
+    echo "Static DNS servers (1.1.1.1 / 8.8.8.8) configured and locked."
+else
+    echo "DNS resolution functioning properly."
+fi
+
 echo "==================================================="
-echo "      Starting Kali Linux System Maintenance."
+echo "          Starting Kali Linux System Maintenance."
 echo "==================================================="
 # --- Update Section ---
 # This section ensures your system's package lists and installed software are up-to-date.
@@ -60,7 +76,7 @@ echo -e "\nVerify Bash Version..."
 bash --version
 
 echo "==================================================="
-echo "      Kali Linux System Maintenance Finished."
+echo "          Kali Linux System Maintenance Finished."
 echo "==================================================="
 
 # Check if a reboot is required by system updates
