@@ -9,11 +9,17 @@
 #               and then cleans up the system.
 ##################################################################################################
 
+# Exit immediately if any command fails (for unattend automation)
+set -e
+
+echo "==================================================="
+echo "$(date): Starting Kali Linux System Maintenance."
+echo "==================================================="
 # --- Update Section ---
 # This section ensures your system's package lists and installed software are up-to-date.
 
 # 1. Check for available updates for your package lists.
-echo "Checking for updates..."
+echo -e "Checking for updates..."
 sudo apt-get update -y
 
 # 2. Full Distribut Upgrade
