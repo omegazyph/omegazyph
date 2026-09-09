@@ -4,7 +4,7 @@
 # Script Name:  update.Kali.sh
 # Author:       Wayne Stock
 # updated:      2026-09-08
-# description:  This script automates system maintenance tasks on Debian/Ubuntu-based systems.
+# Description:  This script automates system maintenance tasks on Debian/Ubuntu-based systems.
 #               It performs updates, upgrades installed software, updates specific tools,
 #               and then cleans up the system.
 ##################################################################################################
@@ -12,7 +12,7 @@
 # Exit immediately if any command fails (for unattend automation)
 set -e
 
-# Ensure script is executed with root privilages
+# Ensure script is executed with root privileges
 if [ "$EUID" -ne 0 ]; then
     echo "Error: This script must be run as root."
     exit 1
@@ -28,7 +28,7 @@ echo "==================================================="
 echo -e "Checking for updates..."
 apt-get update -y
 
-# 2. Full Distribut Upgrade
+# 2. Full Distribution Upgrade
 echo -e "\nUpgrading all packages, including Bash..."
 apt-get dist-upgrade -y
 
@@ -66,8 +66,8 @@ echo "==================================================="
 # Check if a reboot is required by system updates
 if [ -f /var/run/reboot-required ]; then
     echo -e "Kernel or core libraries were updated. A system reboot is required."
-    read -p "WOuld you like to reboot the system now? (y/N): " REBOOT_CHOICE
-    if [["$REBOOT_CHOICE" =~ ^[Yy]$ ]]; then
+    read -p "Would you like to reboot the system now? (y/N): " REBOOT_CHOICE
+    if [[ "$REBOOT_CHOICE" =~ ^[Yy]$ ]]; then
         echo -e "Initiating system reboot...."
         /usr/sbin/reboot
     else
