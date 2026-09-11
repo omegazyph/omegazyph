@@ -2,7 +2,7 @@
 ###########################################################################
 # Date:         2026-09-10
 # Script Name:  update_parrot.sh
-# Author:       Wayne Stock
+# Author:       Omegazyph
 # updated:      2026-09-10
 # Description:  This script automates system maintenance tasks on Debian/Ubuntu-based systems.
 #               It performs updates, upgrades installed software, updates specific tools,

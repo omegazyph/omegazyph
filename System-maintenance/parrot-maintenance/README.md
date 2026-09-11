@@ -7,7 +7,7 @@ A comprehensive Bash automation script designed to manage system updates, upgrad
 ## Header Details
 
 * **Script Name:** `update_parrot.sh`
-* **Author:** Wayne Stock
+* **Author:** Omegazyph
 * **Date Created:** 2026-09-10
 * **Last Updated:** 2026-09-10
 * **Target Environment:** Parrot Security OS / Debian-based systems

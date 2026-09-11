@@ -2,7 +2,7 @@
 ###########################################################################
 # Date:         2024-01-21
 # Script Name:  update_kali.sh
-# Author:       Wayne Stock
+# Author:       Omegazyph
 # updated:      2026-09-10
 # Description:  This script automates system maintenance tasks on Debian/Ubuntu-based systems.
 #               It performs updates, upgrades installed software, updates specific tools,

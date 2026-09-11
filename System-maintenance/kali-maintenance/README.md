@@ -7,7 +7,7 @@ A robust Bash automation script built to execute end-to-end maintenance, softwar
 ## Header Details
 
 * **Script Name:** `update_kali.sh`
-* **Author:** Wayne Stock
+* **Author:** Omegazyph
 * **Date Created:** 2024-01-21
 * **Last Updated:** 2026-09-10
 * **Target Environment:** Kali Linux / Debian-based systems
