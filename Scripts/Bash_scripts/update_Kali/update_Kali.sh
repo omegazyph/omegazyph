@@ -3,7 +3,7 @@
 # Date:         2024-01-21
 # Script Name:  update_Kali.sh
 # Author:       Wayne Stock
-# updated:      2026-09-09
+# updated:      2026-09-10
 # Description:  This script automates system maintenance tasks on Debian/Ubuntu-based systems.
 #               It performs updates, upgrades installed software, updates specific tools,
 #               and then cleans up the system.
