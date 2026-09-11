@@ -57,8 +57,14 @@ system-maintenance/
 
 ## Installation & Usage
 
+1. **Make the script excutable:**
+'''bash
 chmod +x update_parrot.sh
+'''
+2. **Execute with root privilegs:**
+'''bash
 sudo ./update_parrot.sh
+'''
 
 ---
 

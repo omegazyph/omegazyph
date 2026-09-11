@@ -49,16 +49,26 @@ A robust Bash automation script built to execute end-to-end maintenance, softwar
 
 ## File Structure
 
-Project_Folder/
+system-maintenance/
 
-├── update_kali.sh
+└── kali-maintenance/
 
-└── README.md
+    ├── update_kali.sh
+    └── README.md
+---
 
 ## Installation & Usage
 
+1. **Make the script excutable:**
+'''bash
 chmod +x update_kali.sh
+'''
+2. **Execute with root privilegs:**
+'''bash
 sudo ./update_kali.sh
+'''
+
+---
 
 ## Coniguration & Notes
 
