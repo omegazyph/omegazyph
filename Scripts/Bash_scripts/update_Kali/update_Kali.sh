@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ###########################################################################
 # Date:         2024-01-21
 # Script Name:  update_Kali.sh
@@ -9,86 +9,156 @@
 #               and then cleans up the system.
 ##################################################################################################
 
-# Exit immediately if any command fails (for unattend automation)
-set -e
+
+# ANSI Color Codes
+BOLD='\033[1m'
+CYAN='\033[1;36m'
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+PURPLE='\033[1;35m'
+YELLOW='\033[1;33m'
+RED='\033[1;31m'
+RESET='\033[0m'
+
+# Output Functions
+print_ascii_banner() {
+    echo -e "${CYAN}================================================================================${RESET}"
+    echo -e "${BOLD}${CYAN}                    KALI LINUX AUTOMATED SYSTEM MAINTENANCE                     ${RESET}"
+    echo -e "${CYAN}================================================================================${RESET}"
+}
+
+print_status() {
+    echo -e "\n${BOLD}${CYAN}[*] $1...${RESET}"
+}
+
+print_success() {
+    echo -e "${BOLD}${GREEN}[+] $1${RESET}"
+}
+
+print_warning() {
+    echo -e "${BOLD}${YELLOW}[!] $1${RESET}"
+}
+
+print_error() {
+    echo -e "${BOLD}${RED}[X] $1${RESET}"
+}
+
+# Main Process
+print_ascii_banner
+
 
 # Ensure script is executed with root privileges
 if [ "$EUID" -ne 0 ]; then
-    echo "Error: This script must be run as root."
+    print_error "Error: This script must be run as root."
     exit 1
 fi
 
 # --- Network & DNS Integrity Check ---
-# fix DNS resolution issues caused by Network Manager overwriting /etc/resolv.congf
-echo "Verifying DNS resolution..."
-if ! ping -c 1 Kali.org > /dev/null 2>&1; then
-    echo "DNS resolution failed. Applying static DNS configuration..."
+# fix DNS resolution issues caused by Network Manager overwriting /etc/resolv.conf
+print_status "Verifying DNS resolution..."
+if ! ping -c 1 kali.org > /dev/null 2>&1; then
+    print_error "DNS resolution failed. Applying static DNS configuration..."
 
     # Remove immutable attribute if already set, write DNS server, and relock
     chattr -i /etc/resolv.conf 2>/dev/null || true
     echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > /etc/resolv.conf
     chattr +i /etc/resolv.conf
 
-    echo "Static DNS servers (1.1.1.1 / 8.8.8.8) configured and locked."
+    print_success "Static DNS servers (1.1.1.1 / 8.8.8.8) configured and locked."
 else
-    echo "DNS resolution functioning properly."
+    print_success "DNS resolution functioning properly."
 fi
 
-echo "==================================================="
-echo "          Starting Kali Linux System Maintenance."
-echo "==================================================="
+
 # --- Update Section ---
 # This section ensures your system's package lists and installed software are up-to-date.
 
-# 1. Check for available updates for your package lists.
-echo -e "Checking for updates..."
-apt-get update -y
 
-# 2. Full Distribution Upgrade
-echo -e "\nUpgrading all packages, including Bash..."
-apt-get dist-upgrade -y
+# Check for available updates for your package lists.
+print_status "Checking for updates..."
+if apt-get update; then 
+    print_success "Updates was completed successfully"
+else
+    print_warning "Failed to update"
+fi
 
-# 3. Install and update the Exploit Database package.
-echo -e "\nInstalling and updating Exploit Database..."
-apt-get install exploitdb -y
 
-# 4. Update the Searchsploit database itself.
-echo -e "\nUpdating Searchsploit database...."
-searchsploit -u
+# Full Distribution Upgrade
+print_status "Upgrading installed packages"
+if apt-get dist-upgrade -y; then
+    print_success "Package upgrade Completed"
+else
+    print_warning "Package upgrade encountered issues"
+fi
 
-# 5. Update Nmap's Scripting Engine (NSE) scripts.
-echo -e "\nUpdating nmap script database...."
-nmap --script-updatedb
+# Verify Kernel Headers and Image Meta-Packages
+print_status "Updating held kernel headers and image meta-packages"
+if apt-get install linux-headers-amd64 linux-image-amd64 -y --allow-change-held-packages; then
+    print_success "Kernel meta-packages verified and updated"
+else
+    print_warning "Kernel meta-package update skipped or failed"
+fi
+
+
+# Install and update the Exploit Database package.
+print_status "Installing and updating Exploit Database..."
+if apt-get install exploitdb -y; then 
+    print_success "Exploit Database update complete"
+else
+    print_warning "Exploit Database encountered an issue"
+fi
+
+# Update the Searchsploit database itself.
+print_status "Updating Searchsploit database...."
+searchsploit -u > /dev/null 2>&1
+if [ $? -eq 0 ] || [ $? -eq 1 ]; then 
+    print_success "Searchsploit database verified and up to date"
+else
+    print_warning "Searchsploit update encountered an issue"
+fi
+
+# Update Nmap's Scripting Engine (NSE) scripts.
+print_status "Updating nmap script database...."
+if nmap --script-updatedb; then 
+    print_success "Nmap script database Updated successfully"
+else
+    print_warning "Failed to update Nmap script database"
+fi
 
 # --- Cleaning Section ---
 # This section helps free up disk space by removing unneeded packages and downloaded files.
 
-# 6. Remove automatically installed packages that are no longer needed by any other package.
-echo -e "\nRemoving any obsolete packages and their configuration files..."
-apt-get autoremove --purge -y
-
-# 7. Remove downloaded package archive files that are no longer needed.
-echo -e "\nRemoving any downloaded files that are no longer needed..."
-apt-get autoclean -y
+# Clean up orphaned packages and package cache
+print_status "Cleaning up cached installer files and unneeded dependencies..."
+if apt-get autoremove --purge -y && apt-get clean; then
+    print_success "System cleanup complete successfully"
+else
+    print_warning "System cleanup encountered an issue"
+fi
 
 # Verify the currently installed Bash version.
-echo -e "\nVerify Bash Version..."
-bash --version
+print_status "Verify installed Bash Version"
+if bash --version | head -n 1; then
+    print_success "Bash version verified successfully"
+else
+    print_warning "Failed to retrieve Bash version"
+fi
 
-echo "==================================================="
-echo "          Kali Linux System Maintenance Finished."
-echo "==================================================="
+
+echo -e "${CYAN}===================================================${RESET}"
+echo -e "${BOLD}${CYAN}          Kali Linux System Maintenance Finished.${RESET}"
+echo -e "${CYAN}===================================================${RESET}"
 
 # Check if a reboot is required by system updates
 if [ -f /var/run/reboot-required ]; then
-    echo -e "Kernel or core libraries were updated. A system reboot is required."
+    print_warning "Kernel or core libraries were updated. A system reboot is required."
     read -p "Would you like to reboot the system now? (y/N): " REBOOT_CHOICE
     if [[ "$REBOOT_CHOICE" =~ ^[Yy]$ ]]; then
-        echo -e "Initiating system reboot...."
+        print_status "Initiating system reboot...."
         /usr/sbin/reboot
     else
-        echo -e "Reboot deferred. Please remember to reboot later."
+        print_warning "Reboot deferred. Please remember to reboot later."
     fi
 else
-    echo -e "No system reboot required."
+    print_success "No system reboot required."
 fi
