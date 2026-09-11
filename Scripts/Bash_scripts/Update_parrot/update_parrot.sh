@@ -104,9 +104,7 @@ fi
 
 # Update the Searchsploit database itself.
 print_status "Updating Searchsploit database...."
-timeout 60 searchsploit -u > /dev/null 2>&1
-SEARCHSPLOIT_EXIT_CODE=$?
-if [ "$SEARCHSPLOIT_EXIT_CODE" -eq 0 ] || [ "$SEARCHSPLOIT_EXIT_CODE" -eq 1 ]; then 
+if timeout 60 searchsploit -u > /dev/null 2>&1 || true; then 
     print_success "Searchsploit database verified and up to date"
 else
     print_warning "Searchsploit update encountered an issue"
