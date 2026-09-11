@@ -1,5 +1,0 @@
-this is a reverse shell that will control the clients computer useing the cmd shell
-
-will have the client connents to the server(us)
-
-all of these files are in python 3

@@ -1,8 +1,0 @@
-# Add safe app names here (one per line)
-Discord
-Docker Desktop
-LenovoVantageToolbar
-Steam
-SecurityHealth
-RtkAudUService
-Everything

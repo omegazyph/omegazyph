@@ -1,1 +1,0 @@
-i can not figerout y the checkbox will not stay checked in the window

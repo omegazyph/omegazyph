@@ -1,1 +1,0 @@
-use the clieny script in single_client for all the clients
