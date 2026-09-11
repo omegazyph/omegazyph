@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 ###########################################################################
-# Date:         2024-01-21
-# Script Name:  update_Kali.sh
+# Date:         2026-09-10
+# Script Name:  update_parrot.sh
 # Author:       Wayne Stock
 # updated:      2026-09-10
 # Description:  This script automates system maintenance tasks on Debian/Ubuntu-based systems.
 #               It performs updates, upgrades installed software, updates specific tools,
 #               and then cleans up the system.
 ##################################################################################################
-
 
 # ANSI Color Codes
 BOLD='\033[1m'
@@ -23,7 +22,7 @@ RESET='\033[0m'
 # Output Functions
 print_ascii_banner() {
     echo -e "${CYAN}================================================================================${RESET}"
-    echo -e "${BOLD}${CYAN}                    KALI LINUX AUTOMATED SYSTEM MAINTENANCE                     ${RESET}"
+    echo -e "${BOLD}${CYAN}                    PARROT OS AUTOMATED SYSTEM MAINTENANCE                     ${RESET}"
     echo -e "${CYAN}================================================================================${RESET}"
 }
 
@@ -46,7 +45,6 @@ print_error() {
 # Main Process
 print_ascii_banner
 
-
 # Ensure script is executed with root privileges
 if [ "$EUID" -ne 0 ]; then
     print_error "Error: This script must be run as root."
@@ -56,7 +54,7 @@ fi
 # --- Network & DNS Integrity Check ---
 # fix DNS resolution issues caused by Network Manager overwriting /etc/resolv.conf
 print_status "Verifying DNS resolution..."
-if ! ping -c 1 kali.org > /dev/null 2>&1; then
+if ! ping -c 1 parrotsec.org > /dev/null 2>&1; then
     print_error "DNS resolution failed. Applying static DNS configuration..."
 
     # Remove immutable attribute if already set, write DNS server, and relock
@@ -69,10 +67,8 @@ else
     print_success "DNS resolution functioning properly."
 fi
 
-
 # --- Update Section ---
 # This section ensures your system's package lists and installed software are up-to-date.
-
 
 # Check for available updates for your package lists.
 print_status "Checking for updates..."
@@ -81,7 +77,6 @@ if apt-get update; then
 else
     print_warning "Failed to update"
 fi
-
 
 # Full Distribution Upgrade
 print_status "Upgrading installed packages"
@@ -92,13 +87,12 @@ else
 fi
 
 # Verify Kernel Headers and Image Meta-Packages
-print_status "Updating held kernel headers and image meta-packages"
-if apt-get install linux-headers-amd64 linux-image-amd64 -y --allow-change-held-packages; then
+print_status "Updating held kernel headers for active kernel version"
+if apt-get install linux-headers-$(uname -r) -y --allow-change-held-packages; then
     print_success "Kernel meta-packages verified and updated"
 else
     print_warning "Kernel meta-package update skipped or failed"
 fi
-
 
 # Install and update the Exploit Database package.
 print_status "Installing and updating Exploit Database..."
@@ -145,9 +139,8 @@ else
     print_warning "Failed to retrieve Bash version"
 fi
 
-
 echo -e "${CYAN}===================================================${RESET}"
-echo -e "${BOLD}${CYAN}          Kali Linux System Maintenance Finished.${RESET}"
+echo -e "${BOLD}${CYAN}          PARROT OS System Maintenance Finished.${RESET}"
 echo -e "${CYAN}===================================================${RESET}"
 
 # Check if a reboot is required by system updates
