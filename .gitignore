@@ -14,8 +14,10 @@
 # Private local workspace folder
 private/
 
-# Local configuration files
-config.json
+# Ignore config files anywhere in the repository
+**/config.json
+**/config_copy.json
+**/config/
 
 # Logs and local data files
 logs/
