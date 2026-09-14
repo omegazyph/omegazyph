@@ -22,13 +22,13 @@ RESET='\033[0m'
 
 # Output Functions
 print_ascii_banner() {
-    echo -e "${CYAN}================================================================================${RESET}"
-    echo -e "${BOLD}${CYAN}                    KALI LINUX AUTOMATED SYSTEM MAINTENANCE                     ${RESET}"
-    echo -e "${CYAN}================================================================================${RESET}"
+    echo -e "${PURPLE}================================================================================${RESET}"
+    echo -e "${BOLD}${BLUE}                    KALI LINUX AUTOMATED SYSTEM MAINTENANCE                     ${RESET}"
+    echo -e "${PURPLE}================================================================================${RESET}"
 }
 
 print_status() {
-    echo -e "\n${BOLD}${CYAN}[*] $1...${RESET}"
+    echo -e "\n${BOLD}${CYAN}[*] $1${RESET}"
 }
 
 print_success() {
@@ -146,9 +146,9 @@ else
 fi
 
 
-echo -e "${CYAN}===================================================${RESET}"
-echo -e "${BOLD}${CYAN}          Kali Linux System Maintenance Finished.${RESET}"
-echo -e "${CYAN}===================================================${RESET}"
+echo -e "${PURPLE}===================================================${RESET}"
+echo -e "${BOLD}${BLUE}          Kali Linux System Maintenance Finished.${RESET}"
+echo -e "${PURPLE}===================================================${RESET}"
 
 # Check if a reboot is required by system updates
 if [ -f /var/run/reboot-required ]; then
