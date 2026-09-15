@@ -4,7 +4,7 @@
 # Date:        2026-01-04
 # Script name: NetCheck.sh
 # Author:      omegazyph
-# Updated:     2026-09-14
+# Updated:     2026-09-15
 # DESCRIPTION: A security utility to scan the local network and identify 
 #              connected devices.
 # ==============================================================================
