@@ -1,0 +1,8 @@
+# Known MAC addresses allowlist (one MAC address per line)
+# Lines starting with a hash symbol are treated as comments and ignored
+
+# laptop
+00:11:22:33:44:55
+
+# home TV
+AA:BB:CC:DD:EE:FF
