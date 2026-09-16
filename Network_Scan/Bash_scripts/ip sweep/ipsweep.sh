@@ -74,7 +74,7 @@ for ip in $(seq 1 254); do
     printf "${CYAN}\r[*] Scanning: %s.%s (%d/254) ${RESET}\n" "$1" "$ip" "$ip"
 
     # Ping the target IP address once (-c 1), filter for successful replies, and extract the IP
-     if ping -c 1 "$1.$ip" | grep "64 bytes"; then
+    if ping -c 1 "$1.$ip" | grep "64 bytes"; then
         echo -e "$1.$ip" >> "$TARGET_FILE"
         print_success "Host is alive\n"
     else
@@ -82,22 +82,20 @@ for ip in $(seq 1 254); do
 
     fi
 
-    # windows Testing only
-    ##############################################################################################    
-    # Ping the target IP address once (-c 1), filter for successful replies, and extract the IP
-    # if ping -n 1 "$1.$ip" | grep "bytes=32" ; then
-    #     echo -e "$1.$ip" >> "$TARGET_FILE"
-    #     print_success "Host is alive\n"
-    # else
-    #     print_error "Nothing Here\n"
+# windows Testing only
+##############################################################################################    
+# Ping the target IP address once (-c 1), filter for successful replies, and extract the IP
+# if ping -n 1 "$1.$ip" | grep "bytes=32" ; then
+#     echo -e "$1.$ip" >> "$TARGET_FILE"
+#     print_success "Host is alive\n"
+# else
+#     print_error "Nothing Here\n"
 
-    # fi
-    ###############################################################################################
-
+# fi
+###############################################################################################
 done
 
-# Wait for all background ping processes to complete before exiting the script
-wait
+# Wait for all background ping processes to complete before
 
 echo -e "${PURPLE}=======================================================${RESET}"
 echo -e "${BOLD}${BLUE}                               KALI LINUX AUTOMATED IP SWEEP COMPLETE${RESET}"

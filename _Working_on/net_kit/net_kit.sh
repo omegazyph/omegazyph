@@ -14,6 +14,7 @@
 SCRIPT_DIRECTORY="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ -f "${SCRIPT_DIRECTORY}/files/_Headers.sh" ]; then
+    # shellcheck disable=SC1091
     source "${SCRIPT_DIRECTORY}/files/_Headers.sh"
 else
     echo "Error: _Headers.sh not found in ${SCRIPT_DIRECTORY}. Please ensure it is present."
@@ -24,11 +25,11 @@ fi
 
 # Function to execute an IP sweep across a target subnet
 run_ipsweep() {
-    print_message "status" "Initializing IP sweep network discovery..."
-    print_message "warning" "Scanning live hosts on the target subnet..."
+
     
-    if [ -f "${SCRIPT_DIRECTORY}/files/ip sweep/ipsweep.sh" ]; then
-        source "${SCRIPT_DIRECTORY}/files/ip sweep/ipsweep.sh"
+    if [ -f "${SCRIPT_DIRECTORY}/files/ipsweep/ipsweep.sh" ]; then
+        # shellcheck disable=SC1091
+        source "${SCRIPT_DIRECTORY}/files/ipsweep/ipsweep.sh"
     else
         print_message "error" "Error: ipsweep.sh not found in ${SCRIPT_DIRECTORY}. Please ensure it is present."
         exit 1
@@ -65,9 +66,9 @@ run_scan_network() {
 show_menu() {
     echo -e ""
     echo -e "${BOLD}${CYAN}=== Select a Network Toolkit Operation ===${RESET}"
-    echo -e "${GREEN}1)${RESET} IP Sweep (ipsweep)"
-    echo -e "${GREEN}2)${RESET} Network Status Check (netcheck)"
-    echo -e "${GREEN}3)${RESET} Comprehensive Network Scan (scan_network)"
+    echo -e "${GREEN}1)${RESET} IP Sweep (shows ip's that is live)"
+    echo -e "${GREEN}2)${RESET} Network Status Check"
+    echo -e "${GREEN}3)${RESET} Comprehensive Network Scan"
     echo -e "${RED}4)${RESET} Exit Toolkit"
     echo -e ""
 }
