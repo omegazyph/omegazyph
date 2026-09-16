@@ -27,9 +27,12 @@ run_ipsweep() {
     print_message "status" "Initializing IP sweep network discovery..."
     print_message "warning" "Scanning live hosts on the target subnet..."
     
-    # Place your actual ipsweep logic here (e.g., ping loop or nmap ping scan)
-    # Example placeholder delay simulating operation:
-    sleep 2
+    if [ -f "${SCRIPT_DIRECTORY}/files/ip sweep/ipsweep.sh" ]; then
+        source "${SCRIPT_DIRECTORY}/files/ip sweep/ipsweep.sh"
+    else
+        print_message "error" "Error: ipsweep.sh not found in ${SCRIPT_DIRECTORY}. Please ensure it is present."
+        exit 1
+    fi
     
     print_message "success" "IP sweep completed successfully."
 }
