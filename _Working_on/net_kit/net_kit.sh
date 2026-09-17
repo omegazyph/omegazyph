@@ -40,13 +40,13 @@ run_ipsweep() {
 
 # Function to check local network interface status and connectivity
 run_netcheck() {
-    print_message "status" "Checking network interfaces and local connectivity..."
-    print_message "warning" "Querying gateway and interface statistics..."
-    
-    # Place your actual netcheck logic here (e.g., ip a, route, or ping gateway)
-    # Example placeholder delay simulating operation:
-    sleep 2
-    
+    if [ -f "${SCRIPT_DIRECTORY}/files/NetCheck.sh" ]; then
+        # shellcheck disable=SC1091
+        source "${SCRIPT_DIRECTORY}/files/Netcheck.sh"
+    else
+        print_message "error" "Error: ipsweep.sh not found in ${SCRIPT_DIRECTORY}. Please ensure it is present."
+        exit 1
+    fi    
     print_message "success" "Network status check completed."
 }
 
