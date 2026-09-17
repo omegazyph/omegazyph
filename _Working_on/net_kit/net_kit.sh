@@ -52,13 +52,13 @@ run_netcheck() {
 
 # Function to execute a comprehensive network scan
 run_scan_network() {
-    print_message "status" "Initializing comprehensive network port scan..."
-    print_message "warning" "Deep scans can take time; please remain patient..."
-    
-    # Place your actual scan_network logic here (e.g., nmap command routines)
-    # Example placeholder delay simulating operation:
-    sleep 3
-    
+   if [ -f "${SCRIPT_DIRECTORY}/files/scan_network_kali.sh" ]; then
+        # shellcheck disable=SC1091
+        source "${SCRIPT_DIRECTORY}/files/scan_network_kali.sh"
+    else
+        print_message "error" "Error: ipsweep.sh not found in ${SCRIPT_DIRECTORY}. Please ensure it is present."
+        exit 1
+    fi 
     print_message "success" "Comprehensive network scan completed."
 }
 
@@ -66,9 +66,9 @@ run_scan_network() {
 show_menu() {
     echo -e ""
     echo -e "${BOLD}${CYAN}=== Select a Network Toolkit Operation ===${RESET}"
-    echo -e "${GREEN}1)${RESET} IP Sweep (shows ip's that is live)"
-    echo -e "${GREEN}2)${RESET} Network Status Check"
-    echo -e "${GREEN}3)${RESET} Comprehensive Network Scan"
+    echo -e "${GREEN}1)${RESET} IP Sweep (Kali/windows)"
+    echo -e "${GREEN}2)${RESET} Network Status Check (Kali/windows)"
+    echo -e "${GREEN}3)${RESET} Comprehensive Network Scan (need root permissions Kali only for now)"
     echo -e "${RED}4)${RESET} Exit Toolkit"
     echo -e ""
 }
