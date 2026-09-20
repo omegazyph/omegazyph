@@ -26,7 +26,6 @@ print_ascii_banner() {
     echo -e "${PURPLE}====================================================${RESET}"
 }
 
-
 # Unified message printing function
 print_message() {
     local message_type="$1"
@@ -53,7 +52,6 @@ print_message() {
             ;;
     esac
 }
-
 
 # Main Process
 print_ascii_banner

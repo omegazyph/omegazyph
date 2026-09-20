@@ -1,0 +1,30 @@
+====================================================
+            NETCHECK SECURITY SCANNER REPORT        
+            Date: Sun, Sep 20, 2026  2:16:12 PM                         
+====================================================
+
+INTERNET ADDRESS        PHYSICAL ADDRESS       TYPE
+Interface: 192.168.56.1 --- 0x5
+  192.168.56.255        ff-ff-ff-ff-ff-ff     static    
+  224.0.0.2             01-00-5e-00-00-02     static    
+  224.0.0.22            01-00-5e-00-00-16     static    
+  224.0.0.251           01-00-5e-00-00-fb     static    
+  224.0.0.252           01-00-5e-00-00-fc     static    
+  239.255.255.250       01-00-5e-7f-ff-fa     static    
+Interface: 100.71.225.76 --- 0x7
+  224.0.0.22                                  static    
+  224.0.0.251                                 static    
+  239.255.255.250                             static    
+Interface: 10.1.5.191 --- 0xe
+  10.1.0.1              e0-55-3d-70-f8-fc     dynamic   
+  10.1.7.255            ff-ff-ff-ff-ff-ff     static    
+  224.0.0.2             01-00-5e-00-00-02     static    
+  224.0.0.22            01-00-5e-00-00-16     static    
+  224.0.0.251           01-00-5e-00-00-fb     static    
+  224.0.0.252           01-00-5e-00-00-fc     static    
+  239.255.255.250       01-00-5e-7f-ff-fa     static    
+  255.255.255.255       ff-ff-ff-ff-ff-ff     static    
+
+====================================================
+      SCAN COMPLETE: 17 active entries found.
+====================================================
