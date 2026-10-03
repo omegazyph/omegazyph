@@ -24,7 +24,8 @@ LOG_FILE="$LOG_DIR/ip_check.log"
 WEBHOOK_URL="https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
 
 # Retrieve current public IP address
-CURRENT_IP=$(curl -s https://ifconfig.me)
+CURRENT_IP=$(curl -s https://ifconfig.me) # for IPv6
+# CURRENT_IP=$(curl -4 -s https://ifconfig.me) # for IPv4
 
 # Check if curl succeeded in retrieving an IP
 if [ -z "$CURRENT_IP" ]; then
