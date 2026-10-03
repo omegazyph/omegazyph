@@ -1,10 +1,12 @@
 #!/bin/bash
+# ===============================================================================================
 # Date: 2026-10-02
 # Script Name: check_ip_webhook.sh
 # Author: omegazyph
 # Updated: 2026-10-02
 # Description: Checks the current public IP address against a local saved copy.
 #              If a change is detected, it sends a Webhook notification and updates the file.
+# ================================================================================================
 
 # Define project folder structure and files
 PROJECT_DIR="$HOME/ip_checker"
