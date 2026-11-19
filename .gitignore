@@ -12,7 +12,8 @@
 # CUSTOM & LOCAL EXCLUSIONS
 # ==========================================
 # Private local workspace folder
-private/
+Z_private/
+
 
 # Ignore config files anywhere in the repository
 **/config.json
