@@ -31,7 +31,7 @@ if not gemini_api_key:
 client = genai.Client(api_key=gemini_api_key)
 
 # Start a multi-turn chat session with the model
-chat = client.chats.create(model="gemini-flash-latest")
+chat = client.chats.create(model="gemini-3.5-flash-lite")
 
 print("Chat bot started. Type 'exit' to quit.")
 
