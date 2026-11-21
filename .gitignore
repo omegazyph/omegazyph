@@ -2,8 +2,8 @@
 # Project    : GitHub Exclusions Configuration
 # File Name  : .gitignore
 # Author     : omegazyph
-# Created    : 01-05-2026
-# Updated    : 09-11-2026
+# Created    : 2026-01-05
+# Updated    : 2026-11-21
 # Description: Specifies intentionally untracked files and private local 
 #              directories that Git should ignore when pushing to GitHub.
 ###############################################################################
@@ -16,9 +16,7 @@ Z_private/
 
 
 # Ignore config files anywhere in the repository
-**/config.json
-**/config_copy.json
-**/config/
+*.json
 
 # Logs and local data files
 logs/
