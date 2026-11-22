@@ -9,7 +9,8 @@
 #               and dynamically centered ASCII banners.
 # ===========================================================================================
 
-# --- Imports ---
+# region --- Imports ---
+
 # Import operating system interface helpers for clearing the terminal screen
 import os
 
@@ -19,7 +20,9 @@ import sys
 # Import time utilities for character delays during typewriter printing
 import time
 
-# --- ANSI Color Codes ---
+# endregion
+
+# region --- ANSI Color Codes ---
 # Define bold ANSI escape sequences for colored terminal output
 BLUE = "\033[1;34m"
 BOLD = "\033[1m"
@@ -29,10 +32,9 @@ PURPLE = "\033[1;35m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
 YELLOW = "\033[1;33m"
+#endregion
 
-
-# --- UI Functions ---
-
+#region --- UI Functions ---
 # created typing effict
 def print_color(text, color=CYAN):
     """Print text one character at a time with a short delay for a typing effect."""
@@ -100,15 +102,14 @@ def print_message(message_type, message_text=""):
     else:
         # Print plain text when the message type does not match a known category
         print(message_text)
+#endregion
 
-
-# --- Main Process ---
+#region --- Main Process ---
 def main():
     """Main execution entry point."""
     #clears the screen
     os.system('cls' if os.name == 'nt' else 'clear') 
     
-
     # Display the startup banner
     print_ascii_banner("Put your Title here")
 
@@ -121,7 +122,7 @@ def main():
 
     # Displaying the ending banner
     print_ascii_ending("Put your ending title here")
-
+#endregion
 
 # Run main only when the file is executed directly rather than imported
 if __name__ == "__main__":
