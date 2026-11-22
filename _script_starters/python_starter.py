@@ -4,7 +4,7 @@
 # Date:         2026-09-22
 # Script Name:  python_starter.py
 # Author:       omegazyph
-# Updated:      2026-11-21
+# Updated:      2026-11-22
 # Description:  Core library providing ANSI colors, unified messaging,
 #               and dynamically centered ASCII banners.
 # ===========================================================================================
@@ -32,8 +32,9 @@ YELLOW = "\033[1;33m"
 
 
 # --- UI Functions ---
+
 # created typing effict
-def print_hacker(text, color=CYAN):
+def print_color(text, color=CYAN):
     """Print text one character at a time with a short delay for a typing effect."""
     # Apply the selected ANSI color before writing characters
     sys.stdout.write(color)
@@ -60,9 +61,9 @@ def print_ascii_banner(banner_title="Default Title Starting"):
     separator_line = "=" * total_width
 
     # Print the top border, centered title, and bottom border using the typing effect
-    print_hacker(f"{PURPLE}{separator_line}{RESET}")
-    print_hacker(f"{BOLD}{BLUE}{spaces}{banner_title}{RESET}")
-    print_hacker(f"{PURPLE}{separator_line}{RESET}")
+    print_color(f"{PURPLE}{separator_line}{RESET}")
+    print_color(f"{BOLD}{BLUE}{spaces}{banner_title}{RESET}")
+    print_color(f"{PURPLE}{separator_line}{RESET}")
 
 def print_ascii_ending(ending_title="Default Title Ending"):
     """Prints a dynamically centered closing ASCII banner."""
@@ -79,23 +80,23 @@ def print_ascii_ending(ending_title="Default Title Ending"):
     separator_line = "=" * total_width
 
     # Print the top border, centered ending title, and bottom border using the typing effect
-    print_hacker(f"{PURPLE}{separator_line}{RESET}")
-    print_hacker(f"{BOLD}{BLUE}{spaces}{ending_title}{RESET}")
-    print_hacker(f"{PURPLE}{separator_line}{RESET}")
+    print_color(f"{PURPLE}{separator_line}{RESET}")
+    print_color(f"{BOLD}{BLUE}{spaces}{ending_title}{RESET}")
+    print_color(f"{PURPLE}{separator_line}{RESET}")
 
 def print_message(message_type, message_text=""):
     """Unified message printing function using ANSI color formatting."""
     # Choose the prefix marker and ANSI color based on the message type
     if message_type == "error":
-        print(f"{BOLD}{RED}[X] {message_text}{RESET}")
+        print_color(f"{BOLD}{RED}[X] {message_text}{RESET}")
     elif message_type == "info":
-        print(f"{BOLD}{BLUE}[*] {message_text}{RESET}")
+        print_color(f"{BOLD}{BLUE}[*] {message_text}{RESET}")
     elif message_type == "status":
-        print(f"{BOLD}{CYAN}[*] {message_text}{RESET}")
+        print_color(f"{BOLD}{CYAN}[*] {message_text}{RESET}")
     elif message_type == "success":
-        print(f"{BOLD}{GREEN}[+] {message_text}{RESET}")
+        print_color(f"{BOLD}{GREEN}[+] {message_text}{RESET}")
     elif message_type == "warning":
-        print(f"{BOLD}{YELLOW}[!] {message_text}{RESET}")
+        print_color(f"{BOLD}{YELLOW}[!] {message_text}{RESET}")
     else:
         # Print plain text when the message type does not match a known category
         print(message_text)
