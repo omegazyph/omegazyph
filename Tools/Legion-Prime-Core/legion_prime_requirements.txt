@@ -1,0 +1,3 @@
+psutil
+requests
+speedtest-cli
