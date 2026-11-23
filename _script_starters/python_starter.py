@@ -10,6 +10,8 @@
 # ===========================================================================================
 
 # region --- Imports ---
+# Import json for loading external backup task definitions from backup_config.json
+import json  # noqa: F401
 
 # Import operating system interface helpers for clearing the terminal screen
 import os
