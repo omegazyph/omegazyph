@@ -34,6 +34,7 @@ BLUE = "\033[1;34m"
 BOLD = "\033[1m"
 CYAN = "\033[1;36m" # default color
 GREEN = "\033[1;32m"
+MAGENTA = "\033[38;2;255;0;144m"
 PURPLE = "\033[1;35m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
@@ -82,7 +83,7 @@ def print_message(message_type, message_text=""):
     elif message_type == "info":
         print_color(f"{BOLD}{BLUE}[*] {message_text}{RESET}")
     elif message_type == "status":
-        print_color(f"{BOLD}{CYAN}[*] {message_text}{RESET}")
+        print_color(f"{BOLD}{MAGENTA}[~] {message_text}{RESET}")
     elif message_type == "success":
         print_color(f"{BOLD}{GREEN}[+] {message_text}{RESET}")
     elif message_type == "warning":
