@@ -4,7 +4,7 @@
 # Date:         2026-09-22
 # Script Name:  python_starter.py
 # Author:       omegazyph
-# Updated:      2026-11-22
+# Updated:      2026-11-23
 # Description:  Core library providing ANSI colors, unified messaging,
 #               and dynamically centered ASCII banners.
 # ===========================================================================================
@@ -67,25 +67,7 @@ def print_ascii_banner(banner_title="Default Title Starting"):
     print_color(f"{BOLD}{BLUE}{spaces}{banner_title}{RESET}")
     print_color(f"{PURPLE}{separator_line}{RESET}")
 
-def print_ascii_ending(ending_title="Default Title Ending"):
-    """Prints a dynamically centered closing ASCII banner."""
-    # Set the total character width for the closing banner border
-    total_width = 65
-    # Calculate leading spaces needed to center the ending title
-    title_length = len(ending_title)
-    padding = (total_width - title_length) // 2
-
-    # Generate the exact amount of leading spaces for centering
-    spaces = " " * padding
-
-    # Build the horizontal border line
-    separator_line = "=" * total_width
-
-    # Print the top border, centered ending title, and bottom border using the typing effect
-    print_color(f"{PURPLE}{separator_line}{RESET}")
-    print_color(f"{BOLD}{BLUE}{spaces}{ending_title}{RESET}")
-    print_color(f"{PURPLE}{separator_line}{RESET}")
-
+    
 def print_message(message_type, message_text=""):
     """Unified message printing function using ANSI color formatting."""
     # Choose the prefix marker and ANSI color based on the message type
@@ -121,7 +103,7 @@ def main():
     print_message("error", "No devices detected.")
 
     # Displaying the ending banner
-    print_ascii_ending("Put your ending title here")
+    print_ascii_banner("Put your ending title here")
 #endregion
 
 # Run main only when the file is executed directly rather than imported
