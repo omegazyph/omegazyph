@@ -15,7 +15,7 @@
 # Define ANSI escape sequences for terminal colors and text formatting
 BLUE='\033[1;34m'
 BOLD='\033[1m'
-CYAN='\033[1;36m'
+CYAN='\033[1;36m' #defualt color
 GREEN='\033[1;32m'
 MAGENTA='\033[38;2;255;0;144m'
 PURPLE='\033[1;35m'
