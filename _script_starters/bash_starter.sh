@@ -1,104 +1,124 @@
 #!/usr/bin/env bash
 
-##################################################################################################
-# Date:         2026-09-13
-# Script Name:  bash_starter.sh
-# Author:       Omegazyph
-# Updated:      2026-09-16
-# Description:  Core library providing ANSI colors, unified messaging, 
-#               and dynamically centered ASCII banners.
-# ==================================================================================================
+# =============================================================================
+# Date:           2026-09-13
+# Script Name:    bash_starter.sh
+# Author:         Omegazyph
+# Updated:        2026-11-23
+# Description:    Core Bash starter library providing ANSI terminal colors,
+#                 unified status messaging, and dynamically centered banners.
+# File Structure: project_root/
+#                     bash_starter.sh
+# =============================================================================
 
-# --- ANSI Color Codes ---
+# region --- ANSI Color Codes ---
+# Define ANSI escape sequences for terminal colors and text formatting
 BLUE='\033[1;34m'
 BOLD='\033[1m'
 CYAN='\033[1;36m'
 GREEN='\033[1;32m'
+MAGENTA='\033[38;2;255;0;144m'
 PURPLE='\033[1;35m'
 RED='\033[1;31m'
 RESET='\033[0m'
 YELLOW='\033[1;33m'
+# endregion
 
-# --- UI Functions ---
+# region --- User Interface Functions ---
 
-# Prints a dynamically centered starting ASCII banner
+# Print text in a specified ANSI color and reset formatting afterward
+print_color() {
+    local message_text="$1"
+    local text_color="${2:-$CYAN}"
+
+    # Output the colored string followed by a terminal attribute reset
+    printf "%b%s%b\n" "${text_color}" "${message_text}" "${RESET}"
+}
+
+# Print a dynamically centered ASCII banner with top and bottom borders
 print_ascii_banner() {
     local banner_title="${1:-Default Title Starting}"
-    local total_width=80
+    local total_width=65
     local title_length=${#banner_title}
-    local padding=$(( (total_width - title_length) / 2 ))
-    
-    # Generate the exact amount of leading spaces for centering
-    local spaces=""
-    for ((i = 0; i < padding; i++)); do
-        spaces+=" "
+    local padding=0
+
+    # Calculate leading spaces only when the title is shorter than total_width
+    if (( total_width > title_length )); then
+        padding=$(( (total_width - title_length) / 2 ))
+    fi
+
+    # Build the exact number of leading spaces needed to center the title
+    local leading_spaces=""
+    local index=0
+    for (( index = 0; index < padding; index++ )); do
+        leading_spaces+=" "
     done
 
-    echo -e "${PURPLE}================================================================================${RESET}"
-    echo -e "${BOLD}${BLUE}${spaces}${banner_title}${RESET}"
-    echo -e "${PURPLE}================================================================================${RESET}"
-}
-
-# Prints a dynamically centered closing ASCII banner
-print_ascii_ending() {
-    local ending_title="${1:-Default Title Ending}"
-    local total_width=80
-    local title_length=${#ending_title}
-    local padding=$(( (total_width - title_length) / 2 ))
-    
-    # Generate the exact amount of leading spaces for centering
-    local spaces=""
-    for ((i = 0; i < padding; i++)); do
-        spaces+=" "
+    # Build the horizontal border line matching total_width
+    local border_line=""
+    for (( index = 0; index < total_width; index++ )); do
+        border_line+="="
     done
 
-    echo -e "${PURPLE}================================================================================${RESET}"
-    echo -e "${BOLD}${BLUE}${spaces}${ending_title}${RESET}"
-    echo -e "${PURPLE}================================================================================${RESET}"
+    # Print the top purple border, centered bold blue title, and bottom border
+    print_color "${border_line}" "${PURPLE}"
+    print_color "${leading_spaces}${banner_title}" "${BOLD}${BLUE}"
+    print_color "${border_line}" "${PURPLE}"
 }
 
-# Unified message printing function
+# Print formatted messages with distinct prefixes and colors by message type
 print_message() {
     local message_type="$1"
     local message_text="$2"
 
-    case "$message_type" in
+    # Match the requested message type to its corresponding prefix and color
+    case "${message_type}" in
         "error")
-            echo -e "${BOLD}${RED}[X] ${message_text}${RESET}"
+            print_color "[X] ${message_text}" "${BOLD}${RED}"
             ;;
         "info")
-            echo -e "${BOLD}${BLUE}[*] ${message_text}${RESET}"
+            # Use [*] in BLUE for general informational notes
+            print_color "[*] ${message_text}" "${BOLD}${BLUE}"
             ;;
         "status")
-            echo -e "${BOLD}${CYAN}[*] ${message_text}${RESET}"
+            # Use [~] in 24-bit MAGENTA for active status and progress updates
+            print_color "[~] ${message_text}" "${BOLD}${MAGENTA}"
             ;;
         "success")
-            echo -e "${BOLD}${GREEN}[+] ${message_text}${RESET}"
+            print_color "[+] ${message_text}" "${BOLD}${GREEN}"
             ;;
         "warning")
-            echo -e "${BOLD}${YELLOW}[!] ${message_text}${RESET}"
+            print_color "[!] ${message_text}" "${BOLD}${YELLOW}"
             ;;
         *)
-            echo -e "${message_text}"
+            # Print plain uncolored text when no known category is provided
+            printf "%s\n" "${message_text}"
             ;;
     esac
 }
+# endregion
 
-# --- Main Process ---
+# region --- Main Process ---
 main() {
-    # Display the startup banner
+    # Clear the terminal screen before displaying startup output
+    clear
+
+    # Display the opening banner
     print_ascii_banner "Put your Title here"
 
-    # Execute operational status messages
+    # Demonstrate each supported status and notification category
     print_message "status" "Scanning for active devices on your network"
-    print_message "info" "this is a info line"
+    print_message "info" "This is an informational line"
     print_message "warning" "Please wait, this may take a few seconds"
     print_message "success" "Scan complete!"
     print_message "error" "No devices detected."
 
-    # Displaying the ending banner
-    print_ascii_ending "Put your ending title here"
+    # Display the closing banner
+    print_ascii_banner "Put your ending title here"
 }
+# endregion
 
-# run the main execution entry point
-main
+# Execute main only when this script is run directly rather than sourced
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
