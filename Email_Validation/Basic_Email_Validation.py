@@ -4,7 +4,7 @@
 # Script Name:  Basic Email Validation
 # Author:       omegazyph
 # Date Created: 2026-08-21
-# Date Updated: 2026-11-20
+# Date Updated: 2026-11-23
 # Description:  Basic command-line script to check if user input contains an
 #               at sign and a period, styled with ANSI colors, banners, and
 #               unified status messages.
