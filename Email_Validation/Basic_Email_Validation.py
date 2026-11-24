@@ -10,19 +10,23 @@
 #               unified status messages.
 # ==============================================================================
 
-# --- ANSI Color Codes ---
+# region ---- Imports ---
+
+#endregion
+
+#region --- ANSI Color Codes ---
 BLUE = "\033[1;34m"
 BOLD = "\033[1m"
 CYAN = "\033[1;36m"
 GREEN = "\033[1;32m"
+MAGENTA = "\033[38;2;255;0;144m"
 PURPLE = "\033[1;35m"
 RED = "\033[1;31m"
 RESET = "\033[0m"
 YELLOW = "\033[1;33m"
+#endregion
 
-
-# --- User Interface Functions ---
-
+# region --- User Interface Functions ---
 
 def print_ascii_banner(banner_title="Default Title Starting"):
     """Print a dynamically centered starting ASCII banner."""
@@ -39,21 +43,6 @@ def print_ascii_banner(banner_title="Default Title Starting"):
     print(f"{PURPLE}{border_line}{RESET}")
 
 
-def print_ascii_ending(ending_title="Default Title Ending"):
-    """Print a dynamically centered closing ASCII banner."""
-    total_width = 80
-    title_length = len(ending_title)
-    padding = (total_width - title_length) // 2
-
-    # Build the exact number of leading spaces needed to center the title.
-    leading_spaces = " " * padding
-    border_line = "=" * total_width
-
-    print(f"{PURPLE}{border_line}{RESET}")
-    print(f"{BOLD}{BLUE}{leading_spaces}{ending_title}{RESET}")
-    print(f"{PURPLE}{border_line}{RESET}")
-
-
 def print_message(message_type, message_text=""):
     """Print a formatted status message using ANSI color codes."""
     if message_type == "error":
@@ -61,17 +50,16 @@ def print_message(message_type, message_text=""):
     elif message_type == "info":
         print(f"{BOLD}{BLUE}[*] {message_text}{RESET}")
     elif message_type == "status":
-        print(f"{BOLD}{CYAN}[*] {message_text}{RESET}")
+        print(f"{BOLD}{MAGENTA}[~] {message_text}{RESET}")
     elif message_type == "success":
         print(f"{BOLD}{GREEN}[+] {message_text}{RESET}")
     elif message_type == "warning":
         print(f"{BOLD}{YELLOW}[!] {message_text}{RESET}")
     else:
         print(message_text)
+#endregion
 
-
-# --- Main Application Logic ---
-
+#region --- Main Application Logic ---
 
 def main():
     """Run the basic email check inside the styled banner layout."""
@@ -88,8 +76,8 @@ def main():
         print_message("error", "Invalid Email")
 
     # Show the closing banner at the end of execution.
-    print_ascii_ending("Validation Complete")
-
+    print_ascii_banner("Validation Complete")
+#endregion
 
 if __name__ == "__main__":
     main()
