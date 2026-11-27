@@ -4,7 +4,7 @@
 # Date:         2026-09-22
 # Script Name:  python_starter.py
 # Author:       omegazyph
-# Updated:      2026-11-23
+# Updated:      2026-11-27
 # Description:  Core library providing ANSI colors, unified messaging,
 #               and dynamically centered ASCII banners.
 # ===========================================================================================
@@ -41,7 +41,27 @@ RESET = "\033[0m"
 YELLOW = "\033[1;33m"
 #endregion
 
-#region --- UI Functions ---
+#region --- Logo & UI Functions ---
+
+# Store your custom ASCII logo here so it can be printed cleanly at startup
+OMEGAZYPH_LOGO = r"""
+   ___  __  __ _____ ____    _   ______     ______  _   _
+  / _ \|  \/  | ____/ ___|  / \  |__  /\ \ / /  _ \| | | |
+ | | | | |\/| |  _|| |  _  / _ \   / /  \ V /| |_) | |_| |
+ | |_| | |  | | |__| |_| |/ ___ \ / /_   | | |  __/|  _  |
+  \___/|_|  |_|_____\____/_/   \_/____|  |_| |_|   |_| |_|
+                        OMEGAZYPH
+"""
+
+
+def print_logo(logo_text=OMEGAZYPH_LOGO, color=PURPLE):
+    """Print the startup logo using the typing effect and color formatting."""
+    # Print each line of the logo so multi-line ASCII art renders cleanly
+    for line in logo_text.splitlines():
+        if line:
+            print_color(f"{BOLD}{color}{line}{RESET}")
+        else:
+            print("Can't load Logo")
 # created typing effict
 def print_color(text, color=CYAN):
     """Print text one character at a time with a short delay for a typing effect."""
@@ -100,6 +120,7 @@ def main():
     os.system('cls' if os.name == 'nt' else 'clear') 
     
     # Display the startup banner
+    print_logo()
     print_ascii_banner("Put your Title here")
 
     # Execute operational status messages
