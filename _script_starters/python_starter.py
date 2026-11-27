@@ -43,7 +43,7 @@ RESET = "\033[0m"
 YELLOW = "\033[1;33m"
 #endregion
 
-#region --- Logo & UI Functions ---
+# region --- Logo & UI Functions ---
 
 # Store your custom ASCII logo here so it can be printed cleanly at startup
 OMEGAZYPH_LOGO = r"""
@@ -112,9 +112,9 @@ def print_message(message_type, message_text=""):
     else:
         # Print plain text when the message type does not match a known category
         print(message_text)
-#endregion
+# endregion
 
-#region --- Main Process ---
+# region --- Main Process ---
 def main():
     """Main execution entry point."""
     #clears the screen
@@ -133,7 +133,7 @@ def main():
 
     # Displaying the ending banner
     print_ascii_banner("Put your ending title here")
-#endregion
+# endregion
 
 # Run main only when the file is executed directly rather than imported
 if __name__ == "__main__":
