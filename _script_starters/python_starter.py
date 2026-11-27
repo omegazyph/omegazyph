@@ -17,6 +17,8 @@
 # Import operating system interface helpers for clearing the terminal screen
 import os
 
+# Import high-level file and folder operations for copying files while preserving metadata
+#import shutil
 # Import standard output and flush controls for character-by-character output
 import sys
 
