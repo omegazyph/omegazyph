@@ -60,8 +60,7 @@ def print_logo(logo_text=OMEGAZYPH_LOGO, color=PURPLE):
     for line in logo_text.splitlines():
         if line:
             print_color(f"{BOLD}{color}{line}{RESET}")
-        else:
-            print("Can't load Logo")
+
 # created typing effict
 def print_color(text, color=CYAN):
     """Print text one character at a time with a short delay for a typing effect."""
